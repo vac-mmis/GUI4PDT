@@ -12,4 +12,3 @@ import NavBar from "@/components/MainComponents/NavBar.vue";
         </v-main>
     </v-layout>
 </template>
-s

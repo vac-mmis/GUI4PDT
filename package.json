@@ -16,6 +16,7 @@
     "dependencies": {
         "plotly.js-dist-min": "^2.23.2",
         "sass": "^1.62.1",
+        "three": "^0.153.0",
         "vue": "^3.3.2",
         "vue-router": "^4.2.0",
         "vuetify": "^3.3.2"
@@ -27,6 +28,7 @@
         "@types/jsdom": "^21.1.1",
         "@types/node": "^18.16.8",
         "@types/plotly.js-dist-min": "^2.3.1",
+        "@types/three": "^0.152.1",
         "@vitejs/plugin-vue": "^4.2.3",
         "@vue/eslint-config-prettier": "^7.1.0",
         "@vue/eslint-config-typescript": "^11.0.3",
