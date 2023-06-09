@@ -1,0 +1,171 @@
+{
+    "name": "sample_pdt",
+    "objects": [
+        {
+            "id": 0,
+            "type": {
+                "distribution": {
+                    "representation": "categorical",
+                    "mass": {
+                        "tetrapod": 0.7,
+                        "reefcone": 0.3
+                    }
+                }
+            },
+            "location": {
+                "distribution": {
+                    "representation": "multivariate-normal",
+                    "mean": [0, 0, -11],
+                    "covariance": [
+                        [0.1, 0.05, 0],
+                        [0, 0.5, 0.01],
+                        [0, 0, 0.001]
+                    ]
+                }
+            },
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1],
+            "material": "concrete"
+        },
+        {
+            "id": 1,
+            "type": {
+                "distribution": {
+                    "representation": "categorical",
+                    "mass": {
+                        "tetrapod": 0.3,
+                        "reefcone": 0.5,
+                        "reefring": 0.1,
+                        "stone": 0.1
+                    }
+                }
+            },
+            "location": {
+                "distribution": {
+                    "representation": "multivariate-normal",
+                    "mean": [3, 0, -11],
+                    "covariance": [
+                        [0.2, 0.05, 0],
+                        [0, 0.5, 0.04],
+                        [0, 0, 0.002]
+                    ]
+                }
+            },
+            "rotation": [0, 0, 10],
+            "scale": [1, 1, 1],
+            "material": "concrete"
+        },
+        {
+            "id": 2,
+            "type": {
+                "distribution": {
+                    "representation": "categorical",
+                    "mass": {
+                        "tetrapod": 0.99,
+                        "reefcone": 0.01
+                    }
+                }
+            },
+            "location": {
+                "distribution": {
+                    "representation": "uniform-continous",
+                    "x-min": 5,
+                    "x-max": 7,
+                    "y-min": -3,
+                    "y-max": -5,
+                    "z-min": -11,
+                    "z-max": -11
+                }
+            },
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1],
+            "material": "concrete"
+        },
+        {
+            "id": 3,
+            "type": {
+                "distribution": {
+                    "representation": "categorical",
+                    "mass": {
+                        "tetrapod": 0.99,
+                        "reefcone": 0.01
+                    }
+                }
+            },
+            "location": {
+                "distribution": {
+                    "representation": "uniform-continous",
+                    "x-min": 5,
+                    "x-max": 7,
+                    "y-min": -3,
+                    "y-max": -5,
+                    "z-min": -11,
+                    "z-max": -11
+                }
+            },
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1],
+            "material": "concrete"
+        },
+        {
+            "id": 4,
+            "type": {
+                "distribution": {
+                    "representation": "categorical",
+                    "mass": {
+                        "stone": 0.5,
+                        "reefring": 0.5
+                    }
+                }
+            },
+            "location": {
+                "distribution": {
+                    "representation": "multivariate-normal",
+                    "mean": [-10, -10, -11],
+                    "covariance": [
+                        [0.1, 0.05, 0],
+                        [0, 0.5, 0.01],
+                        [0, 0, 0.001]
+                    ]
+                }
+            },
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1],
+            "material": {
+                "representation": "categorical",
+                "mass": {
+                    "concrete": 0.5,
+                    "mineral": 0.5
+                }
+            }
+        },
+        {
+            "id": 5,
+            "type": "tetrapod",
+            "location": {
+                "distribution": {
+                    "representation": "multivariate-normal",
+                    "mean": [10, 15, -11],
+                    "covariance": [
+                        [0.1, 0.05, 0],
+                        [0, 0.5, 0.01],
+                        [0, 0, 0.001]
+                    ]
+                }
+            },
+            "rotation": {
+                "roll": 0,
+                "pitch": 0,
+                "yaw": {
+                    "distribution": {
+                        "representation": "von-mises",
+                        "mean": 0.17,
+                        "dispersion": 8
+                    }
+                }
+            },
+            "scale": [1, 1, 1],
+            "material": "concrete"
+        }
+    ]
+}
