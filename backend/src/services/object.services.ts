@@ -16,11 +16,13 @@ const toData = (obj: PDTObjectType): Partial<Plotly.Data> => {
             marker: {
                 color: dataPoints[2],
                 colorscale: "Viridis",
-                size: 5,
+                size: 2,
                 colorbar: {
                     title: "Probability Density",
                 },
             },
+            xaxis: "x",
+            yaxis: "y",
         };
     } else {
         return {};

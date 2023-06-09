@@ -67,7 +67,7 @@ class PDT {
     path: string;
     name: string;
     models: Partial<Plotly.Data>[];
-    PDF?: Partial<Plotly.Data>[];
+    objects: Partial<Plotly.Data>[];
     bottomTexture?: Partial<Plotly.Data>;
     depthMap?: Partial<Plotly.Data>;
     temperature?: Partial<Plotly.Data>;
@@ -77,6 +77,7 @@ class PDT {
         this.path = path;
         this.name = path.split("/")[1];
         this.models = [];
+        this.objects = [];
     }
 
     public async init() {

@@ -9,7 +9,7 @@ app.use(cors());
 
 app.use(bodyParser.json({ limit: "50mb" }));
 
-app.use("/", routes);
+app.use("/api", routes);
 
 const port = 3000;
 app.listen(port, async () => {

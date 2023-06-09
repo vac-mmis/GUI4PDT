@@ -1,15 +1,12 @@
 import { Request, Response } from "express";
+import PDTServices from "../services/pdt.services";
 
-const utilisateurController = {
-    getAllUtilisateurs,
+const pdtController = {
+    getAllPDT,
 };
 
-/**
- * All user reader for GET route
- * @param res :
- *  - Utilisateurs in database + 200 confirmation
- *  - 500 error
- */
-async function getAllUtilisateurs(req: Request, res: Response) {}
+async function getAllPDT(req: Request, res: Response) {
+    res.status(200).json(PDTServices.get()[0]);
+}
 
-export default utilisateurController;
+export default pdtController;

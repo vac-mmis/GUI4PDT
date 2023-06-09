@@ -20,7 +20,6 @@ export default class PDT {
         // }
         this.name = jsonData.name;
         this.objects = [];
-        console.log(jsonData.objects);
         if (jsonData.objects !== undefined) {
             jsonData.objects.forEach((obj: PDTObjectType) => {
                 this.objects.push(OBJServices.toData(obj));

@@ -7,17 +7,10 @@ export const multivariateNormal = (dist: MultivariateNormal) => {
     function randomGauss() {
         const u1 = Math.random();
         const u2 = Math.random();
-
         const z0 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
-
         return z0;
     }
-    console.log(
-        sqrtm([
-            [33, 24],
-            [48, 57],
-        ])
-    );
+
     const invCov: number[][] = sqrtm(dist.covariance);
     let dataPoints: number[][] = [[], [], []];
     for (let index = 0; index < LOCATION_NUM_POINTS; index++) {

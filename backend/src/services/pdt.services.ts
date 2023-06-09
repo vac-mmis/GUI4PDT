@@ -15,6 +15,10 @@ const init = async () => {
     });
 };
 
+const get = () => {
+    return PDTs;
+};
 export default {
     init,
+    get,
 };
