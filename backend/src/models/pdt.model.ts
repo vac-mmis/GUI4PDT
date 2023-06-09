@@ -1,11 +1,12 @@
 import Plotly from "plotly.js-dist-min";
 import fs from "fs";
-import { ElementType } from "@/types/element.types";
+import OBJServices from "../services/object.services";
+import type { PDTObjectType } from "../types/object.types";
 
 export default class PDT {
     name: string;
     models?: Partial<Plotly.Data>[];
-    objects?: Partial<Plotly.Data>[];
+    objects: Partial<Plotly.Data>[];
     bottomTexture?: Partial<Plotly.Data>;
     depthMap?: Partial<Plotly.Data>;
     temperature?: Partial<Plotly.Data>;
@@ -18,10 +19,11 @@ export default class PDT {
         //     throw new Error("JSON Data undefined");
         // }
         this.name = jsonData.name;
+        this.objects = [];
         console.log(jsonData.objects);
         if (jsonData.objects !== undefined) {
-            jsonData.objects.forEach((object: ElementType) => {
-                console.log(object);
+            jsonData.objects.forEach((obj: PDTObjectType) => {
+                this.objects.push(OBJServices.toData(obj));
             });
         } else {
             console.log("here");
