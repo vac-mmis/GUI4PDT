@@ -1,8 +1,8 @@
-import type { MultivariateNormal } from "@/types/dist.types";
+import type { MultivariateNormal, UniformContinuous } from "@/types/dist.types";
 import { abs } from "mathjs";
 import { sqrtm, add, multiply, mean } from "mathjs";
 
-const LOCATION_NUM_POINTS = 100;
+const LOCATION_NUM_POINTS = 1000;
 
 export const multivariateNormal = (dist: MultivariateNormal) => {
     function randomGauss() {
@@ -20,16 +20,32 @@ export const multivariateNormal = (dist: MultivariateNormal) => {
         dataPoints[0].push(Y[0]);
         dataPoints[1].push(Y[1]);
         dataPoints[2].push(Y[2]);
+        dataPoints[3].push(0);
     }
 
     const meanPoint = [mean(dataPoints[0]), mean(dataPoints[1]), mean(dataPoints[2])];
 
-    dataPoints[3] = dataPoints[0].map((_, index) => {
-        const x = abs((dataPoints[0][index] - meanPoint[0]) / meanPoint[0]);
-        const y = abs((dataPoints[1][index] - meanPoint[1]) / meanPoint[1]);
-        const z = abs((dataPoints[2][index] - meanPoint[2]) / meanPoint[2]);
+    dataPoints[3] = dataPoints[3].map((_, index) => {
+        const x = 1 - abs((dataPoints[0][index] - meanPoint[0]) / meanPoint[0]);
+        const y = 1 - abs((dataPoints[1][index] - meanPoint[1]) / meanPoint[1]);
+        const z = 1 - abs((dataPoints[2][index] - meanPoint[2]) / meanPoint[2]);
         return (x + y + z) / 3;
     });
 
     return dataPoints;
+};
+
+export const uniformContinuous = (dist: UniformContinuous) => {
+    const xMin = dist["x-min"];
+    const xMax = dist["x-max"];
+    const yMin = dist["y-min"];
+    const yMax = dist["y-max"];
+    const zMin = dist["z-min"];
+    const zMax = dist["z-max"];
+
+    return [
+        [xMin, xMax, xMax, xMin, xMin, xMax, xMax, xMin],
+        [yMin, yMin, yMax, yMax, yMin, yMin, yMax, yMax],
+        [zMin, zMin, zMin, zMin, zMax, zMax, zMax, zMax],
+    ];
 };

@@ -33,12 +33,6 @@ const init = async () => {
 
             // Set up the layout
             const layout: Partial<Plotly.Layout> = {
-                margin: {
-                    l: 0,
-                    r: 0,
-                    b: 0,
-                    t: 0,
-                },
                 scene: {
                     aspectmode: "data",
                     aspectratio: { x: 1, y: 1, z: 1 },
@@ -46,7 +40,6 @@ const init = async () => {
                     yaxis: { title: "Y Axis" },
                     zaxis: { title: "Z Axis" },
                 },
-                showlegend: true, // Show a single legend
             };
 
             // Create the plot
