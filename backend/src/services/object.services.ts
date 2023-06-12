@@ -7,6 +7,7 @@ const toData = (obj: PDTObjectType): Partial<Plotly.Data> => {
     const dist = obj.location.distribution;
     if (dist.representation === "multivariate-normal") {
         const dataPoints = multivariateNormal(dist);
+
         return {
             x: dataPoints[0],
             y: dataPoints[1],
@@ -14,7 +15,7 @@ const toData = (obj: PDTObjectType): Partial<Plotly.Data> => {
             mode: "markers",
             type: "scatter3d",
             marker: {
-                color: dataPoints[2],
+                color: dataPoints[3],
                 colorscale: "Viridis",
                 size: 2,
                 colorbar: {
