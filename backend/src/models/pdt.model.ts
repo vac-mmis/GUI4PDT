@@ -1,16 +1,16 @@
 import Plotly from "plotly.js-dist-min";
 import fs from "fs";
 import path from "path";
-import OBJServices from "../services/object.services";
-import type { PDTObjectType } from "../types/object.types";
+import { PDTObject } from "../models/object.model";
 import { loadModels } from "../services/models.services";
+import { ObjectJSONType } from "../types/object.types";
 
 const MODELPATH = `models`;
 export default class PDT {
     name: string;
     PDTDir: string;
     models?: Partial<Plotly.Data>[];
-    objects: Partial<Plotly.RootOrData>[];
+    objects: PDTObject[];
     bottomTexture?: Partial<Plotly.Data>;
     depthMap?: Partial<Plotly.Data>;
     temperature?: Partial<Plotly.Data>;
@@ -27,8 +27,8 @@ export default class PDT {
         this.name = jsonData.name;
         this.objects = [];
         if (jsonData.objects !== undefined) {
-            jsonData.objects.forEach((obj: PDTObjectType) => {
-                this.objects.push(OBJServices.toData(obj));
+            jsonData.objects.forEach((obj: ObjectJSONType) => {
+                this.objects.push(new PDTObject(obj));
             });
         } else {
             console.error("jsonData has no objects");

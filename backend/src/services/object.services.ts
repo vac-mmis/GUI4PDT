@@ -1,13 +1,27 @@
-import type { PDTObjectType } from "../types/object.types";
+import { ELEMENTS, ElementJSONType, LocationJSONType, ObjectJSONType } from "@/types/object.types";
 import { multivariateNormal, uniformContinuous } from "../services/dist.services";
+import { Data } from "plotly.js-dist-min";
 
-import Plotly from "plotly.js-dist-min";
+const typeToData = (type: ElementJSONType): Partial<Data> => {
+    if (typeof type === "string") {
+        return {
+            values: [100],
+            labels: [type],
+            type: "pie",
+        };
+    } else {
+        return {
+            values: Object.values(type.distribution.mass),
+            labels: Object.keys(type.distribution.mass),
+            type: "pie",
+        };
+    }
+};
 
-const toData = (obj: PDTObjectType): any => {
-    const dist = obj.location.distribution;
+const locationToData = (location: LocationJSONType): any => {
+    const dist = location.distribution;
     if (dist.representation === "multivariate-normal") {
         const dataPoints = multivariateNormal(dist);
-
         return {
             x: dataPoints[0],
             y: dataPoints[1],
@@ -49,5 +63,6 @@ const toData = (obj: PDTObjectType): any => {
 };
 
 export default {
-    toData,
+    locationToData,
+    typeToData,
 };

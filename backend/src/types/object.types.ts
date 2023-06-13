@@ -1,17 +1,24 @@
-import type { MultivariateNormal, UniformContinuous, Categorical, VonMises } from "./dist.types";
+import type {
+    MultivariateNormal,
+    UniformContinuous,
+    Categorical,
+    VonMises,
+} from "../types/dist.types";
 
-const ELEMENTS = ["tetrapod", "reefcone", "reefring", "stone"] as const;
+export const ELEMENTS = ["tetrapod", "reefcone", "reefring", "stone"] as const;
 const MATERIALS = ["concrete"] as const;
 
-type ElementType =
-    | { distribution: Categorical<(typeof MATERIALS)[number]> }
-    | (typeof ELEMENTS)[number];
+export type ElementJSONType =
+    | (typeof ELEMENTS)[number]
+    | {
+          distribution: Categorical<(typeof ELEMENTS)[number]>;
+      };
 
-type LocationType = {
+export type LocationJSONType = {
     distribution: MultivariateNormal | UniformContinuous;
 };
 
-type RotationType =
+export type RotationJSONType =
     | {
           roll: number;
           pitch: number;
@@ -21,11 +28,11 @@ type RotationType =
       }
     | [number, number, number];
 
-export type PDTObjectType = {
-    id: number;
-    type: ElementType;
-    location: LocationType;
-    rotation: RotationType;
-    scale: [number, number, number];
-    material: Categorical<(typeof MATERIALS)[number]>;
+export type MaterialJSONType = Categorical<(typeof MATERIALS)[number]>;
+
+export type ObjectJSONType = {
+    type: ElementJSONType;
+    location: LocationJSONType;
+    rotation: RotationJSONType;
+    material: MaterialJSONType;
 };

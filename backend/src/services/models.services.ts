@@ -1,5 +1,5 @@
 import Plotly from "plotly.js-dist-min";
-import { OBJLoader } from "./OBJLoader";
+import { OBJLoader } from "./OBJLoader/OBJLoader";
 import path from "path";
 import fs from "fs";
 
