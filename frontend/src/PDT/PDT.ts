@@ -7,7 +7,7 @@ const modelToData = (objModel: any): Partial<Plotly.Data> | undefined => {
     const geometry = objModel.children[0].geometry;
     const positions = geometry.getAttribute("position").array;
     if (positions.length % 3 !== 0) {
-        console.log("Error: Invalid position attribute length");
+        console.error("Error: Invalid position attribute length");
         return undefined;
     }
 
@@ -49,7 +49,6 @@ const loadModels = (path: string): Promise<Partial<Plotly.Data>[]> => {
             (objModel: any) => {
                 const model = modelToData(objModel);
                 if (model) {
-                    console.log(model);
                     resolve([model]);
                 } else {
                     reject(new Error("Error converting model to data"));

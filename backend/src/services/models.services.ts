@@ -1,11 +1,16 @@
-// TODO : patch broken obj conversion in backend
+import Plotly from "plotly.js-dist-min";
+import { OBJLoader } from "./OBJLoader";
+import path from "path";
+import fs from "fs";
 
-const modelToData = (objModel: any): Partial<Plotly.Data> | undefined => {
+const loader = new OBJLoader();
+
+const modelToData = (objModel: any): Partial<Plotly.Data> => {
     const geometry = objModel.children[0].geometry;
     const positions = geometry.getAttribute("position").array;
     if (positions.length % 3 !== 0) {
-        console.log("Error: Invalid position attribute length");
-        return undefined;
+        console.error("Error: Invalid position attribute length");
+        return {} as Partial<Plotly.Data>;
     }
 
     const vertices = [];
@@ -39,27 +44,30 @@ const modelToData = (objModel: any): Partial<Plotly.Data> | undefined => {
     return model;
 };
 
-const loadModels = (path: string): Promise<Partial<Plotly.Data>[]> => {
-    return new Promise(async (resolve, reject) => {
-        const OBJLoader = await import("three/examples/jsm/loaders/OBJLoader").then(
-            (module) => module.OBJLoader
-        );
-        const loader = new OBJLoader();
-        loader.load(
-            path,
-            (objModel: any) => {
-                const model = modelToData(objModel);
-                if (model) {
-                    console.log(model);
-                    resolve([model]);
-                } else {
-                    reject(new Error("Error converting model to data"));
-                }
-            },
-            undefined,
-            (error: any) => {
-                reject(new Error(`Failed to load model: ${error.message}`));
+export const loadModels = async (
+    baseDir: string,
+    paths: string[]
+): Promise<Partial<Plotly.Data>[]> => {
+    const promises = paths.map((filePath: string) => {
+        const url = path.normalize(path.join(baseDir, filePath));
+        return new Promise<Partial<Plotly.Data>>((resolve, reject) => {
+            try {
+                const data = fs.readFileSync(url, "utf-8");
+                const object = loader.parse(data);
+                const trace = modelToData(object);
+                resolve(trace);
+            } catch (error) {
+                console.error(`Failed to load OBJ file: ${url}`);
+                console.error(error);
+                resolve({} as Partial<Plotly.Data>); // Resolve with null if there's an error
             }
-        );
+        });
     });
+    try {
+        const data = await Promise.all(promises);
+        return data;
+    } catch (error) {
+        console.error("An error occurred while loading models:", error);
+        return [];
+    }
 };

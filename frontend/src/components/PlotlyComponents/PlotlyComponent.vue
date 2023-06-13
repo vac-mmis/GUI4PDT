@@ -13,21 +13,26 @@ import PDT from "@/PDT/PDT";
 const plotContainer = ref<HTMLDivElement | null>(null);
 let myPDT = {} as PDT;
 
-const getPDT = async () => {};
 const init = async () => {
-    //const PDT1 = new PDT("./data/PDT1/models/Betonring.obj");
-    //await PDT1.init();
+    const PDT1 = new PDT("./data/PDT1/models/Betonring.obj");
+    await PDT1.init();
+
     axios
         .get("http://localhost:3000/api")
         .then((res) => {
             myPDT = res.data;
+            myPDT.models.forEach((model: any) => {
+                model.i = Object.values(model.i);
+                model.j = Object.values(model.j);
+                model.k = Object.values(model.k);
+            });
         })
         .then(() => {
-            const trace: Partial<Plotly.Data>[] = myPDT.objects;
-
+            let trace: Partial<Plotly.Data>[] = myPDT.objects;
+            trace = trace.concat(myPDT.models);
             plotContainer.value?.focus();
             if (plotContainer.value === null) {
-                console.log("Error: Invalid container");
+                console.error("Error: Invalid container");
                 return;
             }
 
@@ -41,11 +46,10 @@ const init = async () => {
                     zaxis: { title: "Z Axis" },
                 },
             };
-
             // Create the plot
             Plotly.newPlot(plotContainer.value, trace, layout);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.error(err));
 };
 
 onMounted(() => {

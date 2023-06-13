@@ -3,7 +3,7 @@ import { multivariateNormal, uniformContinuous } from "../services/dist.services
 
 import Plotly from "plotly.js-dist-min";
 
-const toData = (obj: PDTObjectType): Partial<Plotly.RootOrData> => {
+const toData = (obj: PDTObjectType): any => {
     const dist = obj.location.distribution;
     if (dist.representation === "multivariate-normal") {
         const dataPoints = multivariateNormal(dist);
