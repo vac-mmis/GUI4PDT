@@ -1,5 +1,5 @@
 <template>
-    <v-sheet class="d-flexjustify-center align-center">
+    <v-sheet class="d-flex justify-center align-center">
         <div class="h-100 w-100" ref="plotContainer" />
     </v-sheet>
 </template>
@@ -17,24 +17,19 @@ const plotContainer = ref<HTMLDivElement | null>(null);
 let myPDT = {} as PDT;
 
 const plot3D = async () => {
-    const locations: Partial<Plotly.Data>[] = myPDT.objects.map((obj) => {
-        return obj.location;
-    });
-    const objects: Partial<Plotly.Data>[] = myPDT.objects
-        .filter((obj) => obj.obj.length > 0)
+    const plotData: Partial<Plotly.Data>[] = myPDT.objects
         .map((obj) => {
-            return obj.obj.map((model: any) => {
+            const location = obj.location;
+            const objects = obj.obj.map((model: any) => {
                 model.i = Object.values(model.i);
                 model.j = Object.values(model.j);
                 model.k = Object.values(model.k);
                 return model;
             });
+            return [location, ...objects];
         })
-        .flat(1);
+        .flat();
 
-    console.log(myPDT.objects);
-
-    const trace: Partial<Plotly.Data>[] = [...locations, ...objects];
     plotContainer.value?.focus();
     if (plotContainer.value === null) {
         console.error("Error: Invalid container");
@@ -51,13 +46,13 @@ const plot3D = async () => {
             zaxis: { title: "Z Axis" },
         },
     };
-
     const config = { responsive: true };
+
     // Create the plot
-    const plot = Plotly.newPlot(plotContainer.value, trace, layout, config);
+    const plot = Plotly.newPlot(plotContainer.value, plotData, layout, config);
     (await plot).on("plotly_click", (eventData: Plotly.PlotSelectionEvent) => {
-        const pointIndex = eventData.points[0].curveNumber;
-        const clickedObject = myPDT.objects[pointIndex];
+        const objectID = eventData.points[0].data.customdata[0];
+        const clickedObject = myPDT.objects.find((obj) => obj.id === objectID);
         emits("object-clicked", clickedObject);
     });
 };

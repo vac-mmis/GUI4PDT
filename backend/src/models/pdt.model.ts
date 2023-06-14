@@ -1,7 +1,7 @@
 import { PlotData } from "plotly.js-dist-min";
 import fs from "fs";
 import path from "path";
-import { PDTObject } from "../models/object.model";
+import PDTObject from "../models/object.model";
 import { loadModels } from "../services/models.services";
 import { ObjectJSONType } from "../types/object.types";
 

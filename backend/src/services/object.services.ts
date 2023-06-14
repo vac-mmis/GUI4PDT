@@ -1,4 +1,4 @@
-import { ElementJSONType, LocationJSONType, ObjectJSONType } from "@/types/object.types";
+import { ObjectJSONType } from "@/types/object.types";
 import { multivariateNormal, uniformContinuous } from "../services/dist.services";
 import { getMean } from "../services/dist.services";
 import { PlotData } from "plotly.js-dist-min";
@@ -15,6 +15,7 @@ const objToData = (obj: ObjectJSONType, models?: Partial<PlotData>[]): Partial<P
         res.j = model.j;
         res.k = model.k;
         res.opacity = p;
+        res.customdata = [obj.id];
         return res;
     };
 
@@ -49,24 +50,26 @@ const objToData = (obj: ObjectJSONType, models?: Partial<PlotData>[]): Partial<P
     }
 };
 
-const typeToData = (type: ElementJSONType): Partial<PlotData> => {
-    if (typeof type === "string") {
+const typeToData = (obj: ObjectJSONType): Partial<PlotData> => {
+    if (typeof obj.type === "string") {
         return {
             values: [100],
-            labels: [type],
+            labels: [obj.type],
             type: "pie",
+            customdata: [obj.id],
         };
     } else {
         return {
-            values: Object.values(type.distribution.mass),
-            labels: Object.keys(type.distribution.mass),
+            values: Object.values(obj.type.distribution.mass),
+            labels: Object.keys(obj.type.distribution.mass),
             type: "pie",
+            customdata: [obj.id],
         };
     }
 };
 
-const locationToData = (location: LocationJSONType): any => {
-    const dist = location.distribution;
+const locationToData = (obj: ObjectJSONType): any => {
+    const dist = obj.location.distribution;
     if (dist.representation === "multivariate-normal") {
         const dataPoints = multivariateNormal(dist);
         return {
@@ -81,10 +84,9 @@ const locationToData = (location: LocationJSONType): any => {
                 colorscale: "Viridis",
                 size: 2,
             },
-            cmin: 0,
-            cmax: 1,
             xaxis: "x",
             yaxis: "y",
+            customdata: [obj.id],
         };
     } else {
         const dataPoints = uniformContinuous(dist);
@@ -95,10 +97,9 @@ const locationToData = (location: LocationJSONType): any => {
             i: [7, 0, 0, 0, 4, 4, 6, 6, 4, 0, 3, 2],
             j: [3, 4, 1, 2, 5, 6, 5, 2, 0, 1, 6, 3],
             k: [0, 7, 2, 3, 6, 7, 1, 1, 5, 5, 7, 6],
+            customdata: [obj.id],
             type: "mesh3d",
             opacity: 0.5,
-            cmin: 0,
-            cmax: 1,
             flatshading: true,
             intensity: [
                 0, 0.14285714285714285, 0.2857142857142857, 0.42857142857142855, 0.5714285714285714,

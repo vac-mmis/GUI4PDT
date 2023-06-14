@@ -5,20 +5,20 @@ import type {
     VonMises,
 } from "../types/dist.types";
 
-export const ELEMENTS = ["tetrapod", "reefcone", "reefring", "stone"] as const;
+const ELEMENTS = ["tetrapod", "reefcone", "reefring", "stone"] as const;
 const MATERIALS = ["concrete"] as const;
 
-export type ElementJSONType =
+type ElementJSONType =
     | (typeof ELEMENTS)[number]
     | {
           distribution: Categorical<(typeof ELEMENTS)[number]>;
       };
 
-export type LocationJSONType = {
+type LocationJSONType = {
     distribution: MultivariateNormal | UniformContinuous;
 };
 
-export type RotationJSONType =
+type RotationJSONType =
     | {
           roll: number;
           pitch: number;
@@ -28,9 +28,10 @@ export type RotationJSONType =
       }
     | [number, number, number];
 
-export type MaterialJSONType = Categorical<(typeof MATERIALS)[number]>;
+type MaterialJSONType = Categorical<(typeof MATERIALS)[number]>;
 
 export type ObjectJSONType = {
+    id: number;
     type: ElementJSONType;
     location: LocationJSONType;
     rotation: RotationJSONType;

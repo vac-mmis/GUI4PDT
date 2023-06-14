@@ -10,6 +10,7 @@ export interface PDTObject {
 }
 
 export interface PDT {
+    id: number;
     name: string;
     PDTDir: string;
     models: Partial<PlotData>[];
