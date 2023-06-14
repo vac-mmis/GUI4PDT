@@ -1,8 +1,28 @@
-import { ELEMENTS, ElementJSONType, LocationJSONType, ObjectJSONType } from "@/types/object.types";
+import { ElementJSONType, LocationJSONType, ObjectJSONType } from "@/types/object.types";
 import { multivariateNormal, uniformContinuous } from "../services/dist.services";
-import { Data } from "plotly.js-dist-min";
+import { getMean } from "../services/dist.services";
+import { PlotData } from "plotly.js-dist-min";
 
-const typeToData = (type: ElementJSONType): Partial<Data> => {
+const objToData = (obj: ObjectJSONType, models?: Partial<PlotData>[]): Partial<PlotData>[] => {
+    if (models === undefined) {
+        return [];
+    }
+    const loc = getMean(obj.location.distribution);
+    const res = models.map((model) => {
+        const res = {} as Partial<PlotData>;
+        res.x = (model.x as number[]).map((x) => x + loc[0]);
+        res.y = (model.y as number[]).map((y) => y + loc[1]);
+        res.z = (model.z as number[]).map((z) => z + loc[2]);
+        res.type = model.type;
+        res.i = model.i;
+        res.j = model.j;
+        res.k = model.k;
+        return res;
+    });
+    return res;
+};
+
+const typeToData = (type: ElementJSONType): Partial<PlotData> => {
     if (typeof type === "string") {
         return {
             values: [100],
@@ -65,4 +85,5 @@ const locationToData = (location: LocationJSONType): any => {
 export default {
     locationToData,
     typeToData,
+    objToData,
 };

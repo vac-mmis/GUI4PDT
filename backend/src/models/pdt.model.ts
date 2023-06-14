@@ -1,4 +1,4 @@
-import Plotly from "plotly.js-dist-min";
+import { PlotData } from "plotly.js-dist-min";
 import fs from "fs";
 import path from "path";
 import { PDTObject } from "../models/object.model";
@@ -6,33 +6,28 @@ import { loadModels } from "../services/models.services";
 import { ObjectJSONType } from "../types/object.types";
 
 const MODELPATH = `models`;
+
 export default class PDT {
     name: string;
+    jsonData?: any;
     PDTDir: string;
-    models?: Partial<Plotly.Data>[];
+    models?: Partial<PlotData>[];
     objects: PDTObject[];
-    bottomTexture?: Partial<Plotly.Data>;
-    depthMap?: Partial<Plotly.Data>;
-    temperature?: Partial<Plotly.Data>;
-    currents?: Partial<Plotly.Data>;
+    bottomTexture?: Partial<PlotData>;
+    depthMap?: Partial<PlotData>;
+    temperature?: Partial<PlotData>;
+    currents?: Partial<PlotData>;
 
     constructor(PDTFile: string) {
         this.PDTDir = path.dirname(path.resolve("wwwroot", "data", PDTFile)).normalize();
         this.name = path.basename(PDTFile, ".json");
-        const jsonData = JSON.parse(fs.readFileSync(`${this.PDTDir}/${this.name}.json`, "utf-8"));
-        if (jsonData === undefined) {
+        this.jsonData = JSON.parse(fs.readFileSync(`${this.PDTDir}/${this.name}.json`, "utf-8"));
+        if (this.jsonData === undefined) {
             throw new Error("JSON Data undefined");
         }
 
-        this.name = jsonData.name;
+        this.name = this.jsonData.name;
         this.objects = [];
-        if (jsonData.objects !== undefined) {
-            jsonData.objects.forEach((obj: ObjectJSONType) => {
-                this.objects.push(new PDTObject(obj));
-            });
-        } else {
-            console.error("jsonData has no objects");
-        }
     }
 
     public async init() {
@@ -44,5 +39,12 @@ export default class PDT {
             .catch((error) => {
                 console.error(error);
             });
+        if (this.jsonData.objects !== undefined) {
+            this.jsonData.objects.forEach((obj: ObjectJSONType) => {
+                this.objects.push(new PDTObject(obj, this.models));
+            });
+        } else {
+            console.error("jsonData has no objects");
+        }
     }
 }

@@ -1,20 +1,21 @@
-import type { Data } from "plotly.js-dist-min";
+import type { PlotData } from "plotly.js-dist-min";
 
 export interface PDTObject {
     id: number;
-    type: Data;
-    location: Partial<Data>;
-    rotation: Data;
-    material: Data;
+    type: PlotData;
+    obj: PlotData[];
+    location: Partial<PlotData>;
+    rotation: PlotData;
+    material: PlotData;
 }
 
 export interface PDT {
     name: string;
     PDTDir: string;
-    models: Partial<Plotly.Data>[];
+    models: Partial<PlotData>[];
     objects: PDTObject[];
-    bottomTexture?: Partial<Plotly.Data>;
-    depthMap?: Partial<Plotly.Data>;
-    temperature?: Partial<Plotly.Data>;
-    currents?: Partial<Plotly.Data>;
+    bottomTexture?: Partial<PlotData>;
+    depthMap?: Partial<PlotData>;
+    temperature?: Partial<PlotData>;
+    currents?: Partial<PlotData>;
 }

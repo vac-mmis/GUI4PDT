@@ -1,6 +1,5 @@
 import type { MultivariateNormal, UniformContinuous } from "@/types/dist.types";
-import { abs } from "mathjs";
-import { sqrtm, add, multiply, mean } from "mathjs";
+import { abs, sqrtm, add, multiply, mean } from "mathjs";
 
 const LOCATION_NUM_POINTS = 1000;
 
@@ -48,4 +47,16 @@ export const uniformContinuous = (dist: UniformContinuous) => {
         [yMin, yMin, yMax, yMax, yMin, yMin, yMax, yMax],
         [zMin, zMin, zMin, zMin, zMax, zMax, zMax, zMax],
     ];
+};
+
+export const getMean = (dist: MultivariateNormal | UniformContinuous): number[] => {
+    if (dist.representation === "multivariate-normal") {
+        return dist.mean;
+    } else {
+        return [
+            mean([dist["x-min"], dist["x-max"]]),
+            mean([dist["y-min"], dist["y-max"]]),
+            mean([dist["z-min"], dist["z-max"]]),
+        ];
+    }
 };

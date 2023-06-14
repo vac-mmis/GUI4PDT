@@ -17,9 +17,19 @@ const plotContainer = ref<HTMLDivElement | null>(null);
 let myPDT = {} as PDT;
 
 const plot3D = async () => {
-    let trace: Partial<Plotly.Data>[] = myPDT.objects.map((obj) => {
+    const locations: Partial<Plotly.Data>[] = myPDT.objects.map((obj) => {
         return obj.location;
     });
+    const objects: Partial<Plotly.Data>[] = myPDT.objects.map((obj) => {
+        return obj.obj.map((model: any) => {
+            model.i = Object.values(model.i);
+            model.j = Object.values(model.j);
+            model.k = Object.values(model.k);
+            return model;
+        })[0];
+    });
+
+    const trace: Partial<Plotly.Data>[] = [...locations, ...objects];
     plotContainer.value?.focus();
     if (plotContainer.value === null) {
         console.error("Error: Invalid container");

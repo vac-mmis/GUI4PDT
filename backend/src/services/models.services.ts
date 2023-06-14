@@ -1,16 +1,17 @@
-import Plotly from "plotly.js-dist-min";
+import { PlotData } from "plotly.js-dist-min";
 import { OBJLoader } from "./OBJLoader/OBJLoader";
 import path from "path";
 import fs from "fs";
 
 const loader = new OBJLoader();
 
-const modelToData = (objModel: any): Partial<Plotly.Data> => {
+const modelToData = (objModel: any): Partial<PlotData> => {
     const geometry = objModel.children[0].geometry;
     const positions = geometry.getAttribute("position").array;
+
     if (positions.length % 3 !== 0) {
         console.error("Error: Invalid position attribute length");
-        return {} as Partial<Plotly.Data>;
+        return {} as Partial<PlotData>;
     }
 
     const vertices = [];
@@ -32,7 +33,7 @@ const modelToData = (objModel: any): Partial<Plotly.Data> => {
     }
 
     // Create the trace
-    const model: Partial<Plotly.Data> = {
+    const model: Partial<PlotData> = {
         type: "mesh3d",
         x: vertices.map((vertex: any) => vertex.x),
         y: vertices.map((vertex: any) => vertex.y),
@@ -47,10 +48,10 @@ const modelToData = (objModel: any): Partial<Plotly.Data> => {
 export const loadModels = async (
     baseDir: string,
     paths: string[]
-): Promise<Partial<Plotly.Data>[]> => {
+): Promise<Partial<PlotData>[]> => {
     const promises = paths.map((filePath: string) => {
         const url = path.normalize(path.join(baseDir, filePath));
-        return new Promise<Partial<Plotly.Data>>((resolve, reject) => {
+        return new Promise<Partial<PlotData>>((resolve, reject) => {
             try {
                 const data = fs.readFileSync(url, "utf-8");
                 const object = loader.parse(data);
@@ -59,7 +60,7 @@ export const loadModels = async (
             } catch (error) {
                 console.error(`Failed to load OBJ file: ${url}`);
                 console.error(error);
-                resolve({} as Partial<Plotly.Data>); // Resolve with null if there's an error
+                resolve({} as Partial<PlotData>); // Resolve with null if there's an error
             }
         });
     });
