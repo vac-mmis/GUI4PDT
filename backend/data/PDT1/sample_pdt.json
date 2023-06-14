@@ -8,7 +8,7 @@
                     "representation": "categorical",
                     "mass": {
                         "tetrapod": 0.7,
-                        "reefcone": 0.3
+                        "reefkegel": 0.3
                     }
                 }
             },
@@ -34,8 +34,8 @@
                     "representation": "categorical",
                     "mass": {
                         "tetrapod": 0.3,
-                        "reefcone": 0.5,
-                        "reefring": 0.1,
+                        "reefkegel": 0.5,
+                        "betonring": 0.1,
                         "stone": 0.1
                     }
                 }
@@ -62,7 +62,7 @@
                     "representation": "categorical",
                     "mass": {
                         "tetrapod": 0.99,
-                        "reefcone": 0.01
+                        "reefkegel": 0.01
                     }
                 }
             },
@@ -87,18 +87,18 @@
                 "distribution": {
                     "representation": "categorical",
                     "mass": {
-                        "tetrapod": 0.99,
-                        "reefcone": 0.01
+                        "tetrapod": 0.01,
+                        "reefkegel": 0.99
                     }
                 }
             },
             "location": {
                 "distribution": {
                     "representation": "uniform-continous",
-                    "x-min": 5,
-                    "x-max": 7,
-                    "y-min": -3,
-                    "y-max": -5,
+                    "x-min": 3,
+                    "x-max": 5,
+                    "y-min": 3,
+                    "y-max": 5,
                     "z-min": -11,
                     "z-max": -11
                 }
@@ -114,7 +114,7 @@
                     "representation": "categorical",
                     "mass": {
                         "stone": 0.5,
-                        "reefring": 0.5
+                        "betonring": 0.5
                     }
                 }
             },

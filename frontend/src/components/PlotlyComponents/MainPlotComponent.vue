@@ -20,14 +20,19 @@ const plot3D = async () => {
     const locations: Partial<Plotly.Data>[] = myPDT.objects.map((obj) => {
         return obj.location;
     });
-    const objects: Partial<Plotly.Data>[] = myPDT.objects.map((obj) => {
-        return obj.obj.map((model: any) => {
-            model.i = Object.values(model.i);
-            model.j = Object.values(model.j);
-            model.k = Object.values(model.k);
-            return model;
-        })[0];
-    });
+    const objects: Partial<Plotly.Data>[] = myPDT.objects
+        .filter((obj) => obj.obj.length > 0)
+        .map((obj) => {
+            return obj.obj.map((model: any) => {
+                model.i = Object.values(model.i);
+                model.j = Object.values(model.j);
+                model.k = Object.values(model.k);
+                return model;
+            });
+        })
+        .flat(1);
+
+    console.log(myPDT.objects);
 
     const trace: Partial<Plotly.Data>[] = [...locations, ...objects];
     plotContainer.value?.focus();

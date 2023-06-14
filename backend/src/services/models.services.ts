@@ -5,7 +5,7 @@ import fs from "fs";
 
 const loader = new OBJLoader();
 
-const modelToData = (objModel: any): Partial<PlotData> => {
+const modelToData = (modelName: string, objModel: any): Partial<PlotData> => {
     const geometry = objModel.children[0].geometry;
     const positions = geometry.getAttribute("position").array;
 
@@ -34,6 +34,7 @@ const modelToData = (objModel: any): Partial<PlotData> => {
 
     // Create the trace
     const model: Partial<PlotData> = {
+        name: modelName,
         type: "mesh3d",
         x: vertices.map((vertex: any) => vertex.x),
         y: vertices.map((vertex: any) => vertex.y),
@@ -55,7 +56,7 @@ export const loadModels = async (
             try {
                 const data = fs.readFileSync(url, "utf-8");
                 const object = loader.parse(data);
-                const trace = modelToData(object);
+                const trace = modelToData(path.basename(url, ".obj").toLowerCase(), object);
                 resolve(trace);
             } catch (error) {
                 console.error(`Failed to load OBJ file: ${url}`);
