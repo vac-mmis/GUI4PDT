@@ -1,8 +1,8 @@
 <template>
-    <v-card prepend-icon="fa fa-cubes">
-        <template v-slot:title> Details </template>
-        <v-card-text>
-            <div class="h-100 w-75" ref="plotContainer" />
+    <v-card class="h-100" prepend-icon="fa fa-cubes">
+        <template v-slot:title> Details on object {{ props.object.id }}</template>
+        <v-card-text class="d-flex h-100 justify-center">
+            <div class="h-100 w-100" ref="plotContainer" />
         </v-card-text>
     </v-card>
 </template>
@@ -24,7 +24,8 @@ const updatePlot = () => {
     }
 
     const layout = {
-        font: { size: 18 },
+        title: "Type categories",
+        font: { size: 14 },
     };
 
     const config = { responsive: true };
