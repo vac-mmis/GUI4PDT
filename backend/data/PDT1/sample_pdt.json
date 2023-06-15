@@ -24,7 +24,7 @@
                 }
             },
             "rotation": [0, 0, 0],
-            "scale": [1, 1, 1],
+            "scale": [1, 1, 2],
             "material": "concrete"
         },
         {
@@ -78,7 +78,7 @@
                 }
             },
             "rotation": [0, 0, 0],
-            "scale": [1, 1, 1],
+            "scale": [2, 1, 0.5],
             "material": "concrete"
         },
         {
@@ -104,7 +104,7 @@
                 }
             },
             "rotation": [0, 0, 0],
-            "scale": [1, 1, 1],
+            "scale": [3, 0.5, 1.5],
             "material": "concrete"
         },
         {

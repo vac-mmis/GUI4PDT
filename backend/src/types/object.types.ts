@@ -36,4 +36,5 @@ export type ObjectJSONType = {
     location: LocationJSONType;
     rotation: RotationJSONType;
     material: MaterialJSONType;
+    scale: [number, number, number];
 };

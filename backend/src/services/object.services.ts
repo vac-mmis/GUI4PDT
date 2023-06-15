@@ -1,15 +1,14 @@
 import { ObjectJSONType } from "@/types/object.types";
-import { multivariateNormal, uniformContinuous } from "../services/dist.services";
-import { getMean } from "../services/dist.services";
+import { multivariateNormal, uniformContinuous, getMean } from "../services/dist.services";
 import { PlotData } from "plotly.js-dist-min";
 
 const objToData = (obj: ObjectJSONType, models?: Partial<PlotData>[]): Partial<PlotData>[] => {
-    const placeObject = (model: Partial<PlotData>, loc: number[], p: number) => {
+    const placeObject = (model: Partial<PlotData>, loc: number[], scale: number[], p: number) => {
         const res = {} as Partial<PlotData>;
         res.name = model.name;
-        res.x = (model.x as number[]).map((x) => x + loc[0]);
-        res.y = (model.y as number[]).map((y) => y + loc[1]);
-        res.z = (model.z as number[]).map((z) => z + loc[2]);
+        res.x = (model.x as number[]).map((x) => x * scale[0] + loc[0]);
+        res.y = (model.y as number[]).map((y) => y * scale[1] + loc[1]);
+        res.z = (model.z as number[]).map((z) => z * scale[2] + loc[2]);
         res.type = model.type;
         res.i = model.i;
         res.j = model.j;
@@ -30,7 +29,7 @@ const objToData = (obj: ObjectJSONType, models?: Partial<PlotData>[]): Partial<P
         if (model === undefined) {
             return [];
         } else {
-            return [placeObject(model, loc, 1)];
+            return [placeObject(model, loc, obj.scale, 1)];
         }
     } else {
         const dist = obj.type.distribution;
@@ -42,7 +41,7 @@ const objToData = (obj: ObjectJSONType, models?: Partial<PlotData>[]): Partial<P
                 if (model === undefined) {
                     return undefined;
                 } else {
-                    return placeObject(model, loc, type[1]);
+                    return placeObject(model, loc, obj.scale, type[1]);
                 }
             })
             .filter((model): model is Partial<PlotData> => model !== undefined);
