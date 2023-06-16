@@ -1,57 +1,37 @@
 <template>
     <v-card class="h-100" prepend-icon="fa fa-cubes">
         <template v-slot:title> Details on object {{ props.object.id }}</template>
-        <v-card-text class="d-flex h-100 justify-center">
-            <div class="h-100 w-100" ref="plotContainer" />
-        </v-card-text>
+        <v-tabs v-model="tab" color="secondary" align-tabs="center">
+            <v-tab :value="1">Type</v-tab>
+            <v-tab :value="2">Location</v-tab>
+        </v-tabs>
+        <div class="h-auto pa-6">
+            <template v-if="tab === 1">
+                <ObjectPlot :data="object.type" />
+            </template>
+            <template v-else-if="tab === 2">
+                <ObjectPlot :data="object.location" />
+            </template>
+        </div>
     </v-card>
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onMounted } from "vue";
-import { newPlot } from "plotly.js-dist-min";
-import type { Data } from "plotly.js-dist-min";
-
-const plotContainer = ref<HTMLDivElement | null>(null);
-let chart: Promise<Plotly.PlotlyHTMLElement> | null = null;
-
-const updatePlot = () => {
-    const trace: Partial<Data>[] = props.object ? [props.object.type] : [];
-
-    if (plotContainer.value === null) {
-        console.error("Error: Invalid container");
-        return;
-    }
-
-    const layout = {
-        title: "Type categories",
-        font: { size: 14 },
-    };
-
-    const config = { responsive: true };
-
-    if (props.object === undefined) {
-    } else {
-        chart = newPlot(
-            plotContainer.value,
-            trace,
-            layout,
-            config
-        ) as Promise<Plotly.PlotlyHTMLElement>;
-        chart.catch((error) => console.error("Error creating plot:", error));
-    }
-};
+import ObjectPlot from "@/components/PlotlyComponents/ObjectPlot.vue";
+import { onMounted } from "vue";
+import { watch } from "vue";
+import { ref } from "vue";
 
 const props = defineProps(["object"]);
+const object = ref({});
 
-watch(
-    () => props.object,
-    () => {
-        updatePlot();
-    }
-);
+const tab = ref(1);
 
-onMounted(() => {
-    updatePlot();
-});
+const update = () => {
+    object.value = props.object;
+};
+
+watch(() => props.object, update);
+
+onMounted(update);
 </script>

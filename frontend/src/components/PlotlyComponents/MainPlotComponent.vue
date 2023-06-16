@@ -27,10 +27,10 @@ let plot: Promise<Plotly.PlotlyHTMLElement> | null = null;
 const config = { responsive: true };
 const layout: Partial<Plotly.Layout> = {
     margin: {
-        l: 4,
-        r: 4,
-        b: 4,
-        t: 20,
+        l: 2,
+        r: 2,
+        b: 2,
+        t: 24,
     },
     scene: {
         aspectmode: "data",
@@ -39,6 +39,15 @@ const layout: Partial<Plotly.Layout> = {
         yaxis: { title: "Y Axis" },
         zaxis: { title: "Z Axis" },
     },
+};
+
+const sendObject = (eventData: Plotly.PlotSelectionEvent) => {
+    const objectID = eventData.points[0].data.customdata[0];
+    const clickedObject = myPDT.objects.find((obj) => obj.id === objectID);
+    if (clickedObject !== undefined) {
+        clickedObject.location.visible = true;
+        emits("object-clicked", clickedObject);
+    }
 };
 
 const plot3D = async () => {
@@ -70,11 +79,7 @@ const plot3D = async () => {
         config
     ) as Promise<Plotly.PlotlyHTMLElement>;
     plot.catch((error) => console.error("Error creating plot:", error));
-    (await plot).on("plotly_click", (eventData: Plotly.PlotSelectionEvent) => {
-        const objectID = eventData.points[0].data.customdata[0];
-        const clickedObject = myPDT.objects.find((obj) => obj.id === objectID);
-        emits("object-clicked", clickedObject);
-    });
+    (await plot).on("plotly_click", sendObject);
 };
 
 const init = async () => {
