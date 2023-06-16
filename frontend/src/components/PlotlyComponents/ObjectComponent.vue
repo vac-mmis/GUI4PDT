@@ -18,6 +18,7 @@
 
 <script lang="ts" setup>
 import ObjectPlot from "@/components/PlotlyComponents/ObjectPlot.vue";
+import type { ColorBar, Font, PlotMarker } from "plotly.js-dist-min";
 import { onMounted } from "vue";
 import { watch } from "vue";
 import { ref } from "vue";
@@ -28,7 +29,27 @@ const object = ref({});
 const tab = ref(1);
 
 const update = () => {
-    object.value = props.object;
+    let obj = props.object;
+    obj.location.visible = true;
+    if (obj.location.marker) {
+        const marker = obj.location.marker as PlotMarker;
+        marker.showscale = true;
+        marker.colorbar = {
+            y: -0.25,
+            orientation: "h",
+            yanchor: "bottom",
+            title: "Location Density",
+            titleside: "bottom",
+            titlefont: {
+                size: 10,
+            } as Font,
+            thickness: 20, // Adjust the thickness of the color scale bar
+            xpad: 10, // Add padding between the color scale bar and the plot
+            ypad: 0, // Set the y padding of the color scale bar to 0
+        } as Partial<ColorBar>;
+        obj.location.marker = marker;
+    }
+    object.value = obj;
 };
 
 watch(() => props.object, update);

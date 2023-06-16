@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, watchEffect } from "vue";
 import axios from "axios";
-import Plotly from "plotly.js-dist-min";
+import { type PlotlyHTMLElement, type PlotMarker, newPlot, react } from "plotly.js-dist-min";
 import type { PDT } from "./pdt.types";
 
 const emits = defineEmits(["object-clicked"]);
@@ -23,7 +23,7 @@ let showLocation = props.showLocation;
 let myPDT = {} as PDT;
 
 const plotContainer = ref<HTMLDivElement | null>(null);
-let plot: Promise<Plotly.PlotlyHTMLElement> | null = null;
+let plot: Promise<PlotlyHTMLElement> | null = null;
 const config = { responsive: true };
 const layout: Partial<Plotly.Layout> = {
     margin: {
@@ -45,7 +45,6 @@ const sendObject = (eventData: Plotly.PlotSelectionEvent) => {
     const objectID = eventData.points[0].data.customdata[0];
     const clickedObject = myPDT.objects.find((obj) => obj.id === objectID);
     if (clickedObject !== undefined) {
-        clickedObject.location.visible = true;
         emits("object-clicked", clickedObject);
     }
 };
@@ -72,12 +71,7 @@ const plot3D = async () => {
     }
 
     // Create the plot
-    plot = Plotly.newPlot(
-        plotContainer.value,
-        plotData,
-        layout,
-        config
-    ) as Promise<Plotly.PlotlyHTMLElement>;
+    plot = newPlot(plotContainer.value, plotData, layout, config) as Promise<PlotlyHTMLElement>;
     plot.catch((error) => console.error("Error creating plot:", error));
     (await plot).on("plotly_click", sendObject);
 };
@@ -103,12 +97,18 @@ watchEffect(async () => {
         const plotData = await plot;
         const updatedData = myPDT.objects
             .map((obj) => {
-                const location = obj.location;
+                let location = obj.location;
                 location.visible = showLocation;
+                if (location.marker) {
+                    let marker = location.marker as PlotMarker;
+                    marker.colorbar = {};
+                    marker.showscale = false;
+                    location.marker = marker;
+                }
                 return [location, ...obj.obj];
             })
             .flat();
-        plot = Plotly.react(plotData, updatedData, layout);
+        plot = react(plotData, updatedData, layout);
     }
 });
 

@@ -82,6 +82,7 @@ const locationToData = (obj: ObjectJSONType): any => {
                 color: dataPoints[3],
                 colorscale: "Viridis",
                 size: 2,
+                showscale: false,
             },
             xaxis: "x",
             yaxis: "y",
@@ -100,11 +101,9 @@ const locationToData = (obj: ObjectJSONType): any => {
             type: "mesh3d",
             opacity: 0.5,
             flatshading: true,
-            intensity: [
-                0, 0.14285714285714285, 0.2857142857142857, 0.42857142857142855, 0.5714285714285714,
-                0.7142857142857143, 0.8571428571428571, 1,
-            ],
+            intensity: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
             colorscale: "Viridis",
+            showscale: false,
         };
     }
 };

@@ -1,5 +1,5 @@
 import type { MultivariateNormal, UniformContinuous } from "@/types/dist.types";
-import { abs, sqrtm, add, multiply, mean } from "mathjs";
+import { sqrtm, add, multiply, mean } from "mathjs";
 
 const LOCATION_NUM_POINTS = 1000;
 
@@ -19,17 +19,17 @@ export const multivariateNormal = (dist: MultivariateNormal) => {
         dataPoints[0].push(Y[0]);
         dataPoints[1].push(Y[1]);
         dataPoints[2].push(Y[2]);
-        dataPoints[3].push(0);
+
+        const distance = Math.sqrt(
+            Math.pow(Y[0] - dist.mean[0], 2) +
+                Math.pow(Y[1] - dist.mean[1], 2) +
+                Math.pow(Y[2] - dist.mean[2], 2)
+        );
+        dataPoints[3].push(distance);
     }
 
-    const meanPoint = [mean(dataPoints[0]), mean(dataPoints[1]), mean(dataPoints[2])];
-
-    dataPoints[3] = dataPoints[3].map((_, index) => {
-        const x = 1 - abs((dataPoints[0][index] - meanPoint[0]) / meanPoint[0]);
-        const y = 1 - abs((dataPoints[1][index] - meanPoint[1]) / meanPoint[1]);
-        const z = 1 - abs((dataPoints[2][index] - meanPoint[2]) / meanPoint[2]);
-        return (x + y + z) / 3;
-    });
+    const maxDistance = Math.max(...dataPoints[3]);
+    dataPoints[3] = dataPoints[3].map((distance) => 1 - distance / maxDistance);
 
     return dataPoints;
 };
