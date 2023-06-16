@@ -39,6 +39,7 @@ const layout: Partial<Plotly.Layout> = {
         yaxis: { title: "Y Axis" },
         zaxis: { title: "Z Axis" },
     },
+    showlegend: false,
 };
 
 const sendObject = (eventData: Plotly.PlotSelectionEvent) => {
