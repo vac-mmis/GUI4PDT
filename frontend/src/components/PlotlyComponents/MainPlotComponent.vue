@@ -5,22 +5,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watchEffect } from "vue";
-import axios from "axios";
-import { type PlotlyHTMLElement, type PlotMarker, newPlot, react } from "plotly.js-dist-min";
-import type { PDT } from "./pdt.types";
+import { ref, onMounted, watch } from "vue";
+import { type PlotlyHTMLElement, newPlot, react, update } from "plotly.js-dist-min";
+import PDTStore from "@/services/pdt.services";
+import ObjectServices from "@/services/object.services";
+
+const myPDTStore = PDTStore();
 
 const emits = defineEmits(["object-clicked"]);
-const props = defineProps({
-    showLocation: {
-        type: Boolean,
-        required: true,
-        default: false,
-    },
-});
-let showLocation = props.showLocation;
-
-let myPDT = {} as PDT;
 
 const plotContainer = ref<HTMLDivElement | null>(null);
 let plot: Promise<PlotlyHTMLElement> | null = null;
@@ -44,26 +36,14 @@ const layout: Partial<Plotly.Layout> = {
 
 const sendObject = (eventData: Plotly.PlotSelectionEvent) => {
     const objectID = eventData.points[0].data.customdata[0];
-    const clickedObject = myPDT.objects.find((obj) => obj.id === objectID);
+    const clickedObject = myPDTStore.findObject(objectID as number);
     if (clickedObject !== undefined) {
         emits("object-clicked", clickedObject);
     }
 };
 
 const plot3D = async () => {
-    const plotData: Partial<Plotly.Data>[] = myPDT.objects
-        .map((obj) => {
-            const location = obj.location;
-            location.visible = showLocation;
-            const objects = obj.obj.map((model: any) => {
-                model.i = Object.values(model.i);
-                model.j = Object.values(model.j);
-                model.k = Object.values(model.k);
-                return model;
-            });
-            return [location, ...objects];
-        })
-        .flat();
+    const plotData: Partial<Plotly.Data>[] = myPDTStore.getPlot();
 
     plotContainer.value?.focus();
     if (plotContainer.value === null) {
@@ -77,43 +57,20 @@ const plot3D = async () => {
     (await plot).on("plotly_click", sendObject);
 };
 
-const init = async () => {
-    axios
-        .get("http://localhost:3000/api")
-        .then((res) => {
-            myPDT = res.data;
-            myPDT.models.forEach((model: any) => {
-                model.i = Object.values(model.i);
-                model.j = Object.values(model.j);
-                model.k = Object.values(model.k);
-            });
-        })
-        .then(() => plot3D())
-        .catch((err) => console.error(err));
-};
-
-watchEffect(async () => {
-    showLocation = props.showLocation;
-    if (plot !== null) {
-        const plotData = await plot;
-        const updatedData = myPDT.objects
-            .map((obj) => {
-                let location = obj.location;
-                location.visible = showLocation;
-                if (location.marker) {
-                    let marker = location.marker as PlotMarker;
-                    marker.colorbar = {};
-                    marker.showscale = false;
-                    location.marker = marker;
-                }
-                return [location, ...obj.obj];
-            })
-            .flat();
-        plot = react(plotData, updatedData, layout);
+watch(
+    () => myPDTStore.showLocation.value,
+    async (newShowLocation) => {
+        console.log(newShowLocation);
+        //myPDTStore.updatePDT(ObjectServices.toggleLocation(newShowLocation));
+        if (plot !== null) {
+            const plotData = await plot;
+            const updatedData = myPDTStore.getPlot();
+            plot = react(plotData, updatedData, layout);
+        }
     }
-});
+);
 
 onMounted(() => {
-    init();
+    plot3D();
 });
 </script>

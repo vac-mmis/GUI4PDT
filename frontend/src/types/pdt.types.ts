@@ -1,5 +1,12 @@
 import type { PlotData } from "plotly.js-dist-min";
 
+export interface ObjectVisibility {
+    show: boolean;
+    location: boolean;
+    type: boolean;
+    material: boolean;
+}
+
 export interface PDTObject {
     id: number;
     type: PlotData;

@@ -17,11 +17,9 @@
 </template>
 
 <script lang="ts" setup>
-import ObjectPlot from "@/components/PlotlyComponents/ObjectPlot.vue";
+import ObjectPlot from "@/components/PlotlyComponents/Object/ObjectPlot.vue";
 import type { ColorBar, Font, PlotMarker } from "plotly.js-dist-min";
-import { onMounted } from "vue";
-import { watch } from "vue";
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const props = defineProps(["object"]);
 const object = ref({});

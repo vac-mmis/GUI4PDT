@@ -1,8 +1,8 @@
 <template>
     <v-app-bar color="primary" dark collapse-on-scroll>
-        <v-app-bar-nav-icon @click="toggleDrawer"
-            ><v-icon icon="fa fa-home"></v-icon
-        ></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon @click="toggleDrawer">
+            <font-awesome-icon icon="fa-solid fa-home" />
+        </v-app-bar-nav-icon>
         <v-toolbar-title>OTC-DaTA GUI</v-toolbar-title>
     </v-app-bar>
     <v-navigation-drawer color="primary" temporary dark v-model="drawer">

@@ -1,12 +1,15 @@
 import { createApp } from "vue";
 import App from "./App.vue";
+import { createPinia } from "pinia";
 
 // Router
 import router from "./router";
 
 // Icons
-import "@fortawesome/fontawesome-free/css/all.css"; // Ensure your project is capable of handling css files
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
+import { faHome, faBars } from "@fortawesome/free-solid-svg-icons";
 // Vuetify
 import "vuetify/styles";
 import { aliases, fa } from "vuetify/iconsets/fa";
@@ -46,4 +49,13 @@ const vuetify = createVuetify({
     },
 });
 
-createApp(App).use(vuetify).use(router).mount("#app");
+const pinia = createPinia();
+
+library.add(faHome, faBars);
+
+createApp(App)
+    .component("font-awesome-icon", FontAwesomeIcon)
+    .use(vuetify)
+    .use(pinia)
+    .use(router)
+    .mount("#app");
