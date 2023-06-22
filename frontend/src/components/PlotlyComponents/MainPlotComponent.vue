@@ -6,11 +6,10 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, watch } from "vue";
-import { type PlotlyHTMLElement, newPlot, react, update } from "plotly.js-dist-min";
-import PDTStore from "@/services/pdt.services";
-import ObjectServices from "@/services/object.services";
+import { type PlotlyHTMLElement, newPlot, react } from "plotly.js-dist-min";
+import PDTStore from "@/store/pdt.store";
 
-const myPDTStore = PDTStore();
+const PDT = PDTStore();
 
 const emits = defineEmits(["object-clicked"]);
 
@@ -36,14 +35,14 @@ const layout: Partial<Plotly.Layout> = {
 
 const sendObject = (eventData: Plotly.PlotSelectionEvent) => {
     const objectID = eventData.points[0].data.customdata[0];
-    const clickedObject = myPDTStore.findObject(objectID as number);
+    const clickedObject = PDT.findObject(objectID as number);
     if (clickedObject !== undefined) {
         emits("object-clicked", clickedObject);
     }
 };
 
 const plot3D = async () => {
-    const plotData: Partial<Plotly.Data>[] = myPDTStore.getPlot();
+    const plotData: Partial<Plotly.Data>[] = PDT.getPlot();
 
     plotContainer.value?.focus();
     if (plotContainer.value === null) {
@@ -58,13 +57,11 @@ const plot3D = async () => {
 };
 
 watch(
-    () => myPDTStore.showLocation.value,
-    async (newShowLocation) => {
-        console.log(newShowLocation);
-        //myPDTStore.updatePDT(ObjectServices.toggleLocation(newShowLocation));
-        if (plot !== null) {
+    () => PDT.updated,
+    async (updated) => {
+        if (updated && plot !== null) {
             const plotData = await plot;
-            const updatedData = myPDTStore.getPlot();
+            const updatedData = PDT.getPlot();
             plot = react(plotData, updatedData, layout);
         }
     }

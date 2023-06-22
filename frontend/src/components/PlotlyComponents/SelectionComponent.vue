@@ -57,9 +57,10 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import ObjectController from "./Object/ObjectController.vue";
-import PDTStore from "@/services/pdt.services";
+import PDTStore from "@/store/pdt.store";
+import ObjectServices from "@/services/object.services";
 
-const myPDT = PDTStore();
+const PDT = PDTStore();
 const props = defineProps(["objects"]);
 
 const openList = ref(false);
@@ -73,6 +74,6 @@ const toggleList = () => {
 const toggle = ref([] as string[]);
 
 const toggleGlobalLocation = () => {
-    PDTStore.toggleLocation();
+    PDT.updatePDT(ObjectServices.toggleLocation(loc.value));
 };
 </script>

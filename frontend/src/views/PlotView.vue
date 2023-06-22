@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
-import PDTStore from "@/services/pdt.services";
+import PDTStore from "@/store/pdt.store";
 
 import MainPlot from "@/components/PlotlyComponents/MainPlotComponent.vue";
 import ObjectDetails from "@/components/PlotlyComponents/Object/ObjectDetails.vue";
