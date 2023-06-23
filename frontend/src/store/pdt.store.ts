@@ -32,16 +32,29 @@ const PDTStore: any = defineStore("myPDT", () => {
         return plot;
     }
 
+    function getObjects(): PDTObject[] {
+        return _PDT.value.objects;
+    }
+
     function updatePDT(fun: Function) {
         updated.value = true;
         _PDT.value.objects.forEach((obj: PDTObject) => fun(obj));
     }
 
-    const findObject = (objID: number) => {
-        return _PDT.value.objects.find((obj) => obj.id === objID);
+    function updateObject(objectID: number, fun: Function) {
+        updated.value = true;
+        console.log("updateObject : ", updated.value);
+        const objectToUpdate = _PDT.value.objects.find((obj) => obj.id === objectID);
+        if (objectToUpdate) {
+            _PDT.value.objects[objectID] = fun(_PDT.value.objects[objectID]);
+        }
+    }
+
+    const findObject = (objectID: number) => {
+        return _PDT.value.objects.find((obj) => obj.id === objectID);
     };
 
-    return { fetchPDT, getPlot, updatePDT, findObject, updated };
+    return { fetchPDT, getPlot, getObjects, updatePDT, updateObject, findObject, updated };
 });
 
 export default PDTStore;

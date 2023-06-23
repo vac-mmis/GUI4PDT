@@ -9,7 +9,7 @@ import router from "./router";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-import { faHome, faBars } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faBars, faLocationCrosshairs, faEye } from "@fortawesome/free-solid-svg-icons";
 // Vuetify
 import "vuetify/styles";
 import { aliases, fa } from "vuetify/iconsets/fa";
@@ -51,7 +51,7 @@ const vuetify = createVuetify({
 
 const pinia = createPinia();
 
-library.add(faHome, faBars);
+library.add(faHome, faBars, faLocationCrosshairs, faEye);
 
 createApp(App)
     .component("font-awesome-icon", FontAwesomeIcon)

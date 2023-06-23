@@ -8,72 +8,98 @@
         <v-sheet class="border w-full h-full" v-if="openList">
             <v-switch
                 @change="toggleGlobalLocation"
-                v-model="loc"
+                v-model="globalLoc"
                 hide-details
                 inset
                 label="Location Density"
                 class="px-6"
             >
             </v-switch>
-            <v-expansion-panels class="w-100">
-                <v-expansion-panel
-                    v-for="(object, index) in props.objects"
+            <div class="w-100">
+                <v-card
+                    v-for="(object, index) in objects"
                     :key="object.id"
                     :object="object"
+                    class="d-flex w-100 pa-2 justify-space-between align-center mx-auto"
                 >
-                    <v-expansion-panel-title>
-                        <div class="d-flex w-100 justify-space-between align-center">
-                            <div>Object {{ object.id }}</div>
-                            <div>
-                                <v-btn-toggle
-                                    :v-model="toggle[index]"
-                                    multiple
-                                    rounded="xl"
-                                    @click.stop
-                                    bg-secondary
-                                >
-                                    <v-btn variant="tonal">
-                                        <font-awesome-icon :icon="['fas', 'bars']"
-                                    /></v-btn>
-                                    <v-btn variant="tonal">
-                                        <font-awesome-icon :icon="['fas', 'bars']"
-                                    /></v-btn>
-                                    <v-btn variant="tonal">
-                                        <font-awesome-icon :icon="['fas', 'bars']"
-                                    /></v-btn>
-                                </v-btn-toggle>
-                            </div>
-                        </div>
-                    </v-expansion-panel-title>
-                    <v-expansion-panel-text>
-                        <ObjectController :object="object"></ObjectController>
-                    </v-expansion-panel-text>
-                </v-expansion-panel>
-            </v-expansion-panels>
+                    <v-card-title class="text-h6">Object {{ object.id }}</v-card-title>
+                    <v-card-actions>
+                        <v-btn-toggle
+                            v-model="toggleObjects[index]"
+                            multiple
+                            rounded="xl"
+                            color="secondary"
+                        >
+                            <v-btn value="display">
+                                <font-awesome-icon :icon="['fas', 'eye']" />
+                                <v-tooltip activator="parent" location="bottom">
+                                    Show object
+                                </v-tooltip>
+                            </v-btn>
+                            <v-btn value="loc" @click="toggleObjectLocation(object.id)">
+                                <font-awesome-icon :icon="['fas', 'location-crosshairs']" />
+                                <v-tooltip activator="parent" location="bottom">
+                                    Show location
+                                </v-tooltip>
+                            </v-btn>
+                        </v-btn-toggle>
+                    </v-card-actions>
+                </v-card>
+            </div>
         </v-sheet>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import ObjectController from "./Object/ObjectController.vue";
 import PDTStore from "@/store/pdt.store";
 import ObjectServices from "@/services/object.services";
+import { onMounted } from "vue";
+import type { PDTObject } from "@/types/pdt.types";
 
 const PDT = PDTStore();
-const props = defineProps(["objects"]);
+const objects = ref([] as PDTObject[]);
 
 const openList = ref(false);
-
-const loc = ref(false);
-
 const toggleList = () => {
     openList.value = !openList.value;
 };
 
-const toggle = ref([] as string[]);
+const globalLoc = ref(false);
+
+const toggleObjects = ref([[]] as string[][]);
 
 const toggleGlobalLocation = () => {
-    PDT.updatePDT(ObjectServices.toggleLocation(loc.value));
+    PDT.updatePDT(ObjectServices.toggleLocation(globalLoc.value));
+    toggleObjects.value.forEach((objToggle) => {
+        const index = objToggle.indexOf("loc");
+        if (globalLoc.value && index < 0) {
+            objToggle.push("loc");
+        }
+        if (!globalLoc.value && index > -1) {
+            objToggle.splice(index);
+        }
+    });
+    if (toggleObjects.value.every((objToggle: any) => objToggle.includes(`loc`))) {
+        globalLoc.value = true;
+    } else if (toggleObjects.value.every((objToggle: any) => !objToggle.includes(`loc`))) {
+        globalLoc.value = false;
+    }
+    console.log(toggleObjects.value);
 };
+
+const toggleObjectLocation = (objectID: number) => {
+    console.log("toggleObjectLocation", toggleObjects.value[objectID]);
+    PDT.updateObject(
+        objectID,
+        ObjectServices.toggleLocation(toggleObjects.value[objectID].includes("loc"))
+    );
+};
+
+onMounted(() => {
+    objects.value = PDT.getObjects();
+    toggleObjects.value.length = objects.value.length;
+    toggleObjects.value.fill([], 0, objects.value.length);
+    console.log(toggleObjects.value, objects.value.length);
+});
 </script>

@@ -3,7 +3,7 @@
         <template v-slot:title> Details on object {{ props.object.id }}</template>
         <v-tabs v-model="tab" color="secondary" align-tabs="center">
             <v-tab :value="1">Type</v-tab>
-            <v-tab :value="2">Location</v-tab>
+            <v-tab :value="2" @click="update">Location</v-tab>
         </v-tabs>
         <div class="h-auto pa-6">
             <template v-if="tab === 1">
