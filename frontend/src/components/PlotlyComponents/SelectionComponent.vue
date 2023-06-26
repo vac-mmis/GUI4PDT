@@ -53,9 +53,9 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import PDTStore from "@/store/pdt.store";
-import ObjectServices from "@/services/object.services";
 import { onMounted } from "vue";
-import type { PDTObject } from "@/types/pdt.types";
+import type { PDTObject } from "@/models/object.model";
+import { toggleLocation } from "@/models/location.model";
 
 const PDT = PDTStore();
 const objects = ref([] as PDTObject[]);
@@ -70,7 +70,7 @@ const globalLoc = ref(false);
 const toggleObjects = ref([[]] as string[][]);
 
 const toggleGlobalLocation = () => {
-    PDT.updatePDT(ObjectServices.toggleLocation(globalLoc.value));
+    PDT.updateObjects(toggleLocation(globalLoc.value));
     toggleObjects.value.forEach((objToggle) => {
         const index = objToggle.indexOf("loc");
         if (globalLoc.value && index < 0) {
@@ -85,21 +85,15 @@ const toggleGlobalLocation = () => {
     } else if (toggleObjects.value.every((objToggle: any) => !objToggle.includes(`loc`))) {
         globalLoc.value = false;
     }
-    console.log(toggleObjects.value);
 };
 
 const toggleObjectLocation = (objectID: number) => {
-    console.log("toggleObjectLocation", toggleObjects.value[objectID]);
-    PDT.updateObject(
-        objectID,
-        ObjectServices.toggleLocation(toggleObjects.value[objectID].includes("loc"))
-    );
+    PDT.updateObject(objectID, toggleLocation(toggleObjects.value[objectID].includes("loc")));
 };
 
 onMounted(() => {
     objects.value = PDT.getObjects();
     toggleObjects.value.length = objects.value.length;
     toggleObjects.value.fill([], 0, objects.value.length);
-    console.log(toggleObjects.value, objects.value.length);
 });
 </script>

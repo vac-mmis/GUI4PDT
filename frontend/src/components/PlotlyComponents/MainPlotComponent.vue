@@ -7,6 +7,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, watch } from "vue";
 import { type PlotlyHTMLElement, newPlot, react } from "plotly.js-dist-min";
+
 import PDTStore from "@/store/pdt.store";
 
 const PDT = PDTStore();

@@ -1,4 +1,4 @@
-import type { PDT, PDTObject } from "@/types/pdt.types";
+import { PDT } from "@/models/pdt.model";
 import type { PlotData } from "plotly.js-dist-min";
 import { ref } from "vue";
 import axios from "axios";
@@ -13,48 +13,38 @@ const PDTStore: any = defineStore("myPDT", () => {
         return axios
             .get("http://localhost:3000/api")
             .then((res) => {
-                _PDT.value = res.data;
-                _PDT.value.objects.forEach((objects: PDTObject) => {
-                    objects.obj = objects.obj.map((obj: PlotData) => {
-                        obj.i = Float32Array.from(Object.values(obj.i));
-                        obj.j = Float32Array.from(Object.values(obj.j));
-                        obj.k = Float32Array.from(Object.values(obj.k));
-                        return obj;
-                    });
+                const pdtJSON = res.data;
+                pdtJSON.models.forEach((model: Partial<PlotData>) => {
+                    model.i = Float32Array.from(Object.values(model.i as any));
+                    model.j = Float32Array.from(Object.values(model.j as any));
+                    model.k = Float32Array.from(Object.values(model.k as any));
                 });
+                _PDT.value = new PDT(pdtJSON);
             })
             .catch((err: Error) => console.error(err));
     };
 
-    function getPlot(): Partial<PlotData>[] {
-        const plot = _PDT.value.objects.flatMap((obj: PDTObject) => [obj.location, ...obj.obj]);
+    const getObjects = () => _PDT.value.getObjects();
+
+    const getPlot = () => {
         updated.value = false;
-        return plot;
-    }
-
-    function getObjects(): PDTObject[] {
-        return _PDT.value.objects;
-    }
-
-    function updatePDT(fun: Function) {
-        updated.value = true;
-        _PDT.value.objects.forEach((obj: PDTObject) => fun(obj));
-    }
-
-    function updateObject(objectID: number, fun: Function) {
-        updated.value = true;
-        console.log("updateObject : ", updated.value);
-        const objectToUpdate = _PDT.value.objects.find((obj) => obj.id === objectID);
-        if (objectToUpdate) {
-            _PDT.value.objects[objectID] = fun(_PDT.value.objects[objectID]);
-        }
-    }
-
-    const findObject = (objectID: number) => {
-        return _PDT.value.objects.find((obj) => obj.id === objectID);
+        return _PDT.value.getPlot();
     };
 
-    return { fetchPDT, getPlot, getObjects, updatePDT, updateObject, findObject, updated };
+    const findObject = (objID: number) => _PDT.value.findObject(objID);
+
+    function updateObject(objID: number, fun: Function) {
+        updated.value = true;
+        const object = _PDT.value.findObject(objID);
+        fun(object);
+    }
+
+    function updateObjects(fun: Function) {
+        updated.value = true;
+        _PDT.value.updateObjects(fun);
+    }
+
+    return { updated, getObjects, getPlot, fetchPDT, findObject, updateObject, updateObjects };
 });
 
 export default PDTStore;

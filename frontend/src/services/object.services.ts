@@ -1,4 +1,4 @@
-import type { PDTObject } from "@/types/pdt.types";
+import { PDTObject } from "@/models/object.model";
 import type { PlotMarker, Font, ColorBar } from "plotly.js-dist-min";
 
 const addLocationBar = () => {
@@ -23,20 +23,6 @@ const addLocationBar = () => {
         return [location, ...obj.obj];
     };
 };
-const toggleLocation = (showLocation: boolean) => {
-    return (obj: PDTObject): PDTObject => {
-        let location = obj.location;
-        location.visible = showLocation;
-        if (location.marker) {
-            let marker = location.marker as PlotMarker;
-            marker.colorbar = {};
-            marker.showscale = false;
-            location.marker = marker;
-        }
-        obj.location = location;
-        return obj;
-    };
-};
 
 const toggleObjects = (showObject: boolean) => {
     return (obj: PDTObject) => {
@@ -50,7 +36,7 @@ const toggleObjects = (showObject: boolean) => {
 
 const ObjectServices = {
     addLocationBar,
-    toggleLocation,
     toggleObjects,
 };
+
 export default ObjectServices;
