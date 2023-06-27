@@ -48,48 +48,82 @@ const objToData = (obj: ObjectJSON, models?: Partial<PlotData>[]): ObjectPlot[] 
 
 class ObjectPlot implements Partial<PlotData> {
     name: string | undefined;
-    x: Datum[] | Datum[][] | TypedArray | undefined;
-    y: Datum[] | Datum[][] | TypedArray | undefined;
-    z: Datum[] | Datum[][] | Datum[][][] | TypedArray | undefined;
+    x!: number[];
+    y!: number[];
+    z!: number[];
     type: PlotType | undefined;
-    i: TypedArray | undefined;
-    j: TypedArray | undefined;
-    k: TypedArray | undefined;
+    i?: TypedArray;
+    j?: TypedArray;
+    k?: TypedArray;
     opacity: number | undefined;
-    customdata: Datum[] | Datum[][] | undefined;
+    customdata: [number];
 
     constructor(
         objID: number,
-        model: Partial<PlotData>,
-        loc: number[],
-        scale: number[],
-        p: number
+        model?: Partial<PlotData>,
+        loc?: number[],
+        scale?: number[],
+        p?: number
     ) {
+        this.customdata = [objID];
+        if (model === undefined || scale === undefined) {
+            return;
+        }
         this.name = model.name;
-        this.x = (model.x as number[]).map((x) => x * scale[0] + loc[0]);
-        this.y = (model.y as number[]).map((y) => y * scale[1] + loc[1]);
-        this.z = (model.z as number[]).map((z) => z * scale[2] + loc[2]);
+        this.x = (model.x as number[]).map((x) => x * scale[0] + (loc ? loc[0] : 0));
+        this.y = (model.y as number[]).map((y) => y * scale[1] + (loc ? loc[1] : 0));
+        this.z = (model.z as number[]).map((z) => z * scale[2] + (loc ? loc[2] : 0));
         this.type = model.type;
         this.i = model.i;
         this.j = model.j;
         this.k = model.k;
         this.opacity = p;
-        this.customdata = [objID];
+    }
+
+    static copy(plot: ObjectPlot): ObjectPlot {
+        const copyObj = new ObjectPlot(plot.customdata[0]);
+        copyObj.name = plot.name;
+        copyObj.x = [...plot.x];
+        copyObj.y = [...plot.y];
+        copyObj.z = [...plot.z];
+        copyObj.type = plot.type;
+        copyObj.i = plot.i;
+        copyObj.j = plot.j;
+        copyObj.k = plot.k;
+        copyObj.opacity = plot.opacity;
+        copyObj.customdata = plot.customdata;
+        return copyObj;
     }
 }
 
 export class PDTObject {
     id: number;
-    obj: ObjectPlot[];
-    type: Type;
-    location: Location;
+    obj!: ObjectPlot[];
+    type!: Type;
+    location!: Location;
     rotation?: PlotData;
     material?: PlotData;
 
-    constructor(obj: ObjectJSON, models?: Partial<PlotData>[]) {
-        this.id = obj.id;
+    constructor(obj: ObjectJSON | number, models?: Partial<PlotData>[]) {
+        if (typeof obj === "number") {
+            this.id = obj;
+            return;
+        } else {
+            this.id = obj.id;
+            this.obj = objToData(obj, models);
+        }
         this.location = new Location(this.id, obj.location);
         this.type = new Type(this.id, obj.type);
-        this.obj = objToData(obj, models);
+    }
+
+    static copy(object: PDTObject): PDTObject {
+        const copyObj = new PDTObject(object.id);
+        copyObj.id = object.id;
+        copyObj.obj = object.obj.map((obj) => ObjectPlot.copy(obj));
+        copyObj.type = Type.copy(object.type);
+        copyObj.location = Location.copy(object.location);
+        copyObj.rotation = object.rotation ? { ...object.rotation } : undefined;
+        copyObj.material = object.material ? { ...object.material } : undefined;
+        return copyObj;
     }
 }

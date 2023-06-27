@@ -1,4 +1,4 @@
-import type { VonMises } from "../types/dist.types";
+import type { VonMises } from "@/services/dist.services";
 
 export type RotationJSON =
     | {

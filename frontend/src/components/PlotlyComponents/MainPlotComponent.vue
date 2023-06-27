@@ -9,6 +9,7 @@ import { ref, onMounted, watch } from "vue";
 import { type PlotlyHTMLElement, newPlot, react } from "plotly.js-dist-min";
 
 import PDTStore from "@/store/pdt.store";
+import { PDTObject } from "@/models/object.model";
 
 const PDT = PDTStore();
 
@@ -16,6 +17,7 @@ const emits = defineEmits(["object-clicked"]);
 
 const plotContainer = ref<HTMLDivElement | null>(null);
 let plot: Promise<PlotlyHTMLElement> | null = null;
+
 const config = { responsive: true };
 const layout: Partial<Plotly.Layout> = {
     margin: {
@@ -38,7 +40,7 @@ const sendObject = (eventData: Plotly.PlotSelectionEvent) => {
     const objectID = eventData.points[0].data.customdata[0];
     const clickedObject = PDT.findObject(objectID as number);
     if (clickedObject !== undefined) {
-        emits("object-clicked", clickedObject);
+        emits("object-clicked", PDTObject.copy(clickedObject));
     }
 };
 

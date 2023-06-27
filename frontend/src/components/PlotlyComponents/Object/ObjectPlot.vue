@@ -4,8 +4,11 @@
 
 <script lang="ts" setup>
 import { ref, watch, onMounted } from "vue";
-import { newPlot } from "plotly.js-dist-min";
-import type { Data, Layout } from "plotly.js-dist-min";
+import { newPlot, type Data, type Layout } from "plotly.js-dist-min";
+import type { Type } from "@/models/type.model";
+import type { Location } from "@/models/location.model";
+
+const props = defineProps<{ data: Location | Type }>();
 
 const plotContainer = ref<HTMLDivElement | null>(null);
 let chart: Promise<Plotly.PlotlyHTMLElement> | null = null;
@@ -47,8 +50,6 @@ const init = () => {
         chart.catch((error) => console.error("Error creating plot:", error));
     }
 };
-
-const props = defineProps(["data"]);
 
 watch(() => props.data, init);
 
