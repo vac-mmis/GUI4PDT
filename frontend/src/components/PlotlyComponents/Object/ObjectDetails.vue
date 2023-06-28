@@ -7,10 +7,10 @@
         </v-tabs>
         <div class="h-auto pa-6">
             <template v-if="tab === 1">
-                <ObjectPlot :data="object.type" />
+                <ObjectPlot :data="[object.type]" />
             </template>
             <template v-else-if="tab === 2">
-                <ObjectPlot :data="object.location" />
+                <ObjectPlot :data="object.location.getTrace()" />
             </template>
         </div>
     </v-card>
@@ -23,7 +23,7 @@ import { ref, computed } from "vue";
 
 const props = defineProps<{ object: PDTObject }>();
 const object = computed(() => {
-    props.object.location.toggleLocation(true, true);
+    props.object.location.toggleLocation(true);
     return props.object;
 });
 

@@ -11,6 +11,7 @@ import { multivariateNormal, uniformContinuous } from "@/services/dist.services"
 import type { MultivariateNormal, UniformContinuous } from "@/services/dist.services";
 import type { BoxPlotMarker } from "plotly.js/lib/traces/box";
 import type { PDTObject } from "@/models/object.model";
+import { ObjectPlot } from "@/models/object.model";
 
 export type LocationJSON = {
     distribution: MultivariateNormal | UniformContinuous;
@@ -20,7 +21,7 @@ export const toggleLocation = (showLocation: boolean) => {
     return (obj: PDTObject) => obj.location.toggleLocation(showLocation);
 };
 
-export class Location implements Partial<PlotData> {
+export class LocationElement implements Partial<PlotData> {
     x: number[];
     y: number[];
     z: number[];
@@ -126,8 +127,8 @@ export class Location implements Partial<PlotData> {
         }
     }
 
-    static copy(loc: Location): Location {
-        const copyLocation = new Location(loc.customdata[0]);
+    static copy(loc: LocationElement): LocationElement {
+        const copyLocation = new LocationElement(loc.customdata[0]);
         copyLocation.x = [...loc.x];
         copyLocation.y = [...loc.y];
         copyLocation.z = [...loc.z];
@@ -144,6 +145,54 @@ export class Location implements Partial<PlotData> {
         copyLocation.showscale = loc.showscale;
         copyLocation.intensity = loc.intensity;
         copyLocation.colorscale = loc.colorscale;
+        return copyLocation;
+    }
+}
+
+export class Location {
+    locationObjects: ObjectPlot[] | [LocationElement];
+    objId: number;
+    constructor(objID: number, models?: Partial<PlotData>[], loc?: LocationJSON) {
+        this.objId = objID;
+        if (loc === undefined) {
+            this.locationObjects = [];
+            return;
+        }
+
+        const dist = loc.distribution;
+        if (dist.representation === "multivariate-normal") {
+            const dataPoints = multivariateNormal(dist);
+            this.locationObjects = dataPoints[0].map((_, index: number) => {
+                return new ObjectPlot(
+                    objID,
+                    models ? models[0] : undefined,
+                    [dataPoints[0][index], dataPoints[1][index], dataPoints[2][index]],
+                    [1, 1, 1],
+                    dataPoints[3][index]
+                );
+            });
+        } else {
+            this.locationObjects = [new LocationElement(objID, loc)];
+        }
+    }
+
+    public getTrace() {
+        return this.locationObjects;
+    }
+
+    public toggleLocation(showLocation = false) {
+        this.locationObjects.forEach((loc) => loc.toggleLocation(showLocation));
+    }
+
+    static copy(loc: Location) {
+        const copyLocation = new Location(loc.objId);
+        if (loc.locationObjects[0] instanceof LocationElement) {
+            copyLocation.locationObjects = [LocationElement.copy(loc.locationObjects[0])];
+        } else {
+            copyLocation.locationObjects = loc.locationObjects.map((loc) =>
+                ObjectPlot.copy(loc as ObjectPlot)
+            ) as ObjectPlot[];
+        }
         return copyLocation;
     }
 }

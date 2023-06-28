@@ -46,7 +46,7 @@ const objToData = (obj: ObjectJSON, models?: Partial<PlotData>[]): ObjectPlot[] 
     }
 };
 
-class ObjectPlot implements Partial<PlotData> {
+export class ObjectPlot implements Partial<PlotData> {
     name: string | undefined;
     x!: number[];
     y!: number[];
@@ -57,14 +57,17 @@ class ObjectPlot implements Partial<PlotData> {
     k?: TypedArray;
     opacity: number | undefined;
     customdata: [number];
+    visible: boolean;
 
     constructor(
         objID: number,
         model?: Partial<PlotData>,
         loc?: number[],
         scale?: number[],
-        p?: number
+        p?: number,
+        visibility = true
     ) {
+        this.visible = visibility;
         this.customdata = [objID];
         if (model === undefined || scale === undefined) {
             return;
@@ -94,6 +97,10 @@ class ObjectPlot implements Partial<PlotData> {
         copyObj.customdata = plot.customdata;
         return copyObj;
     }
+
+    public toggleLocation(visibility = true) {
+        this.visible = visibility;
+    }
 }
 
 export class PDTObject {
@@ -112,7 +119,7 @@ export class PDTObject {
             this.id = obj.id;
             this.obj = objToData(obj, models);
         }
-        this.location = new Location(this.id, obj.location);
+        this.location = new Location(this.id, models, obj.location);
         this.type = new Type(this.id, obj.type);
     }
 

@@ -22,8 +22,12 @@ export class PDT {
         this.objects = pdt.objects.map((obj: ObjectJSON) => new PDTObject(obj, this.models));
     }
 
-    getPlot = (): Partial<PlotData>[] =>
-        this.objects.flatMap((obj: PDTObject) => [obj.location, ...obj.obj]);
+    getPlot = (): Partial<PlotData>[] => {
+        return this.objects.flatMap((obj: PDTObject) => [
+            ...obj.location.locationObjects,
+            ...obj.obj,
+        ]);
+    };
 
     getObjects = (): PDTObject[] => this.objects;
 

@@ -4,11 +4,11 @@
 
 <script lang="ts" setup>
 import { ref, watch, onMounted } from "vue";
-import { newPlot, type Data, type Layout } from "plotly.js-dist-min";
+import { newPlot, type PlotData, type Layout } from "plotly.js-dist-min";
 import type { Type } from "@/models/type.model";
 import type { Location } from "@/models/location.model";
 
-const props = defineProps<{ data: Location | Type }>();
+const props = defineProps<{ data: Partial<PlotData>[] }>();
 
 const plotContainer = ref<HTMLDivElement | null>(null);
 let chart: Promise<Plotly.PlotlyHTMLElement> | null = null;
@@ -32,7 +32,7 @@ const layout = {
 const config = { responsive: true };
 
 const init = () => {
-    const trace: Partial<Data>[] = props.data ? [props.data] : [];
+    const trace: Partial<Plotly.Data>[] = props.data ? props.data : [];
 
     if (plotContainer.value === null) {
         console.error("Error: Invalid container");
