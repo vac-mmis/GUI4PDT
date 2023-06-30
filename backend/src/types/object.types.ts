@@ -5,36 +5,47 @@ import type {
     VonMises,
 } from "../types/dist.types";
 
-const ELEMENTS = ["tetrapod", "reefcone", "reefring", "stone"] as const;
-const MATERIALS = ["concrete"] as const;
+const CLASSES = [
+    "tetrapod",
+    "reefcone",
+    "reefring",
+    "stone",
+    "container",
+    "bicycle",
+    "effeltower",
+] as const;
+const MATERIALS = ["concrete", "metal", "bicycle", "eiffeltower"] as const;
 
-type ElementJSONType =
-    | (typeof ELEMENTS)[number]
+type ClassJSON =
+    | (typeof CLASSES)[number]
     | {
-          distribution: Categorical<(typeof ELEMENTS)[number]>;
+          dist: Categorical<(typeof CLASSES)[number]>;
       };
 
-type LocationJSONType = {
-    distribution: MultivariateNormal | UniformContinuous;
-};
+type LocationJSON =
+    | {
+          dist: MultivariateNormal | UniformContinuous;
+      }
+    | [number, number, number];
 
-type RotationJSONType =
+type RotationJSON =
     | {
           roll: number;
           pitch: number;
           yaw: {
-              distribution: VonMises;
+              dist: VonMises;
           };
       }
     | [number, number, number];
 
-type MaterialJSONType = Categorical<(typeof MATERIALS)[number]>;
+type MaterialJSON = Categorical<(typeof MATERIALS)[number]>;
 
-export type ObjectJSONType = {
+export type ObjectJSON = {
     id: number;
-    type: ElementJSONType;
-    location: LocationJSONType;
-    rotation: RotationJSONType;
-    material: MaterialJSONType;
-    scale: [number, number, number];
+    class: ClassJSON;
+    location: LocationJSON;
+    rotation?: RotationJSON;
+    material: MaterialJSON;
+    scale?: number;
+    physics?: boolean;
 };

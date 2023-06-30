@@ -1,6 +1,6 @@
 import { DirectionalLight, AmbientLight } from "three";
 
-function createLights() {
+export function createLights() {
     const ambientLight = new AmbientLight("white", 2);
 
     const mainLight = new DirectionalLight("white", 5);
@@ -8,5 +8,3 @@ function createLights() {
 
     return { ambientLight, mainLight };
 }
-
-export { createLights };

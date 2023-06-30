@@ -9,7 +9,7 @@ export function createCamera(): PerspectiveCamera {
     );
 
     // move the camera back so we can view the scene
-    camera.position.set(0, -300, 300);
+    camera.position.set(0, -20, 10);
 
     return camera;
 }

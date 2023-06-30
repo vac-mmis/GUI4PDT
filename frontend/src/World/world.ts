@@ -6,9 +6,11 @@ import { createRenderer } from "@/World/systems/renderer";
 import { Loop } from "@/World/systems/Loop";
 import { Resizer } from "@/World/systems/Resizer";
 
-import { loadModel } from "@/World/systems/loader";
 import type { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { createObject } from "./components/object";
+
+import type { Group } from "three";
+import type { PDTObject } from "@/models/object.model";
+import { createHelpers } from "./components/helpers";
 
 export class World {
     private camera: THREE.PerspectiveCamera;
@@ -26,18 +28,16 @@ export class World {
         const { ambientLight, mainLight } = createLights();
         this.scene.add(ambientLight, mainLight);
 
+        const { axesHelper, gridHelper } = createHelpers();
+        this.scene.add(axesHelper, gridHelper);
         const resizer = new Resizer(container, this.camera, this.renderer);
 
         this.loop = new Loop(this.camera, this.scene, this.renderer);
     }
 
-    public async init() {
-        const model = await loadModel("/assets/Tetrapod.obj");
-        for (let i = -80; i < 80; i++) {
-            for (let j = -80; j < 80; j++) {
-                this.scene.add(createObject(model, [i * 3, j * 3, 0]));
-            }
-        }
+    public append(objects: PDTObject[]) {
+        const trace: Group[] = objects.map((obj: PDTObject) => obj.obj);
+        this.scene.add(...trace);
     }
 
     public render() {

@@ -1,20 +1,19 @@
-import { PlotData } from "plotly.js-dist-min";
 import fs from "fs";
 import path from "path";
-import { loadModels } from "../services/models.services";
-import { ObjectJSONType } from "../types/object.types";
+import { ObjectJSON } from "../types/object.types";
 
 const MODELPATH = `models`;
 
 export default class PDT {
     name: string;
-    PDTDir: string;
-    models?: Partial<PlotData>[];
-    objects: ObjectJSONType[];
-    bottomTexture?: Partial<PlotData>;
-    depthMap?: Partial<PlotData>;
-    temperature?: Partial<PlotData>;
-    currents?: Partial<PlotData>;
+    private PDTDir: string;
+    models?: { name: string; content: string }[];
+    objects: ObjectJSON[];
+    bottomTexture?: any;
+    depthMap?: any;
+    temperature?: any;
+    currents?: any;
+
     constructor(PDTFile: string) {
         this.PDTDir = path.dirname(path.resolve("wwwroot", "data", PDTFile)).normalize();
         this.name = path.basename(PDTFile, ".json");
@@ -25,16 +24,25 @@ export default class PDT {
 
         this.name = json.name;
         this.objects = json.objects;
-    }
 
-    public async init() {
         const modelPath = `${this.PDTDir}/${MODELPATH}`;
-        await loadModels(modelPath, fs.readdirSync(modelPath))
-            .then((models) => {
-                this.models = models;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        fs.readdir(modelPath, (err, files) => {
+            if (err) {
+                console.error("Error reading folder:", err);
+            } else {
+                const fileContents: { name: string; content: string }[] = [];
+
+                files.forEach((file) => {
+                    const filePath = path.join(modelPath, file);
+                    const stat = fs.statSync(filePath);
+
+                    if (stat.isFile()) {
+                        const fileData = fs.readFileSync(filePath);
+                        fileContents.push({ name: file, content: fileData.toString("base64") });
+                    }
+                });
+                this.models = fileContents;
+            }
+        });
     }
 }

@@ -1,5 +1,5 @@
 import { createHash } from "crypto";
-import { Request, Response } from "express";
+import { Request } from "express";
 import multer, { Multer } from "multer";
 import { getExtension } from "mime";
 

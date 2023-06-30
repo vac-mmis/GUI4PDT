@@ -1,13 +1,13 @@
 import { sqrtm, add, multiply, mean } from "mathjs";
 
 export type MultivariateNormal = {
-    representation: "multivariate-normal";
+    type: "multivariate-normal";
     mean: [number, number, number];
     covariance: [[number, number, number], [number, number, number], [number, number, number]];
 };
 
 export type UniformContinuous = {
-    representation: "uniform-continous";
+    type: "uniform-continous";
     "x-min": number;
     "x-max": number;
     "y-min": number;
@@ -17,15 +17,17 @@ export type UniformContinuous = {
 };
 
 export type Categorical<E extends string> = {
-    representation: "categorical";
+    type: "categorical";
     mass: Record<E, number>;
 };
 
 export type VonMises = {
-    representation: "von-mises";
-    mean: number;
-    dispersion: number;
+    type: "von-mises";
+    mean: [number, number, number];
+    kappa: [number, number, number];
 };
+
+export type DistLocation = MultivariateNormal | UniformContinuous | VonMises;
 
 export const multivariateNormal = (dist: MultivariateNormal) => {
     const NUM_POINTS = 1000;
@@ -75,8 +77,8 @@ export const uniformContinuous = (dist: UniformContinuous) => {
     ];
 };
 
-export const getMean = (dist: MultivariateNormal | UniformContinuous): number[] => {
-    if (dist.representation === "multivariate-normal") {
+export const getMean = (dist: DistLocation): [number, number, number] => {
+    if (dist.type === "multivariate-normal" || dist.type === "von-mises") {
         return dist.mean;
     } else {
         return [

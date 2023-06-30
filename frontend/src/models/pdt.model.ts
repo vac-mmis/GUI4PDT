@@ -1,35 +1,33 @@
-import type { PlotData } from "plotly.js-dist-min";
 import { PDTObject, type ObjectJSON } from "./object.model";
-
+import type { Group } from "three";
+import { loadModel } from "@/World/systems/loader";
 export interface PDTJSON {
     name: string;
-    models: Partial<PlotData>[];
+    models: { name: string; content: string }[];
     objects: ObjectJSON[];
 }
 
 export class PDT {
     name: string;
-    models: Partial<PlotData>[];
-    objects: PDTObject[];
-    bottomTexture?: Partial<PlotData>;
-    depthMap?: Partial<PlotData>;
-    temperature?: Partial<PlotData>;
-    currents?: Partial<PlotData>;
+    models!: Group[];
+    objects!: PDTObject[];
+    bottomTexture?: any;
+    depthMap?: any;
+    temperature?: any;
+    currents?: any;
 
     constructor(pdt: PDTJSON) {
         this.name = pdt.name;
-        this.models = pdt.models;
+    }
+
+    public async init(pdt: PDTJSON) {
+        this.models = await Promise.all(pdt.models.map(async (model) => loadModel(model)));
         this.objects = pdt.objects.map((obj: ObjectJSON) => new PDTObject(obj, this.models));
     }
 
-    getPlot = (): Partial<PlotData>[] => {
-        return this.objects.flatMap((obj: PDTObject) => [
-            ...obj.location.locationObjects,
-            ...obj.obj,
-        ]);
-    };
-
-    getObjects = (): PDTObject[] => this.objects;
+    public getObjects(): PDTObject[] {
+        return this.objects;
+    }
 
     updateObjects = (fun: Function): void => this.objects.forEach((obj: PDTObject) => fun(obj));
 

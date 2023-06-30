@@ -1,11 +1,11 @@
 export type MultivariateNormal = {
-    representation: "multivariate-normal";
+    type: "multivariate-normal";
     mean: [number, number, number];
-    covariance: [[number, number, number], [number, number, number], [number, number, number]];
+    cov: [[number, number, number], [number, number, number], [number, number, number]];
 };
 
 export type UniformContinuous = {
-    representation: "uniform-continous";
+    type: "uniform-continous";
     "x-min": number;
     "x-max": number;
     "y-min": number;
@@ -15,12 +15,12 @@ export type UniformContinuous = {
 };
 
 export type Categorical<E extends string> = {
-    representation: "categorical";
+    type: "categorical";
     mass: Record<E, number>;
 };
 
 export type VonMises = {
-    representation: "von-mises";
+    type: "von-mises";
     mean: number;
     dispersion: number;
 };

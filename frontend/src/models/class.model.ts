@@ -1,21 +1,29 @@
 import type { PieData } from "plotly.js-dist-min";
 import type { Categorical } from "@/services/dist.services";
 
-const TYPES = ["tetrapod", "reefcone", "reefring", "stone"] as const;
+const CLASSES = [
+    "tetrapod",
+    "reefcone",
+    "reefring",
+    "stone",
+    "container",
+    "bicycle",
+    "effeltower",
+] as const;
 
-export type TypeJSON =
-    | (typeof TYPES)[number]
+export type ClassJSON =
+    | (typeof CLASSES)[number]
     | {
-          distribution: Categorical<(typeof TYPES)[number]>;
+          dist: Categorical<(typeof CLASSES)[number]>;
       };
 
-export class Type implements Partial<PieData> {
+export class Class implements Partial<PieData> {
     values!: number[];
     labels!: string[];
     type: "pie";
     customdata: [number];
 
-    constructor(objID: number, type?: TypeJSON) {
+    constructor(objID: number, type?: ClassJSON) {
         this.type = "pie";
         this.customdata = [objID];
         if (type === undefined) {
@@ -25,13 +33,13 @@ export class Type implements Partial<PieData> {
             this.values = [100];
             this.labels = [type];
         } else {
-            this.values = Object.values(type.distribution.mass);
-            this.labels = Object.keys(type.distribution.mass);
+            this.values = Object.values(type.dist.mass);
+            this.labels = Object.keys(type.dist.mass);
         }
     }
 
-    static copy(type: Type): Type {
-        const copyType = new Type(type.customdata[0]);
+    static copy(type: Class): Class {
+        const copyType = new Class(type.customdata[0]);
         copyType.values = [...type.values];
         copyType.labels = [...type.labels];
         copyType.type = "pie";

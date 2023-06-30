@@ -1,4 +1,4 @@
-import { Camera, Clock, Scene, WebGLRenderer } from "three";
+import { Camera, Scene, WebGLRenderer } from "three";
 
 export class Loop {
     camera: Camera;

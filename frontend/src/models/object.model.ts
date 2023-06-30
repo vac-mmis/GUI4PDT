@@ -1,134 +1,87 @@
-import type { Datum, PlotData, PlotType, TypedArray } from "plotly.js-dist-min";
-import { Location, type LocationJSON } from "@/models/location.model";
-import { Type, type TypeJSON } from "@/models/type.model";
+import type { LocationJSON } from "@/models/location.model";
+import { Class, type ClassJSON } from "@/models/class.model";
 import type { RotationJSON } from "@/models/rotation.model";
 import type { MaterialJSON } from "@/models/material.model";
+import type { DistLocation } from "@/services/dist.services";
 import { getMean } from "@/services/dist.services";
+import { Group } from "three";
+import { emptyObject, createObject } from "@/World/components/object";
 
 export type ObjectJSON = {
     id: number;
-    type: TypeJSON;
+    class: ClassJSON;
     location: LocationJSON;
-    rotation: RotationJSON;
+    rotation?: RotationJSON;
     material: MaterialJSON;
-    scale: [number, number, number];
+    scale?: number;
+    physics?: boolean;
 };
 
-const objToData = (obj: ObjectJSON, models?: Partial<PlotData>[]): ObjectPlot[] => {
-    if (models === undefined) {
-        return [];
-    }
-
-    const loc = getMean(obj.location.distribution);
-
-    if (typeof obj.type === "string") {
-        const model = models.find((model) => model.name === obj.type);
-        if (model === undefined) {
-            return [];
-        } else {
-            return [new ObjectPlot(obj.id, model, loc, obj.scale, 1)];
+export function typeToObject(
+    models: Group[],
+    position: [number, number, number],
+    type: ClassJSON
+): Group {
+    // create a geometry
+    const group = new Group();
+    if (typeof type === "string") {
+        const model = models.find((model) => model.name === type);
+        if (model !== undefined) {
+            const object = createObject(model, position);
+            group.add(object);
         }
     } else {
-        const dist = obj.type.distribution;
+        const dist = type.dist;
         const res = Object.entries(dist.mass)
             .map((type: [string, number]) => {
-                const model = models.find((m) => {
-                    return m.name === type[0];
-                });
+                const model = models.find((m) => m.name === type[0]);
                 if (model === undefined) {
                     return undefined;
                 } else {
-                    return new ObjectPlot(obj.id, model, loc, obj.scale, type[1]);
+                    return createObject(model, position, type[1]);
                 }
             })
-            .filter((model): model is ObjectPlot => model !== undefined);
-        return res.length === 0 ? [] : res;
+            .filter((model): model is Group => model !== undefined);
+        group.add(...res);
     }
-};
-
-export class ObjectPlot implements Partial<PlotData> {
-    name: string | undefined;
-    x!: number[];
-    y!: number[];
-    z!: number[];
-    type: PlotType | undefined;
-    i?: TypedArray;
-    j?: TypedArray;
-    k?: TypedArray;
-    opacity: number | undefined;
-    customdata: [number];
-    visible: boolean;
-
-    constructor(
-        objID: number,
-        model?: Partial<PlotData>,
-        loc?: number[],
-        scale?: number[],
-        p?: number,
-        visibility = true
-    ) {
-        this.visible = visibility;
-        this.customdata = [objID];
-        if (model === undefined || scale === undefined) {
-            return;
-        }
-        this.name = model.name;
-        this.x = (model.x as number[]).map((x) => x * scale[0] + (loc ? loc[0] : 0));
-        this.y = (model.y as number[]).map((y) => y * scale[1] + (loc ? loc[1] : 0));
-        this.z = (model.z as number[]).map((z) => z * scale[2] + (loc ? loc[2] : 0));
-        this.type = model.type;
-        this.i = model.i;
-        this.j = model.j;
-        this.k = model.k;
-        this.opacity = p;
-    }
-
-    static copy(plot: ObjectPlot): ObjectPlot {
-        const copyObj = new ObjectPlot(plot.customdata[0]);
-        copyObj.name = plot.name;
-        copyObj.x = [...plot.x];
-        copyObj.y = [...plot.y];
-        copyObj.z = [...plot.z];
-        copyObj.type = plot.type;
-        copyObj.i = plot.i;
-        copyObj.j = plot.j;
-        copyObj.k = plot.k;
-        copyObj.opacity = plot.opacity;
-        copyObj.customdata = plot.customdata;
-        return copyObj;
-    }
-
-    public toggleLocation(visibility = true) {
-        this.visible = visibility;
-    }
+    return group;
 }
 
 export class PDTObject {
     id: number;
-    obj!: ObjectPlot[];
-    type!: Type;
-    location!: Location;
-    rotation?: PlotData;
-    material?: PlotData;
+    obj!: Group;
+    type!: Class;
+    //location!: Location;
+    rotation?: any;
+    material?: any;
 
-    constructor(obj: ObjectJSON | number, models?: Partial<PlotData>[]) {
+    constructor(obj: ObjectJSON | number, models?: Group[]) {
         if (typeof obj === "number") {
             this.id = obj;
             return;
         } else {
             this.id = obj.id;
-            this.obj = objToData(obj, models);
         }
-        this.location = new Location(this.id, models, obj.location);
-        this.type = new Type(this.id, obj.type);
+
+        let position: [number, number, number];
+        if ("dist" in obj.location) {
+            position = getMean(obj.location.dist as DistLocation);
+        } else {
+            position = obj.location;
+        }
+
+        this.obj = models ? typeToObject(models, position, obj.class) : emptyObject(position);
+        this.type = new Class(this.id, obj.class);
+
+        //this.location = new Location(this.id, models[0], obj.location);
     }
 
     static copy(object: PDTObject): PDTObject {
         const copyObj = new PDTObject(object.id);
         copyObj.id = object.id;
-        copyObj.obj = object.obj.map((obj) => ObjectPlot.copy(obj));
-        copyObj.type = Type.copy(object.type);
-        copyObj.location = Location.copy(object.location);
+        copyObj.obj = object.obj.clone();
+        copyObj.type = Class.copy(object.type);
+        //copyObj.location = Location.copy(object.location);
         copyObj.rotation = object.rotation ? { ...object.rotation } : undefined;
         copyObj.material = object.material ? { ...object.material } : undefined;
         return copyObj;

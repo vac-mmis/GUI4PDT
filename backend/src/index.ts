@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import routes from "./routes/routes";
 import cors from "cors";
 
-import PDTServices from "./services/pdt.services";
+import PDTServices from "./store/pdt.store";
 const app = express();
 app.use(cors());
 
