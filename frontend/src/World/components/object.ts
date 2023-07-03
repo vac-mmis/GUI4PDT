@@ -5,22 +5,12 @@ import {
     MeshBasicMaterial,
     MeshPhongMaterial,
     BoxGeometry,
-    Object3D,
 } from "three";
-
-function enableAlphaSorting(object: Object3D) {
-    object.traverse((child) => {
-        if (child instanceof Mesh) {
-            child.renderOrder = 1; // Set a higher render order for transparency
-            child.material.depthTest = true; // Enable depth testing
-            child.material.depthWrite = false; // Disable writing to the depth buffer
-        }
-    });
-}
 
 export function createObject(
     model: Group,
     position: [number, number, number],
+    scale: number = 1,
     opacity: number = 1
 ): Group {
     const object = new Group();
@@ -42,6 +32,7 @@ export function createObject(
             }
             const clonedMesh = new Mesh(child.geometry, clonedMaterial);
             if (opacity < 1) {
+                // Enable alpha sorting
                 clonedMesh.renderOrder = 1; // Set a higher render order for transparency
                 clonedMesh.material.depthTest = true; // Enable depth testing
                 clonedMesh.material.depthWrite = false; // Disable writing to the depth buffer
@@ -50,24 +41,17 @@ export function createObject(
         }
     });
 
-    object.position.set(position[0], position[1], position[2]);
-
-    // Enable alpha sorting for the object
-    if (opacity < 1) {
-        enableAlphaSorting(object);
-    }
+    object.position.set(...position);
+    object.scale.set(scale, scale, scale);
 
     return object;
 }
 
-export function emptyObject(position: [number, number, number]): Group {
+export function emptyObject(position: [number, number, number]): Mesh {
     const geometry = new BoxGeometry(2, 2, 2);
     const material = new MeshStandardMaterial();
 
     const object = new Mesh(geometry, material);
-    object.position.set(position[0], position[1], position[2]);
-
-    const group = new Group();
-    group.add(object);
-    return group;
+    object.position.set(...position);
+    return object;
 }

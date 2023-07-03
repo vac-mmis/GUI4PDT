@@ -36,7 +36,7 @@ export class World {
     }
 
     public append(objects: PDTObject[]) {
-        const trace: Group[] = objects.map((obj: PDTObject) => obj.obj);
+        const trace: PDTObject[] = objects;
         this.scene.add(...trace);
     }
 

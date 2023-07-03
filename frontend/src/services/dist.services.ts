@@ -3,7 +3,7 @@ import { sqrtm, add, multiply, mean } from "mathjs";
 export type MultivariateNormal = {
     type: "multivariate-normal";
     mean: [number, number, number];
-    covariance: [[number, number, number], [number, number, number], [number, number, number]];
+    cov: [[number, number, number], [number, number, number], [number, number, number]];
 };
 
 export type UniformContinuous = {
@@ -23,11 +23,9 @@ export type Categorical<E extends string> = {
 
 export type VonMises = {
     type: "von-mises";
-    mean: [number, number, number];
-    kappa: [number, number, number];
+    mean: number;
+    dispersion: number;
 };
-
-export type DistLocation = MultivariateNormal | UniformContinuous | VonMises;
 
 export const multivariateNormal = (dist: MultivariateNormal) => {
     const NUM_POINTS = 1000;
@@ -39,25 +37,31 @@ export const multivariateNormal = (dist: MultivariateNormal) => {
         return z0;
     }
 
-    const invCov: number[][] = sqrtm(dist.covariance);
-    let dataPoints: number[][] = [[], [], [], []];
+    const invCov: number[][] = sqrtm(dist.cov);
+    let dataPoints: number[] = [];
     for (let index = 0; index < NUM_POINTS; index++) {
         const X: number[] = [randomGauss(), randomGauss(), randomGauss()];
         const Y: number[] = add(multiply(invCov, X), dist.mean) as number[];
-        dataPoints[0].push(Y[0]);
-        dataPoints[1].push(Y[1]);
-        dataPoints[2].push(Y[2]);
 
         const distance = Math.sqrt(
             Math.pow(Y[0] - dist.mean[0], 2) +
                 Math.pow(Y[1] - dist.mean[1], 2) +
                 Math.pow(Y[2] - dist.mean[2], 2)
         );
-        dataPoints[3].push(distance);
+        if (distance < 0) {
+            throw new Error("Negative distance");
+        }
+        Y.push(distance);
+        dataPoints.push(...Y);
     }
 
-    const maxDistance = Math.max(...dataPoints[3]);
-    dataPoints[3] = dataPoints[3].map((distance) => 1 - distance / maxDistance);
+    const maxDistance = Math.max(...dataPoints.filter((_, i) => i % 4 === 3));
+    dataPoints = dataPoints.map((p, i) => {
+        if (i % 4 === 3) {
+            const prob = 1 - p / maxDistance;
+            return prob < 1 ? prob : 0;
+        } else return p;
+    });
 
     return dataPoints;
 };
@@ -77,8 +81,8 @@ export const uniformContinuous = (dist: UniformContinuous) => {
     ];
 };
 
-export const getMean = (dist: DistLocation): [number, number, number] => {
-    if (dist.type === "multivariate-normal" || dist.type === "von-mises") {
+export const getMean = (dist: MultivariateNormal | UniformContinuous): [number, number, number] => {
+    if (dist.type === "multivariate-normal") {
         return dist.mean;
     } else {
         return [

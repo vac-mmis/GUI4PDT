@@ -1,8 +1,8 @@
-import type { LocationJSON } from "@/models/location.model";
+import { Location, type LocationJSON } from "@/models/location.model";
 import { Class, type ClassJSON } from "@/models/class.model";
 import type { RotationJSON } from "@/models/rotation.model";
 import type { MaterialJSON } from "@/models/material.model";
-import type { DistLocation } from "@/services/dist.services";
+import type { MultivariateNormal, UniformContinuous } from "@/services/dist.services";
 import { getMean } from "@/services/dist.services";
 import { Group } from "three";
 import { emptyObject, createObject } from "@/World/components/object";
@@ -20,14 +20,15 @@ export type ObjectJSON = {
 export function typeToObject(
     models: Group[],
     position: [number, number, number],
-    type: ClassJSON
+    type: ClassJSON,
+    scale: number = 1
 ): Group {
     // create a geometry
     const group = new Group();
     if (typeof type === "string") {
         const model = models.find((model) => model.name === type);
         if (model !== undefined) {
-            const object = createObject(model, position);
+            const object = createObject(model, position, scale, 1);
             group.add(object);
         }
     } else {
@@ -38,7 +39,7 @@ export function typeToObject(
                 if (model === undefined) {
                     return undefined;
                 } else {
-                    return createObject(model, position, type[1]);
+                    return createObject(model, position, scale, type[1]);
                 }
             })
             .filter((model): model is Group => model !== undefined);
@@ -47,43 +48,34 @@ export function typeToObject(
     return group;
 }
 
-export class PDTObject {
-    id: number;
-    obj!: Group;
-    type!: Class;
+export class PDTObject extends Group {
+    objID: number;
+    class!: Class;
     //location!: Location;
-    rotation?: any;
     material?: any;
 
-    constructor(obj: ObjectJSON | number, models?: Group[]) {
-        if (typeof obj === "number") {
-            this.id = obj;
-            return;
-        } else {
-            this.id = obj.id;
-        }
+    constructor(objJSON: ObjectJSON, models?: Group[]) {
+        super();
+        //
+        this.objID = objJSON.id;
 
         let position: [number, number, number];
-        if ("dist" in obj.location) {
-            position = getMean(obj.location.dist as DistLocation);
+        if ("dist" in objJSON.location) {
+            position = getMean(objJSON.location.dist as MultivariateNormal | UniformContinuous);
         } else {
-            position = obj.location;
+            position = objJSON.location;
         }
 
-        this.obj = models ? typeToObject(models, position, obj.class) : emptyObject(position);
-        this.type = new Class(this.id, obj.class);
+        const object = models
+            ? typeToObject(models, position, objJSON.class, objJSON.scale)
+            : emptyObject(position);
+        this.add(object);
+
+        const location = new Location(this.objID, objJSON.location);
+        this.add(location);
+
+        this.class = new Class(this.id, objJSON.class);
 
         //this.location = new Location(this.id, models[0], obj.location);
-    }
-
-    static copy(object: PDTObject): PDTObject {
-        const copyObj = new PDTObject(object.id);
-        copyObj.id = object.id;
-        copyObj.obj = object.obj.clone();
-        copyObj.type = Class.copy(object.type);
-        //copyObj.location = Location.copy(object.location);
-        copyObj.rotation = object.rotation ? { ...object.rotation } : undefined;
-        copyObj.material = object.material ? { ...object.material } : undefined;
-        return copyObj;
     }
 }
