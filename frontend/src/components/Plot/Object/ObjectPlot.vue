@@ -5,8 +5,6 @@
 <script lang="ts" setup>
 import { ref, watch, onMounted } from "vue";
 import { newPlot, type PlotData, type Layout } from "plotly.js-dist-min";
-import type { Type } from "@/models/type.model";
-import type { Location } from "@/models/location.model";
 
 const props = defineProps<{ data: Partial<PlotData>[] }>();
 

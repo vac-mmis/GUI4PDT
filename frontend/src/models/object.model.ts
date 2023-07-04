@@ -47,7 +47,6 @@ export function typeToObject(
     }
     return group;
 }
-
 export class PDTObject extends Group {
     objID: number;
     class!: Class;
@@ -58,6 +57,7 @@ export class PDTObject extends Group {
         super();
         //
         this.objID = objJSON.id;
+        this.userData.type = "Object";
 
         let position: [number, number, number];
         if ("dist" in objJSON.location) {
@@ -75,7 +75,28 @@ export class PDTObject extends Group {
         this.add(location);
 
         this.class = new Class(this.id, objJSON.class);
+    }
 
-        //this.location = new Location(this.id, models[0], obj.location);
+    public toggleVisibility(showObject: boolean = true) {
+        this.children[0].visible = showObject;
+    }
+
+    public toggleLocation(showLocation: boolean = false) {
+        this.children[1].visible = showLocation;
     }
 }
+
+const toggleObjects = (showObject: boolean) => {
+    return (obj: PDTObject) => {
+        obj.toggleVisibility(showObject);
+    };
+};
+
+const toggleLocation = (showLocation: boolean) => {
+    return (obj: PDTObject) => obj.toggleLocation(showLocation);
+};
+
+export const ObjServices = {
+    toggleLocation,
+    toggleObjects,
+};

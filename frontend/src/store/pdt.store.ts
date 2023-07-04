@@ -25,20 +25,12 @@ const PDTStore: any = defineStore("myPDT", () => {
         return toRaw(_PDT.value).getObjects();
     }
 
-    const findObject = (objID: number) => toRaw(_PDT.value).findObject(objID);
-
-    function updateObject(objID: number, fun: Function) {
-        updated.value = true;
-        const object = _PDT.value.findObject(objID);
-        fun(object);
-    }
-
     function updateObjects(fun: Function) {
         updated.value = true;
         _PDT.value.updateObjects(fun);
     }
 
-    return { updated, getObjects, fetchPDT, findObject, updateObject, updateObjects };
+    return { updated, getObjects, fetchPDT, updateObjects };
 });
 
 export default PDTStore;

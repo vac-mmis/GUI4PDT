@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full" :class="openList ? `w-25` : ``">
+    <div :class="openList ? `w-auto` : ``">
         <v-toolbar class="w-100" :collapse="!openList" title="Objects">
             <v-app-bar-nav-icon @click="toggleList">
                 <font-awesome-icon :icon="['fas', 'bars']" />
@@ -22,7 +22,7 @@
                     :object="object"
                     class="d-flex w-100 pa-2 justify-space-between align-center mx-auto"
                 >
-                    <v-card-title class="text-h6">Object {{ object.id }}</v-card-title>
+                    <v-card-title class="text-h6">Object {{ object.name }}</v-card-title>
                     <v-card-actions>
                         <v-btn-toggle
                             v-model="toggleObjects[index]"
@@ -30,13 +30,23 @@
                             rounded="xl"
                             color="secondary"
                         >
-                            <v-btn value="display">
+                            <v-btn
+                                value="display"
+                                @click="
+                                    object.toggleVisibility(
+                                        toggleObjects[index].includes(`display`)
+                                    )
+                                "
+                            >
                                 <font-awesome-icon :icon="['fas', 'eye']" />
                                 <v-tooltip activator="parent" location="bottom">
                                     Show object
                                 </v-tooltip>
                             </v-btn>
-                            <v-btn value="loc" @click="toggleObjectLocation(object.id)">
+                            <v-btn
+                                value="loc"
+                                @click="object.toggleLocation(toggleObjects[index].includes(`loc`))"
+                            >
                                 <font-awesome-icon :icon="['fas', 'location-crosshairs']" />
                                 <v-tooltip activator="parent" location="bottom">
                                     Show location
@@ -51,14 +61,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, computed, type ComputedRef } from "vue";
+import { ObjServices, type PDTObject } from "@/models/object.model";
 import PDTStore from "@/store/pdt.store";
 import { onMounted } from "vue";
-import type { PDTObject } from "@/models/object.model";
-import { toggleLocation } from "@/models/location.model";
+import { watch } from "vue";
 
-const PDT = PDTStore();
-const objects = ref([] as PDTObject[]);
+const pdt = PDTStore();
+const objects: ComputedRef<PDTObject[]> = computed(() => pdt.getObjects());
 
 const openList = ref(false);
 const toggleList = () => {
@@ -70,7 +80,7 @@ const globalLoc = ref(false);
 const toggleObjects = ref([[]] as string[][]);
 
 const toggleGlobalLocation = () => {
-    PDT.updateObjects(toggleLocation(globalLoc.value));
+    pdt.updateObjects(ObjServices.toggleLocation(globalLoc.value));
     toggleObjects.value.forEach((objToggle) => {
         const index = objToggle.indexOf("loc");
         if (globalLoc.value && index < 0) {
@@ -80,20 +90,24 @@ const toggleGlobalLocation = () => {
             objToggle.splice(index);
         }
     });
-    if (toggleObjects.value.every((objToggle: any) => objToggle.includes(`loc`))) {
-        globalLoc.value = true;
-    } else if (toggleObjects.value.every((objToggle: any) => !objToggle.includes(`loc`))) {
-        globalLoc.value = false;
-    }
-};
-
-const toggleObjectLocation = (objectID: number) => {
-    PDT.updateObject(objectID, toggleLocation(toggleObjects.value[objectID].includes("loc")));
 };
 
 onMounted(() => {
-    objects.value = PDT.getObjects();
     toggleObjects.value.length = objects.value.length;
-    toggleObjects.value.fill([], 0, objects.value.length);
+    toggleObjects.value.fill(["display"], 0, objects.value.length);
 });
+
+watch(
+    () => toggleObjects,
+    () => {
+        console.log("hey");
+        if (toggleObjects.value.every((objToggle: any) => objToggle.includes(`loc`))) {
+            globalLoc.value = true;
+            console.log(globalLoc.value);
+        } else if (toggleObjects.value.every((objToggle: any) => !objToggle.includes(`loc`))) {
+            globalLoc.value = false;
+            console.log(globalLoc.value);
+        }
+    }
+);
 </script>

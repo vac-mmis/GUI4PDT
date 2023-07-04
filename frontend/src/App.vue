@@ -5,10 +5,12 @@ import NavBar from "@/components/MainComponents/NavBar.vue";
 
 <template>
     <header></header>
-    <v-layout>
-        <NavBar></NavBar>
-        <v-main>
-            <RouterView />
-        </v-main>
-    </v-layout>
+    <v-app app>
+        <v-layout>
+            <NavBar></NavBar>
+            <v-main>
+                <RouterView />
+            </v-main>
+        </v-layout>
+    </v-app>
 </template>

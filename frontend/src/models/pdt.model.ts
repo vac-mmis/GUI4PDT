@@ -30,7 +30,4 @@ export class PDT {
     }
 
     updateObjects = (fun: Function): void => this.objects.forEach((obj: PDTObject) => fun(obj));
-
-    findObject = (objectID: number): PDTObject | undefined =>
-        this.objects.find((obj) => obj.id === objectID);
 }

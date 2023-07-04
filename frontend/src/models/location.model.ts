@@ -58,6 +58,8 @@ export class Location extends Group {
     constructor(objID: number, locJSON: LocationJSON) {
         super();
         this.objID = objID;
+        this.userData.type = "Location";
+        this.visible = false;
 
         if (!("dist" in locJSON)) {
             return;
