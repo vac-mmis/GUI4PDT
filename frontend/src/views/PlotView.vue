@@ -1,12 +1,13 @@
 <template>
-    <div v-if="!isLoading" class="d-flex flex-row">
-        <SelectionComponent @location-status="handleLocationStatus" :objects="objectList" />
-        <div class="d-flex h-100 w-100 justify-center">
-            <div class="w-75 h-100 pa-6">
-                <MainPlot @objects="makeObjectList" @object-clicked="openObject" />
-            </div>
-            <div class="w-25 h-100 pa-4" v-if="openedObject">
-                <ObjectDetails v-if="openedObject" :object="openedObject" />
+    <div v-if="!isLoading" class="h-100 w-100">
+        <div class="position-absolute h-100 w-100 d-flex justify-center align-center z-0">
+            <ThreeScene />
+        </div>
+        <div class="w-100 d-flex flex-row justify-space-between">
+            <SelectionComponent class="position-relative overflow-visible z-1" />
+
+            <div class="position-relative w-25 h-auto pa-6 z-1">
+                <ObjectDetails :object="objects[0]" />
             </div>
         </div>
     </div>
@@ -16,34 +17,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, computed } from "vue";
+import ObjectDetails from "@/components/Plot/Object/ObjectDetails.vue";
+import SelectionComponent from "@/components/Plot/SelectionComponent.vue";
+import ThreeScene from "@/components/Plot/ThreeScene.vue";
 import PDTStore from "@/store/pdt.store";
 
-import MainPlot from "@/components/PlotlyComponents/MainPlotComponent.vue";
-import ObjectDetails from "@/components/PlotlyComponents/Object/ObjectDetails.vue";
-import SelectionComponent from "@/components/PlotlyComponents/SelectionComponent.vue";
+const isLoading = ref(true);
 
-let isLoading = ref(true);
-const myPDT = PDTStore();
-
-const openedObject = ref(null);
-const showLocation = ref(false);
-const objectList = ref(null);
-const openObject = (obj: any) => {
-    openedObject.value = obj;
-};
-
-const handleLocationStatus = (loc: boolean) => {
-    showLocation.value = loc;
-};
-
-const makeObjectList = (objects: any) => {
-    objectList.value = objects;
-};
+const pdt = PDTStore();
+const objects = computed(() => pdt.getObjects());
 
 onBeforeMount(async () => {
     isLoading.value = true;
-    await myPDT.fetchPDT().finally(() => {
+    await pdt.fetchPDT().finally(() => {
         isLoading.value = false;
     });
 });
