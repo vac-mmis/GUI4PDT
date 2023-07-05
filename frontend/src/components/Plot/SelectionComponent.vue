@@ -100,13 +100,10 @@ onMounted(() => {
 watch(
     () => toggleObjects,
     () => {
-        console.log("hey");
         if (toggleObjects.value.every((objToggle: any) => objToggle.includes(`loc`))) {
             globalLoc.value = true;
-            console.log(globalLoc.value);
         } else if (toggleObjects.value.every((objToggle: any) => !objToggle.includes(`loc`))) {
             globalLoc.value = false;
-            console.log(globalLoc.value);
         }
     }
 );

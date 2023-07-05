@@ -8,7 +8,7 @@
     <v-navigation-drawer color="primary" temporary dark v-model="drawer">
         <v-list>
             <v-list-item
-                v-for="item in menuItems"
+                v-for="item of menuItems"
                 :key="item.title"
                 :to="item.route"
                 link
