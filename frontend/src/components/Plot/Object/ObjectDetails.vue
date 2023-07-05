@@ -1,32 +1,58 @@
 <template>
-    <v-card>
-        <template v-slot:title>
-            <div class="d-flex justify-between align-center pa-2">
+    <v-card
+        v-if="opened"
+        :title="`Details on object ${object.id}`"
+        append-icon="$close"
+        class="mx-auto"
+        elevation="16"
+        max-width="500"
+    >
+        <template v-slot:prepend>
+            <div class="pa-2">
                 <font-awesome-icon :icon="['fas', 'cubes']" />
-                <span class="px-6">Details on object {{ props.object.id }}</span>
             </div>
         </template>
-        <v-tabs v-model="tab" color="secondary" align-tabs="center">
-            <v-tab :value="1">Type</v-tab>
-            <v-tab :value="2">Location</v-tab>
-        </v-tabs>
-        <div class="h-auto pa-6">
-            <template v-if="tab === 1">
-                <ObjectPlot :data="[object.class]" />
-            </template>
-        </div>
+
+        <template v-slot:append>
+            <v-btn icon="$close" variant="text" @click="opened = false">
+                <font-awesome-icon :icon="['fas', 'xmark']" />
+            </v-btn>
+        </template>
+
+        <v-divider></v-divider>
+        <v-card-item>
+            <v-tabs v-model="tab" color="secondary" align-tabs="center">
+                <v-tab :value="1">Type</v-tab>
+                <v-tab :value="2">Location</v-tab>
+            </v-tabs>
+            <div class="h-auto pa-6">
+                <template v-if="tab === 1">
+                    <ObjectPlot :data="[object.class]" />
+                </template>
+            </div>
+        </v-card-item>
     </v-card>
 </template>
 
 <script lang="ts" setup>
 import ObjectPlot from "@/components/Plot/Object/ObjectPlot.vue";
 import type { PDTObject } from "@/models/object.model";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 
 const props = defineProps<{ object: PDTObject }>();
+
+const opened = ref(true);
 const object = computed(() => {
+    opened.value = true;
     return props.object;
 });
+
+watch(
+    () => props.object,
+    () => {
+        opened.value = true;
+    }
+);
 
 const tab = ref(1);
 </script>
