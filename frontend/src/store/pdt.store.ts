@@ -7,7 +7,6 @@ import { PDTObject } from "@/models/object.model";
 
 const PDTStore: any = defineStore("myPDT", () => {
     const _PDT = ref({} as PDT);
-    const updated = ref(false);
 
     const fetchPDT = async () => {
         return axios
@@ -26,11 +25,10 @@ const PDTStore: any = defineStore("myPDT", () => {
     }
 
     function updateObjects(fun: Function) {
-        updated.value = true;
         _PDT.value.updateObjects(fun);
     }
 
-    return { updated, getObjects, fetchPDT, updateObjects };
+    return { getObjects, fetchPDT, updateObjects };
 });
 
 export default PDTStore;

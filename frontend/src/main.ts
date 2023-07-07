@@ -17,6 +17,10 @@ import {
     faCubes,
     faXmark,
     faWindowMinimize,
+    faMinus,
+    faPlus,
+    faPlay,
+    faPause,
 } from "@fortawesome/free-solid-svg-icons";
 // Vuetify
 import "vuetify/styles";
@@ -59,7 +63,19 @@ const vuetify = createVuetify({
 
 const pinia = createPinia();
 
-library.add(faHome, faBars, faLocationCrosshairs, faEye, faCubes, faXmark, faWindowMinimize);
+library.add(
+    faHome,
+    faBars,
+    faLocationCrosshairs,
+    faEye,
+    faCubes,
+    faXmark,
+    faWindowMinimize,
+    faMinus,
+    faPlus,
+    faPlay,
+    faPause
+);
 
 createApp(App)
     .component("font-awesome-icon", FontAwesomeIcon)

@@ -1,5 +1,6 @@
 import { multivariateNormal } from "@/services/dist.services";
 import type { MultivariateNormal, UniformContinuous } from "@/services/dist.services";
+
 import {
     Group,
     Points,
@@ -8,6 +9,8 @@ import {
     PointsMaterial,
     Color,
     BufferAttribute,
+    Vector3,
+    type InterleavedBufferAttribute,
 } from "three";
 
 export type LocationJSON =
@@ -16,11 +19,11 @@ export type LocationJSON =
       }
     | [number, number, number];
 
-function createScatterPlot(pointsData: number[]): Group {
-    const group = new Group();
+const NUM_POINTS = 1000;
 
+function createScatterPlot(pointsData: number[]): Points {
     const vertices = pointsData.filter((_, i) => i % 4 !== 3);
-    const probs = pointsData.filter((p, i) => i % 4 === 3);
+    const probs = pointsData.filter((_, i) => i % 4 === 3);
 
     const geometry = new BufferGeometry();
     geometry.setAttribute("position", new Float32BufferAttribute(vertices, 3));
@@ -45,31 +48,54 @@ function createScatterPlot(pointsData: number[]): Group {
     });
     geometry.setAttribute("color", new BufferAttribute(colors, 4));
 
-    const points = new Points(geometry, material);
-
-    // Add the points object to the group
-    group.add(points);
-
-    return group;
+    return new Points(geometry, material);
 }
-export class Location extends Group {
-    objID: number;
 
+export class Location extends Group {
+    private objID: number;
+    private timeIndex: number;
+
+    private points?: BufferAttribute | InterleavedBufferAttribute;
     constructor(objID: number, locJSON: LocationJSON) {
         super();
         this.objID = objID;
         this.userData.type = "Location";
         this.visible = false;
+        this.timeIndex = 0;
 
         if (!("dist" in locJSON)) {
-            return;
-        }
-        if (locJSON.dist.type === "multivariate-normal") {
-            const dataPoints = multivariateNormal(locJSON.dist);
+            const scatterPlot = createScatterPlot([...locJSON]);
+            this.add(scatterPlot);
+        } else if (locJSON.dist.type === "multivariate-normal") {
+            const dist: MultivariateNormal = {
+                type: locJSON.dist.type,
+                mean: [0, 0, 0],
+                cov: locJSON.dist.cov,
+            };
+            const dataPoints = multivariateNormal(dist, NUM_POINTS);
             const scatterPlot = createScatterPlot(dataPoints);
             this.add(scatterPlot);
+
+            const points = this.children[0] as Points;
+            if (points) {
+                this.points = points.geometry.attributes.position;
+                this.timeIndex = Math.ceil(Math.random() * this.points.count * 3);
+            }
+        }
+    }
+
+    public getPosition(t: number): Vector3 {
+        const points = this.children[0] as Points;
+        if (points) {
+            this.points = points.geometry.attributes.position;
+            this.timeIndex = Math.trunc(t) % this.points.count;
+            return new Vector3(
+                this.points.array[this.timeIndex],
+                this.points.array[this.timeIndex + 1],
+                this.points.array[this.timeIndex + 2]
+            );
         } else {
-            return;
+            return new Vector3(0, 0, 0);
         }
     }
 }

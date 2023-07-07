@@ -2,8 +2,8 @@ import { sqrtm, add, multiply, mean } from "mathjs";
 
 export type MultivariateNormal = {
     type: "multivariate-normal";
-    mean: [number, number, number];
-    cov: [[number, number, number], [number, number, number], [number, number, number]];
+    mean: number[];
+    cov: number[][];
 };
 
 export type UniformContinuous = {
@@ -27,9 +27,7 @@ export type VonMises = {
     dispersion: number;
 };
 
-export const multivariateNormal = (dist: MultivariateNormal) => {
-    const NUM_POINTS = 1000;
-
+export const multivariateNormal = (dist: MultivariateNormal, numPoints: number = 1) => {
     function randomGauss() {
         const u1 = Math.random();
         const u2 = Math.random();
@@ -39,7 +37,7 @@ export const multivariateNormal = (dist: MultivariateNormal) => {
 
     const invCov: number[][] = sqrtm(dist.cov);
     let dataPoints: number[] = [];
-    for (let index = 0; index < NUM_POINTS; index++) {
+    for (let index = 0; index < numPoints; index++) {
         const X: number[] = [randomGauss(), randomGauss(), randomGauss()];
         const Y: number[] = add(multiply(invCov, X), dist.mean) as number[];
 
@@ -81,7 +79,7 @@ export const uniformContinuous = (dist: UniformContinuous) => {
     ];
 };
 
-export const getMean = (dist: MultivariateNormal | UniformContinuous): [number, number, number] => {
+export const getMean = (dist: MultivariateNormal | UniformContinuous): number[] => {
     if (dist.type === "multivariate-normal") {
         return dist.mean;
     } else {

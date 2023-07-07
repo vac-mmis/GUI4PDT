@@ -4,7 +4,7 @@ import type { RotationJSON } from "@/models/rotation.model";
 import type { MaterialJSON } from "@/models/material.model";
 import type { MultivariateNormal, UniformContinuous } from "@/services/dist.services";
 import { getMean } from "@/services/dist.services";
-import { Group } from "three";
+import { Group, type Intersection } from "three";
 import { emptyObject, createObject } from "@/World/components/object";
 
 export type ObjectJSON = {
@@ -47,11 +47,11 @@ export function typeToObject(
     }
     return group;
 }
+
 export class PDTObject extends Group {
     objID: number;
     class!: Class;
-    //location!: Location;
-    material?: any;
+    //material?: any;
 
     constructor(objJSON: ObjectJSON, models?: Group[]) {
         super();
@@ -59,16 +59,18 @@ export class PDTObject extends Group {
         this.objID = objJSON.id;
         this.userData.type = "Object";
 
-        let position: [number, number, number];
         if ("dist" in objJSON.location) {
-            position = getMean(objJSON.location.dist as MultivariateNormal | UniformContinuous);
+            const mean = getMean(
+                objJSON.location.dist as MultivariateNormal | UniformContinuous
+            ).slice(0, 3);
+            this.position.set(...(mean as [number, number, number]));
         } else {
-            position = objJSON.location;
+            this.position.set(...objJSON.location);
         }
 
         const object = models
-            ? typeToObject(models, position, objJSON.class, objJSON.scale)
-            : emptyObject(position);
+            ? typeToObject(models, [0, 0, 0], objJSON.class, objJSON.scale)
+            : emptyObject([0, 0, 0]);
         this.add(object);
 
         const location = new Location(this.objID, objJSON.location);
@@ -84,6 +86,15 @@ export class PDTObject extends Group {
     public toggleLocation(showLocation: boolean = false) {
         this.children[1].visible = showLocation;
     }
+
+    public tick(time: number, delta: number = 1) {
+        const loc = this.children[1] as Location;
+        const newLocation = loc.getPosition(time);
+
+        newLocation.sub(this.children[0].position);
+        const norm = newLocation.length();
+        this.children[0].translateOnAxis(newLocation.normalize(), delta * norm);
+    }
 }
 
 const toggleObjects = (showObject: boolean) => {
@@ -96,7 +107,19 @@ const toggleLocation = (showLocation: boolean) => {
     return (obj: PDTObject) => obj.toggleLocation(showLocation);
 };
 
+const getObjectFromIntersect = (intersect: Intersection): PDTObject => {
+    let object = intersect.object;
+    while (object.parent && object.userData.type !== "Object") {
+        object = object.parent;
+    }
+    if (object.type === "Scene") {
+        throw new Error("Object not found, Scene reached");
+    }
+    return object as PDTObject;
+};
+
 export const ObjServices = {
     toggleLocation,
     toggleObjects,
+    getObjectFromIntersect,
 };

@@ -25,9 +25,7 @@ export class PDT {
         this.objects = pdt.objects.map((obj: ObjectJSON) => new PDTObject(obj, this.models));
     }
 
-    public getObjects(): PDTObject[] {
-        return this.objects;
-    }
+    public getObjects = (): PDTObject[] => this.objects;
 
     updateObjects = (fun: Function): void => this.objects.forEach((obj: PDTObject) => fun(obj));
 }

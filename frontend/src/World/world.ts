@@ -4,10 +4,10 @@ import { createLights } from "@/World/components/lights";
 import { createControls } from "@/World/systems/controls";
 import { createRenderer } from "@/World/systems/renderer";
 import { Resizer } from "@/World/systems/Resizer";
-
+import { Timer } from "@/World/systems/Timer";
 import type { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-import type { PDTObject } from "@/models/object.model";
+import { ObjServices, type PDTObject } from "@/models/object.model";
 import { createHelpers } from "./components/helpers";
 import { createRaycaster } from "./components/raycaster";
 import { Vector2 } from "three";
@@ -15,15 +15,25 @@ export class World {
     private camera: THREE.PerspectiveCamera;
     private scene: THREE.Scene;
     private renderer: THREE.WebGLRenderer;
+    private timer: Timer;
+    private resizer: Resizer;
     private controls: OrbitControls;
     private raycaster: THREE.Raycaster;
     private pointer: THREE.Vector2;
     private selectedObject?: PDTObject | null;
 
-    constructor(container: HTMLDivElement, selectCallback: (obj?: PDTObject | null) => void) {
+    constructor(
+        container: HTMLDivElement,
+        selectionCallback?: (obj?: PDTObject | null) => void,
+        timerCallback?: (t: number) => number
+    ) {
         this.camera = createCamera();
         this.scene = createScene();
         this.renderer = createRenderer();
+        this.resizer = new Resizer(container, this.camera, this.renderer);
+
+        this.timer = new Timer(this.camera, this.scene, this.renderer, timerCallback);
+
         this.raycaster = createRaycaster();
         this.pointer = new Vector2();
 
@@ -37,9 +47,9 @@ export class World {
                 (object) => object.userData.type === "Object"
             );
             const intersects = this.raycaster.intersectObjects(toIntersect, true);
-            if (intersects.length > 0) {
-                this.selectedObject = intersects[0].object.parent?.parent?.parent as PDTObject;
-                selectCallback(this.selectedObject);
+            if (selectionCallback && intersects.length > 0) {
+                this.selectedObject = ObjServices.getObjectFromIntersect(intersects[0]);
+                selectionCallback(this.selectedObject);
             }
         };
         this.renderer.domElement.addEventListener("click", onClick);
@@ -52,8 +62,6 @@ export class World {
 
         const { axesHelper, gridHelper } = createHelpers();
         this.scene.add(axesHelper, gridHelper);
-
-        const resizer = new Resizer(container, this.camera, this.renderer);
     }
 
     public append(objects: PDTObject[]) {
@@ -61,18 +69,7 @@ export class World {
         this.scene.add(...trace);
     }
 
-    public onClick(callback: Function) {
-        callback(this.selectedObject);
-    }
-
-    public start() {
-        this.renderer.setAnimationLoop(() => {
-            // render a frame
-            this.renderer.render(this.scene, this.camera);
-        });
-    }
-
-    public stop() {
-        this.renderer.setAnimationLoop(null);
+    public getTimer() {
+        return this.timer;
     }
 }
