@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import PDTStore from "../store/pdt.store";
+
+import PDTStore from "@/store/pdt.store";
 
 const pdtController = {
     getAllPDT,

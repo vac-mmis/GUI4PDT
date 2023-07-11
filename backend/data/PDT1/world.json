@@ -146,7 +146,7 @@
                     "kappa": [100000000000.0, 100000000000.0, 20.000000000000004]
                 }
             },
-            "scale": 0.01,
+            "scale": 1,
             "physics": false
         },
         {
@@ -162,13 +162,13 @@
                     ]
                 }
             },
-            "material": "bicycle"
+            "material": "metal"
         },
         {
             "class": "eiffeltower",
             "location": [-12, 4, -20.5],
-            "material": "eiffeltower",
-            "scale": 0.022
+            "material": "metal",
+            "scale": 0.00022
         }
     ]
 }

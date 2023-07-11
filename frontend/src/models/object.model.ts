@@ -1,10 +1,11 @@
+import { Group, MeshStandardMaterial, type Intersection } from "three";
+
 import { Location, type LocationJSON } from "@/models/location.model";
 import { Class, type ClassJSON } from "@/models/class.model";
 import type { RotationJSON } from "@/models/rotation.model";
-import type { MaterialJSON } from "@/models/material.model";
-import type { MultivariateNormal, UniformContinuous } from "@/services/dist.services";
-import { getMean } from "@/services/dist.services";
-import { Group, type Intersection } from "three";
+import { findMaterial, type MaterialJSON } from "@/models/material.model";
+import { getMean, type MultivariateNormal, type UniformContinuous } from "@/services/dist.services";
+
 import { emptyObject, createObject } from "@/World/components/object";
 
 export type ObjectJSON = {
@@ -17,18 +18,26 @@ export type ObjectJSON = {
     physics?: boolean;
 };
 
+export type ModelFile = {
+    name: string;
+    content: string;
+};
+
 export function typeToObject(
     models: Group[],
+    materials: MeshStandardMaterial[],
     position: [number, number, number],
     type: ClassJSON,
+    materialJSON: MaterialJSON,
     scale: number = 1
 ): Group {
     // create a geometry
     const group = new Group();
     if (typeof type === "string") {
         const model = models.find((model) => model.name === type);
+        const material = findMaterial(materials, materialJSON);
         if (model !== undefined) {
-            const object = createObject(model, position, scale, 1);
+            const object = createObject(model, material, position, scale, 1);
             group.add(object);
         }
     } else {
@@ -36,10 +45,11 @@ export function typeToObject(
         const res = Object.entries(dist.mass)
             .map((type: [string, number]) => {
                 const model = models.find((m) => m.name === type[0]);
+                const material = findMaterial(materials, materialJSON);
                 if (model === undefined) {
                     return undefined;
                 } else {
-                    return createObject(model, position, scale, type[1]);
+                    return createObject(model, material, position, scale, type[1]);
                 }
             })
             .filter((model): model is Group => model !== undefined);
@@ -53,7 +63,7 @@ export class PDTObject extends Group {
     class!: Class;
     //material?: any;
 
-    constructor(objJSON: ObjectJSON, models?: Group[]) {
+    constructor(objJSON: ObjectJSON, models?: Group[], materials?: MeshStandardMaterial[]) {
         super();
         //
         this.objID = objJSON.id;
@@ -67,9 +77,18 @@ export class PDTObject extends Group {
         } else {
             this.position.set(...objJSON.location);
         }
-
+        if (!materials) {
+            materials = [new MeshStandardMaterial()];
+        }
         const object = models
-            ? typeToObject(models, [0, 0, 0], objJSON.class, objJSON.scale)
+            ? typeToObject(
+                  models,
+                  materials,
+                  [0, 0, 0],
+                  objJSON.class,
+                  objJSON.material,
+                  objJSON.scale
+              )
             : emptyObject([0, 0, 0]);
         this.add(object);
 

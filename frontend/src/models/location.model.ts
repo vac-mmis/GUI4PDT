@@ -64,7 +64,7 @@ export class Location extends Group {
         this.timeIndex = 0;
 
         if (!("dist" in locJSON)) {
-            const scatterPlot = createScatterPlot([...locJSON]);
+            const scatterPlot = createScatterPlot([0, 0, 0]);
             this.add(scatterPlot);
         } else if (locJSON.dist.type === "multivariate-normal") {
             const dist: MultivariateNormal = {

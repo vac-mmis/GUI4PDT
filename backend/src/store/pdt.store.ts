@@ -1,21 +1,17 @@
 import { readdir } from "fs/promises";
-import PDT from "../models/pdt.model";
-import { lstatSync } from "fs";
+
+import PDT from "@/models/pdt.model";
 
 const dataPath = `${__dirname}/../../data`;
 const PDTs: PDT[] = [];
 
 const init = async () => {
-    readdir(dataPath).then((folders) =>
-        folders.map(async (folder) => {
-            const folderPath = `${dataPath}/${folder}`;
-            const files = await readdir(folderPath);
-            return files
-                .filter((file) => !lstatSync(`${folderPath}/${file}`).isDirectory())
-                .map((file) => {
-                    const pdt = new PDT(`${folderPath}/${file}`);
-                    PDTs.push(pdt);
-                });
+    const pdtDirs = await readdir(dataPath);
+    await Promise.all(
+        pdtDirs.map(async (PDTDir) => {
+            const pdt = new PDT(`${dataPath}/${PDTDir}`);
+            await pdt.init();
+            PDTs.push(pdt);
         })
     );
 };

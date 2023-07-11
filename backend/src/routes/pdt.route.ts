@@ -1,5 +1,6 @@
 import express from "express";
-import pdtController from "../controller/pdt.controller";
+
+import pdtController from "@/controller/pdt.controller";
 
 const router = express.Router();
 

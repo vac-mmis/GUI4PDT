@@ -1,14 +1,17 @@
-import {
-    Group,
-    Mesh,
-    MeshStandardMaterial,
-    MeshBasicMaterial,
-    MeshPhongMaterial,
-    BoxGeometry,
-} from "three";
+import { Group, Mesh, MeshStandardMaterial, BoxGeometry } from "three";
+
+function createMaterial(material: MeshStandardMaterial, opacity: number = 1): MeshStandardMaterial {
+    const newMaterial = material.clone();
+    if (opacity < 1) {
+        newMaterial.transparent = true;
+        newMaterial.opacity = opacity;
+    }
+    return newMaterial;
+}
 
 export function createObject(
     model: Group,
+    material: MeshStandardMaterial,
     position: [number, number, number],
     scale: number = 1,
     opacity: number = 1
@@ -18,32 +21,20 @@ export function createObject(
     // Traverse through all children of the model and set transparency for each material
     model.traverse((child) => {
         if (child instanceof Mesh) {
-            const clonedMaterial = child.material.clone();
-            // Set transparency for the material
-            if (opacity < 1) {
-                if (
-                    clonedMaterial instanceof MeshStandardMaterial ||
-                    clonedMaterial instanceof MeshBasicMaterial ||
-                    clonedMaterial instanceof MeshPhongMaterial
-                ) {
-                    clonedMaterial.transparent = true;
-                    clonedMaterial.opacity = opacity;
-                }
-            }
-            const clonedMesh = new Mesh(child.geometry, clonedMaterial);
+            const newMaterial = createMaterial(material, opacity);
+            const newMesh = new Mesh(child.geometry, newMaterial);
             if (opacity < 1) {
                 // Enable alpha sorting
-                clonedMesh.renderOrder = 1; // Set a higher render order for transparency
-                clonedMesh.material.depthTest = true; // Enable depth testing
-                clonedMesh.material.depthWrite = false; // Disable writing to the depth buffer
+                newMesh.renderOrder = 1; // Set a higher render order for transparency
+                newMesh.material.depthTest = true; // Enable depth testing
+                newMesh.material.depthWrite = false; // Disable writing to the depth buffer
             }
-            object.add(clonedMesh);
+            object.add(newMesh);
         }
     });
 
     object.position.set(...position);
     object.scale.set(scale, scale, scale);
-
     return object;
 }
 
