@@ -2,9 +2,9 @@ import { sqrtm, add, multiply, sum } from "mathjs";
 
 import { Distribution } from "@/models/distribution/dist.model";
 
-export class MultivariateNormal extends Distribution implements MultivariateNormal {
-    mean: number[];
-    cov: number[][];
+export class MultivariateNormal extends Distribution {
+    private mean: number[];
+    private cov: number[][];
 
     constructor(dist: MultivariateNormal) {
         super("multivariate-normal");

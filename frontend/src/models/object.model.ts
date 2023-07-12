@@ -3,7 +3,7 @@ import { Group, MeshStandardMaterial, type Intersection, Vector3 } from "three";
 import { Location, type LocationJSON } from "@/models/location.model";
 import { Class, type ClassJSON } from "@/models/class.model";
 import type { RotationJSON } from "@/models/rotation.model";
-import { findMaterial, type MaterialJSON } from "@/models/material.model";
+import { Material, type MaterialJSON } from "@/models/material.model";
 
 import { emptyObject, createObject } from "@/World/components/object";
 
@@ -22,44 +22,35 @@ export type ModelFile = {
     content: string;
 };
 
-export function typeToObject(
+const typeToObject = (
     models: Group[],
     materials: MeshStandardMaterial[],
     position: [number, number, number],
-    type: ClassJSON,
-    materialJSON: MaterialJSON,
+    type: Class,
+    materialDist: Material,
     scale: number = 1
-): Group {
+): Group => {
     // create a geometry
     const group = new Group();
-    if (typeof type === "string") {
-        const model = models.find((model) => model.name === type);
-        const material = findMaterial(materials, materialJSON);
-        if (model !== undefined) {
-            const object = createObject(model, material, position, scale, 1);
-            group.add(object);
-        }
-    } else {
-        const dist = type.dist;
-        const res = Object.entries(dist.mass)
-            .map((type: [string, number]) => {
-                const model = models.find((m) => m.name === type[0]);
-                const material = findMaterial(materials, materialJSON);
-                if (model === undefined) {
-                    return undefined;
-                } else {
-                    return createObject(model, material, position, scale, type[1]);
-                }
-            })
-            .filter((model): model is Group => model !== undefined);
-        group.add(...res);
-    }
+    const res = Object.entries(type.getMass())
+        .map((type: [string, number]) => {
+            const model = models.find((m) => m.name === type[0]);
+            const material = materialDist.getMaterial(materials);
+            if (model === undefined) {
+                return undefined;
+            } else {
+                return createObject(model, material, position, scale, type[1]);
+            }
+        })
+        .filter((model): model is Group => model !== undefined);
+    group.add(...res);
     return group;
-}
+};
 
 export class PDTObject extends Group {
     objID: number;
     class!: Class;
+    material!: Material;
     private timeIndex: number;
     private nextPosition: Vector3;
 
@@ -74,21 +65,16 @@ export class PDTObject extends Group {
         if (!materials) {
             materials = [new MeshStandardMaterial()];
         }
+
+        this.class = new Class(objJSON.class);
+        this.material = new Material(objJSON.material);
+
         const object = models
-            ? typeToObject(
-                  models,
-                  materials,
-                  [0, 0, 0],
-                  objJSON.class,
-                  objJSON.material,
-                  objJSON.scale
-              )
+            ? typeToObject(models, materials, [0, 0, 0], this.class, this.material, objJSON.scale)
             : emptyObject([0, 0, 0]);
 
         this.add(object);
         this.add(location);
-
-        this.class = new Class(this.id, objJSON.class);
     }
 
     public toggleVisibility(showObject: boolean = true) {

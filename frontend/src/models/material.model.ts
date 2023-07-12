@@ -1,9 +1,12 @@
-//import type { Categorical } from "@/models/dist.model";
 import { MeshStandardMaterial } from "three";
 
-const MATERIALS = ["concrete", "metal", "bicycle", "eiffeltower"] as const;
+import { Categorical } from "@/models/distribution/categorical.model";
 
-export type MaterialJSON = (typeof MATERIALS)[number]; //| Categorical<(typeof MATERIALS)[number]>;
+export type MaterialJSON =
+    | string
+    | {
+          dist: Categorical;
+      };
 
 export type MaterialFile = {
     name: string;
@@ -14,11 +17,25 @@ export type MaterialFile = {
     roughness: string;
 };
 
-export const findMaterial = (materials: MeshStandardMaterial[], name: string) => {
-    const material = materials.find((m) => m.name === name);
-    if (material === undefined) {
-        return new MeshStandardMaterial();
-    } else {
-        return material;
+export class Material extends Categorical {
+    constructor(type: MaterialJSON) {
+        const finalMaterial =
+            typeof type === "string"
+                ? {
+                      mass: {
+                          [type]: 100,
+                      },
+                  }
+                : type.dist;
+        super(finalMaterial as Categorical);
     }
-};
+
+    public getMaterial = (materials: MeshStandardMaterial[]): MeshStandardMaterial => {
+        const material = materials.find((m) => m.name === Object.keys(this.getMass())[0]);
+        if (material === undefined) {
+            return new MeshStandardMaterial();
+        } else {
+            return material;
+        }
+    };
+}

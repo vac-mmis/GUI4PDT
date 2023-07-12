@@ -2,9 +2,9 @@ import { mean } from "mathjs";
 
 import { Distribution } from "@/models/distribution/dist.model";
 
-export class UniformContinuous extends Distribution implements UniformContinuous {
+export class UniformContinuous extends Distribution {
     private mean: number[];
-    params: number[][];
+    private params: number[][];
 
     constructor(dist: UniformContinuous) {
         super("uniform-continuous");

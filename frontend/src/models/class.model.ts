@@ -1,49 +1,21 @@
-import type { PieData } from "plotly.js-dist-min";
-import type { Categorical } from "@/models/distribution/categorical.model";
-
-const CLASSES = [
-    "tetrapod",
-    "reefcone",
-    "reefring",
-    "stone",
-    "container",
-    "bicycle",
-    "effeltower",
-] as const;
+import { Categorical } from "@/models/distribution/categorical.model";
 
 export type ClassJSON =
-    | (typeof CLASSES)[number]
+    | string
     | {
-          dist: Categorical<(typeof CLASSES)[number]>;
+          dist: Categorical;
       };
 
-export class Class implements Partial<PieData> {
-    values!: number[];
-    labels!: string[];
-    type: "pie";
-    customdata: [number];
-
-    constructor(objID: number, type?: ClassJSON) {
-        this.type = "pie";
-        this.customdata = [objID];
-        if (type === undefined) {
-            return;
-        }
-        if (typeof type === "string") {
-            this.values = [100];
-            this.labels = [type];
-        } else {
-            this.values = Object.values(type.dist.mass);
-            this.labels = Object.keys(type.dist.mass);
-        }
-    }
-
-    static copy(type: Class): Class {
-        const copyType = new Class(type.customdata[0]);
-        copyType.values = [...type.values];
-        copyType.labels = [...type.labels];
-        copyType.type = "pie";
-        copyType.customdata = [...type.customdata];
-        return copyType;
+export class Class extends Categorical {
+    constructor(type: ClassJSON) {
+        const finalClass =
+            typeof type === "string"
+                ? {
+                      mass: {
+                          [type]: 100,
+                      },
+                  }
+                : type.dist;
+        super(finalClass as Categorical);
     }
 }

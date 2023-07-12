@@ -24,10 +24,14 @@
             <v-tabs v-model="tab" color="secondary" align-tabs="center">
                 <v-tab :value="1">Type</v-tab>
                 <v-tab :value="2">Location</v-tab>
+                <v-tab :value="3">Material</v-tab>
             </v-tabs>
             <div class="h-auto pa-6">
                 <template v-if="tab === 1">
-                    <ObjectPlot :data="[object.class]" />
+                    <ObjectPlot :data="[object.class.representation()]" />
+                </template>
+                <template v-if="tab === 3">
+                    <ObjectPlot :data="[object.material.representation()]" />
                 </template>
             </div>
         </v-card-item>

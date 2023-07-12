@@ -37,16 +37,13 @@ const init = () => {
         return;
     }
 
-    if (props.data === undefined) {
-    } else {
-        chart = newPlot(
-            plotContainer.value,
-            trace,
-            layout,
-            config
-        ) as Promise<Plotly.PlotlyHTMLElement>;
-        chart.catch((error) => console.error("Error creating plot:", error));
-    }
+    chart = newPlot(
+        plotContainer.value,
+        trace,
+        layout,
+        config
+    ) as Promise<Plotly.PlotlyHTMLElement>;
+    chart.catch((error) => console.error("Error creating plot:", error));
 };
 
 watch(() => props.data, init);
