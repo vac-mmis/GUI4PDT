@@ -169,6 +169,29 @@
             "location": [-12, 4, -20.5],
             "material": "metal",
             "scale": 0.00022
+        },
+        {
+            "class": "reefring",
+            "location": {
+                "dist": {
+                    "type": "uniform-continuous",
+                    "params": [
+                        [-18, -16],
+                        [-12, -10],
+                        [-21, -19]
+                    ]
+                }
+            },
+            "material": "concrete",
+            "rotation": {
+                "dist": {
+                    "type": "multivariate-normal",
+                    "mean": [0, 0, 0],
+                    "kappa": [100000000000.0, 100000000000.0, 49.99999999999999]
+                }
+            },
+            "scale": 1,
+            "physics": false
         }
     ]
 }

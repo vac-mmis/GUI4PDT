@@ -6,12 +6,7 @@ export type MultivariateNormal = {
 
 export type UniformContinuous = {
     type: "uniform-continous";
-    "x-min": number;
-    "x-max": number;
-    "y-min": number;
-    "y-max": number;
-    "z-min": number;
-    "z-max": number;
+    params: number[][];
 };
 
 export type Categorical<E extends string> = {

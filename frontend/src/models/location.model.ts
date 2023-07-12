@@ -1,5 +1,6 @@
-import { multivariateNormal } from "@/services/dist.services";
-import type { MultivariateNormal, UniformContinuous } from "@/services/dist.services";
+import { Distribution } from "@/models/distribution/dist.model";
+import { UniformContinuous } from "@/models/distribution/uniContinuous.model";
+import { MultivariateNormal } from "@/models/distribution/multiNormal.model";
 
 import {
     Group,
@@ -10,16 +11,26 @@ import {
     Color,
     BufferAttribute,
     Vector3,
-    type InterleavedBufferAttribute,
+    Object3D,
+    MeshStandardMaterial,
+    Mesh,
+    BoxGeometry,
 } from "three";
 
 export type LocationJSON =
     | {
-          dist: MultivariateNormal | UniformContinuous;
+          dist: Distribution;
       }
     | [number, number, number];
 
-const NUM_POINTS = 1000;
+export const toDistribution = (dist: Distribution) => {
+    switch (dist.type) {
+        case "uniform-continuous":
+            return new UniformContinuous(dist as UniformContinuous);
+        default:
+            return new MultivariateNormal(dist as MultivariateNormal);
+    }
+};
 
 function createScatterPlot(pointsData: number[]): Points {
     const vertices = pointsData.filter((_, i) => i % 4 !== 3);
@@ -51,49 +62,46 @@ function createScatterPlot(pointsData: number[]): Points {
     return new Points(geometry, material);
 }
 
-export class Location extends Group {
-    private objID: number;
-    private timeIndex: number;
+function createContinuousPlot(dim: [number, number, number]) {
+    const geometry = new BoxGeometry(...dim);
+    const material = new MeshStandardMaterial({ color: 0xf0f921, transparent: true, opacity: 0.5 });
+    return new Mesh(geometry, material);
+}
 
-    private points?: BufferAttribute | InterleavedBufferAttribute;
-    constructor(objID: number, locJSON: LocationJSON) {
+export class Location extends Group {
+    private dist?: Distribution;
+
+    constructor(parent: Object3D, locJSON: LocationJSON) {
         super();
-        this.objID = objID;
+        this.parent = parent;
         this.userData.type = "Location";
         this.visible = false;
-        this.timeIndex = 0;
 
         if (!("dist" in locJSON)) {
             const scatterPlot = createScatterPlot([0, 0, 0]);
+            this.parent.position.set(...locJSON);
             this.add(scatterPlot);
-        } else if (locJSON.dist.type === "multivariate-normal") {
-            const dist: MultivariateNormal = {
-                type: locJSON.dist.type,
-                mean: [0, 0, 0],
-                cov: locJSON.dist.cov,
-            };
-            const dataPoints = multivariateNormal(dist, NUM_POINTS);
-            const scatterPlot = createScatterPlot(dataPoints);
-            this.add(scatterPlot);
+        } else {
+            this.dist = toDistribution(locJSON.dist);
+            this.parent.position.set(...(this.dist.getMean() as [number, number, number]));
+            this.dist.setMean([0, 0, 0]);
+            const dataPoints = this.dist.representation();
 
-            const points = this.children[0] as Points;
-            if (points) {
-                this.points = points.geometry.attributes.position;
-                this.timeIndex = Math.ceil(Math.random() * this.points.count * 3);
+            if (this.dist instanceof MultivariateNormal) {
+                const scatterPlot = createScatterPlot(dataPoints);
+                this.add(scatterPlot);
+            } else if (this.dist instanceof UniformContinuous) {
+                const continuousPlot = createContinuousPlot(
+                    dataPoints.splice(0, 3) as [number, number, number]
+                );
+                this.add(continuousPlot);
             }
         }
     }
 
     public getPosition(t: number): Vector3 {
-        const points = this.children[0] as Points;
-        if (points) {
-            this.points = points.geometry.attributes.position;
-            this.timeIndex = Math.trunc(t) % this.points.count;
-            return new Vector3(
-                this.points.array[this.timeIndex],
-                this.points.array[this.timeIndex + 1],
-                this.points.array[this.timeIndex + 2]
-            );
+        if (this.dist) {
+            return new Vector3(...this.dist.random());
         } else {
             return new Vector3(0, 0, 0);
         }

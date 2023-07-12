@@ -1,10 +1,9 @@
-import { Group, MeshStandardMaterial, type Intersection } from "three";
+import { Group, MeshStandardMaterial, type Intersection, Vector3 } from "three";
 
 import { Location, type LocationJSON } from "@/models/location.model";
 import { Class, type ClassJSON } from "@/models/class.model";
 import type { RotationJSON } from "@/models/rotation.model";
 import { findMaterial, type MaterialJSON } from "@/models/material.model";
-import { getMean, type MultivariateNormal, type UniformContinuous } from "@/services/dist.services";
 
 import { emptyObject, createObject } from "@/World/components/object";
 
@@ -61,22 +60,17 @@ export function typeToObject(
 export class PDTObject extends Group {
     objID: number;
     class!: Class;
-    //material?: any;
+    private timeIndex: number;
+    private nextPosition: Vector3;
 
     constructor(objJSON: ObjectJSON, models?: Group[], materials?: MeshStandardMaterial[]) {
         super();
-        //
         this.objID = objJSON.id;
         this.userData.type = "Object";
+        this.timeIndex = 0;
+        this.nextPosition = new Vector3(0, 0, 0);
 
-        if ("dist" in objJSON.location) {
-            const mean = getMean(
-                objJSON.location.dist as MultivariateNormal | UniformContinuous
-            ).slice(0, 3);
-            this.position.set(...(mean as [number, number, number]));
-        } else {
-            this.position.set(...objJSON.location);
-        }
+        const location = new Location(this, objJSON.location);
         if (!materials) {
             materials = [new MeshStandardMaterial()];
         }
@@ -90,9 +84,8 @@ export class PDTObject extends Group {
                   objJSON.scale
               )
             : emptyObject([0, 0, 0]);
-        this.add(object);
 
-        const location = new Location(this.objID, objJSON.location);
+        this.add(object);
         this.add(location);
 
         this.class = new Class(this.id, objJSON.class);
@@ -108,9 +101,14 @@ export class PDTObject extends Group {
 
     public tick(time: number, delta: number = 1) {
         const loc = this.children[1] as Location;
-        const newLocation = loc.getPosition(time);
+        if (Math.abs(Math.trunc(time) - this.timeIndex) >= 1) {
+            this.nextPosition = loc.getPosition(time);
+            this.timeIndex = Math.trunc(time);
+        }
 
-        newLocation.sub(this.children[0].position);
+        const newLocation = new Vector3(...this.nextPosition.toArray()).sub(
+            this.children[0].position
+        );
         const norm = newLocation.length();
         this.children[0].translateOnAxis(newLocation.normalize(), delta * norm);
     }

@@ -1,4 +1,4 @@
-//import type { Categorical } from "@/services/dist.services";
+//import type { Categorical } from "@/models/dist.model";
 import { MeshStandardMaterial } from "three";
 
 const MATERIALS = ["concrete", "metal", "bicycle", "eiffeltower"] as const;

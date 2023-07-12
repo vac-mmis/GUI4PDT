@@ -1,5 +1,5 @@
 import type { PieData } from "plotly.js-dist-min";
-import type { Categorical } from "@/services/dist.services";
+import type { Categorical } from "@/models/distribution/categorical.model";
 
 const CLASSES = [
     "tetrapod",
