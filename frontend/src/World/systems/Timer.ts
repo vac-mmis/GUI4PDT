@@ -56,7 +56,7 @@ export class Timer {
         this.time += delta;
         this.scene.children.forEach((object: any) => {
             if (object.tick) {
-                object.tick(this.time, delta !== 0 ? delta : 1);
+                object.tick(this.time);
             }
         });
     }

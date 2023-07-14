@@ -9,12 +9,12 @@ import { emptyObject, createObject } from "@/World/components/object";
 
 export type ObjectJSON = {
     id: number;
-    class: ClassJSON;
-    location: LocationJSON;
-    rotation?: RotationJSON;
-    material: MaterialJSON;
-    scale?: number;
-    physics?: boolean;
+    class: ClassJSON[];
+    location: LocationJSON[];
+    rotation?: RotationJSON[];
+    material: MaterialJSON[];
+    scale?: number[];
+    physics?: boolean[];
 };
 
 export type ModelFile = {
@@ -51,30 +51,47 @@ export class PDTObject extends Group {
     objID: number;
     class!: Class;
     material!: Material;
+    private timeLength: number;
     private timeIndex: number;
-    private nextPosition: Vector3;
+    private beginPosition: Vector3;
+    private endPosition: Vector3;
+    private direction!: Vector3;
 
     constructor(objJSON: ObjectJSON, models?: Group[], materials?: MeshStandardMaterial[]) {
         super();
         this.objID = objJSON.id;
         this.userData.type = "Object";
-        this.timeIndex = 0;
-        this.nextPosition = new Vector3(0, 0, 0);
 
-        const location = new Location(this, objJSON.location);
+        this.timeIndex = 0;
+        this.timeLength = objJSON.location.length;
+
+        this.class = new Class(objJSON.class[0]);
+
         if (!materials) {
             materials = [new MeshStandardMaterial()];
         }
-
-        this.class = new Class(objJSON.class);
-        this.material = new Material(objJSON.material);
+        this.material = new Material(objJSON.material[0]);
 
         const object = models
-            ? typeToObject(models, materials, [0, 0, 0], this.class, this.material, objJSON.scale)
+            ? typeToObject(
+                  models,
+                  materials,
+                  [0, 0, 0],
+                  this.class,
+                  this.material,
+                  (objJSON.scale || [1])[0]
+              )
             : emptyObject([0, 0, 0]);
-
         this.add(object);
+
+        const location = new Location(this, objJSON.location);
         this.add(location);
+
+        this.beginPosition = new Vector3();
+        this.endPosition = new Vector3();
+        this.getWorldPosition(this.beginPosition);
+        this.getWorldPosition(this.endPosition);
+        this.setDirection(this.timeIndex);
     }
 
     public toggleVisibility(showObject: boolean = true) {
@@ -85,18 +102,33 @@ export class PDTObject extends Group {
         this.children[1].visible = showLocation;
     }
 
-    public tick(time: number, delta: number = 1) {
+    private setDirection(time: number) {
         const loc = this.children[1] as Location;
+
+        this.beginPosition = this.endPosition;
+        this.endPosition = loc.getPosition(time + 1);
+
+        this.direction = new Vector3(...this.endPosition.toArray()).sub(this.beginPosition);
+        this.timeIndex = Math.trunc(time);
+    }
+
+    public tick(time: number) {
+        time = time % this.timeLength;
+        const delta = time - Math.trunc(time);
         if (Math.abs(Math.trunc(time) - this.timeIndex) >= 1) {
-            this.nextPosition = loc.getPosition(time);
-            this.timeIndex = Math.trunc(time);
+            this.setDirection(time);
         }
 
-        const newLocation = new Vector3(...this.nextPosition.toArray()).sub(
-            this.children[0].position
-        );
-        const norm = newLocation.length();
-        this.children[0].translateOnAxis(newLocation.normalize(), delta * norm);
+        let actualPosition = new Vector3();
+        this.children[0].getWorldPosition(actualPosition);
+
+        const ratioVector = new Vector3().copy(this.direction).multiplyScalar(delta);
+        const axis = new Vector3(...this.beginPosition.toArray())
+            .sub(actualPosition)
+            .add(ratioVector);
+        const norm = axis.length();
+
+        this.children[0].translateOnAxis(axis.normalize(), norm);
     }
 }
 

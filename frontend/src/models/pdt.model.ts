@@ -13,6 +13,7 @@ export interface PDTJSON {
 
 export class PDT {
     name: string;
+    length: number;
     models!: Group[];
     materials!: MeshStandardMaterial[];
     objects!: PDTObject[];
@@ -23,6 +24,7 @@ export class PDT {
 
     constructor(pdt: PDTJSON) {
         this.name = pdt.name;
+        this.length = pdt.objects[0].location.length;
     }
 
     public async init(pdt: PDTJSON) {
@@ -36,6 +38,8 @@ export class PDT {
     }
 
     public getObjects = (): PDTObject[] => this.objects;
+
+    public getLength = (): number => this.length;
 
     updateObjects = (fun: Function): void => this.objects.forEach((obj: PDTObject) => fun(obj));
 }

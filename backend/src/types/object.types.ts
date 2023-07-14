@@ -16,19 +16,19 @@ const CLASSES = [
 ] as const;
 const MATERIALS = ["concrete", "metal", "bicycle", "eiffeltower"] as const;
 
-type ClassJSON =
+export type ClassJSON =
     | (typeof CLASSES)[number]
     | {
           dist: Categorical<(typeof CLASSES)[number]>;
       };
 
-type LocationJSON =
+export type LocationJSON =
     | {
           dist: MultivariateNormal | UniformContinuous;
       }
     | [number, number, number];
 
-type RotationJSON =
+export type RotationJSON =
     | {
           roll: number;
           pitch: number;
@@ -38,9 +38,9 @@ type RotationJSON =
       }
     | [number, number, number];
 
-type MaterialJSON = Categorical<(typeof MATERIALS)[number]>;
+export type MaterialJSON = Categorical<(typeof MATERIALS)[number]>;
 
-export type ObjectJSON = {
+export type ObjectTimestamp = {
     id: number;
     class: ClassJSON;
     location: LocationJSON;
@@ -48,4 +48,14 @@ export type ObjectJSON = {
     material: MaterialJSON;
     scale?: number;
     physics?: boolean;
+};
+
+export type ObjectJSON = {
+    id: number;
+    class: ClassJSON[];
+    location: LocationJSON[];
+    material: MaterialJSON[];
+    rotation: (RotationJSON | undefined)[];
+    scale: (number | undefined)[];
+    physics: (boolean | undefined)[];
 };

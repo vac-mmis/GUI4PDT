@@ -5,11 +5,13 @@ import { Distribution } from "@/models/distribution/dist.model";
 export class MultivariateNormal extends Distribution {
     private mean: number[];
     private cov: number[][];
+    private invCov: number[][];
 
     constructor(dist: MultivariateNormal) {
         super("multivariate-normal");
         this.mean = dist.mean;
         this.cov = dist.cov;
+        this.invCov = sqrtm(this.cov);
     }
 
     private randomGauss() {
@@ -27,42 +29,44 @@ export class MultivariateNormal extends Distribution {
 
     public getCov = () => this.cov;
 
-    public random() {
-        const invCov: number[][] = sqrtm(this.cov);
+    public random(relative: boolean = false) {
         const X: number[] = Array.from({ length: this.mean.length }, (_, i) => this.randomGauss());
-        const Y: number[] = add(multiply(invCov, X), this.mean) as number[];
-        return Y;
+        const XInvCov = multiply(this.invCov, X);
+        return (relative ? XInvCov : add(XInvCov, this.mean)) as number[];
     }
 
-    private randomN(numPoints: number = 1, withDistance: boolean = true) {
-        let dataPoints: number[] = [];
-        for (let index = 0; index < numPoints; index++) {
-            const Y = this.random();
-
+    private randomN(
+        numPoints: number = 1,
+        relative: boolean = false,
+        withDistance: boolean = true
+    ) {
+        const dataPoints = Array.from({ length: numPoints }, () => {
+            const Y = this.random(relative);
             if (withDistance) {
-                const distance = Math.sqrt(sum(Y.map((y, i) => Math.pow(y - this.mean[i], 2))));
+                const distance = Math.sqrt(
+                    sum(Y.map((y, i) => Math.pow(y - (relative ? 0 : this.mean[i]), 2)))
+                );
                 if (distance < 0) {
                     throw new Error("Negative distance");
                 }
-                Y.push(distance);
+                return [...Y, distance];
             }
-            dataPoints.push(...Y);
-        }
+            return Y;
+        });
 
-        if (withDistance) {
-            const maxDistance = Math.max(...dataPoints.filter((_, i) => i % 4 === 3));
-            dataPoints = dataPoints.map((p, i) => {
-                if (i % 4 === 3) {
-                    const prob = 1 - p / maxDistance;
-                    return prob < 1 ? prob : 0;
-                } else return p;
-            });
-        }
+        const maxDistance = withDistance ? Math.max(...dataPoints.map((Y) => Y[Y.length - 1])) : 1;
 
-        return dataPoints;
+        return dataPoints.flatMap((Y) => {
+            if (withDistance) {
+                const distance = Y.pop()!;
+                const prob = 1 - distance / maxDistance;
+                return [...Y, prob < 1 ? prob : 0];
+            }
+            return Y;
+        });
     }
 
-    public representation() {
-        return this.randomN(1000, true);
+    public representation(relative: boolean = false) {
+        return this.randomN(1000, relative, true);
     }
 }

@@ -1,5 +1,5 @@
 import { PDT, type PDTJSON } from "@/models/pdt.model";
-import { ref, toRaw } from "vue";
+import { ref, computed, toRaw } from "vue";
 import axios from "axios";
 
 import { defineStore } from "pinia";
@@ -7,6 +7,8 @@ import { PDTObject } from "@/models/object.model";
 
 const PDTStore: any = defineStore("myPDT", () => {
     const _PDT = ref({} as PDT);
+
+    const length = computed(() => _PDT.value.getLength());
 
     const fetchPDT = async () => {
         return axios
@@ -28,7 +30,7 @@ const PDTStore: any = defineStore("myPDT", () => {
         _PDT.value.updateObjects(fun);
     }
 
-    return { getObjects, fetchPDT, updateObjects };
+    return { length, getObjects, fetchPDT, updateObjects };
 });
 
 export default PDTStore;

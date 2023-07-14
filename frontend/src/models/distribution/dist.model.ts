@@ -1,5 +1,5 @@
 export abstract class Distribution implements Distribution {
-    private type: string;
+    type: string;
 
     constructor(type: string) {
         this.type = type;
@@ -11,7 +11,7 @@ export abstract class Distribution implements Distribution {
 
     public abstract setMean(newMean: number[]): void;
 
-    public abstract random(): any;
+    public abstract random(relative?: boolean): any;
 
-    public abstract representation(): any;
+    public abstract representation(relative?: boolean): any;
 }

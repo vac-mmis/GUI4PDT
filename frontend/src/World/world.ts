@@ -62,6 +62,8 @@ export class World {
 
         const { axesHelper, gridHelper } = createHelpers();
         this.scene.add(axesHelper, gridHelper);
+
+        this.renderer.render(this.scene, this.camera);
     }
 
     public append(objects: PDTObject[]) {

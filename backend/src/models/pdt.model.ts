@@ -1,7 +1,7 @@
 import { readFile, readdir, stat } from "fs/promises";
 import path from "path";
 
-import { ObjectJSON } from "@/types/object.types";
+import { ObjectJSON, ObjectTimestamp } from "@/types/object.types";
 import { MaterialFile, ModelFile } from "@/types/file.types";
 
 const MODELPATH = `models`;
@@ -66,6 +66,45 @@ const serializeMaterials = async (pdtPath: string) => {
         });
 };
 
+const timestampsToPDTJSON = async (pdtFiles: string[]) => {
+    const JSONData = await Promise.all(
+        pdtFiles.map(async (file) => {
+            const json = JSON.parse(await readFile(file, { encoding: "utf8" }));
+            if (json === undefined) {
+                throw new Error("JSON Data undefined");
+            }
+            return json;
+        })
+    );
+    const res = {
+        objects: [] as Array<ObjectJSON>,
+    };
+    JSONData.forEach((timestamp: { objects: ObjectTimestamp[] }, i) => {
+        timestamp.objects.forEach((object, i) => {
+            const resObject = res.objects.find((obj) => obj.id === object.id);
+            if (resObject) {
+                resObject.class.push(object.class);
+                resObject.location.push(object.location);
+                resObject.material.push(object.material);
+                resObject.rotation.push(object.rotation);
+                resObject.scale.push(object.scale);
+                resObject.physics.push(object.physics);
+            } else {
+                res.objects.push({
+                    id: object.id,
+                    class: [object.class],
+                    location: [object.location],
+                    material: [object.material],
+                    rotation: [object.rotation],
+                    scale: [object.scale],
+                    physics: [object.physics],
+                });
+            }
+        });
+    });
+    return res;
+};
+
 class PDT {
     name!: string;
     private PDTDir: string;
@@ -82,18 +121,20 @@ class PDT {
     }
 
     public async init() {
-        const pdtFiles = await readdir(this.PDTDir);
-        this.name = pdtFiles.filter((file) => file.split(".json")[0] !== file)[0];
-        const jsonFile = await readFile(`${this.PDTDir}/${this.name}`, { encoding: "utf8" });
-        const json = JSON.parse(jsonFile);
-        if (json === undefined) {
-            throw new Error("JSON Data undefined");
-        }
+        const timestamps = (await readdir(this.PDTDir))
+            .filter((file) => file.split(".json")[0] !== file)
+            .map((file) => `${this.PDTDir}/${file}`);
+        const json = await timestampsToPDTJSON(timestamps);
 
-        this.name = json.name;
+        this.name = path.basename(this.PDTDir, ".json");
         this.objects = json.objects;
         this.models = await serializeModels(this.PDTDir);
         this.materials = await serializeMaterials(this.PDTDir);
+    }
+
+    public getPublicData(): Partial<PDT> {
+        const { name, models, materials, objects } = this;
+        return { name, models, materials, objects };
     }
 }
 export default PDT;

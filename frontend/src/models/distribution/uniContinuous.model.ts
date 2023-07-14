@@ -24,7 +24,7 @@ export class UniformContinuous extends Distribution {
         return this.params.map((p) => p[0] + (p[1] - p[0]) * Math.random());
     }
 
-    public representation(): number[] {
+    public representation(relative: boolean = false): number[] {
         return this.params.map((p) => p[1] - p[0]);
     }
 }

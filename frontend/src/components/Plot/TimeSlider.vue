@@ -11,8 +11,7 @@
             hide-details
             :readonly="play"
             :min="0"
-            :max="timeLength"
-            :step="1"
+            :max="timeLength - 1"
             :ticks="ticks"
             thumb-label
         >
@@ -21,7 +20,7 @@
                     variant="text"
                     icon
                     color="primary"
-                    :disabled="play"
+                    :disabled="play || slider < 1"
                     @click="slider >= 1 ? slider-- : 0"
                 >
                     <font-awesome-icon :icon="['fas', 'minus']" />
@@ -32,8 +31,8 @@
                     variant="text"
                     icon
                     color="primary"
-                    :disabled="play"
-                    @click="slider <= timeLength - 1 ? slider++ : timeLength"
+                    :disabled="play || slider > timeLength - 2"
+                    @click="slider <= timeLength - 2 ? slider++ : timeLength"
                 >
                     <font-awesome-icon :icon="['fas', 'plus']" />
                 </v-btn>
@@ -45,10 +44,12 @@
 <script setup lang="ts">
 import { ref, computed, toRaw, watch } from "vue";
 import type { Timer } from "@/World/systems/Timer";
+import PDTStore from "@/store/pdt.store";
 
 const props = defineProps<{ timer?: Timer }>();
-// TODO : Get timeLength from PDT
-const timeLength = 1000;
+
+const pdt = PDTStore();
+const timeLength = pdt.length;
 
 const updateSlider = (t: number) => {
     slider.value = t % timeLength;
@@ -63,7 +64,7 @@ const timer = computed(() => {
 const slider = ref(timer.value?.getTime() || 0);
 const play = ref(false);
 
-const ticks = Array.from({ length: 5 }, (_, x) => (timeLength * x) / 4).reduce(
+const ticks = Array.from({ length: timeLength / 10 + 1 }, (_, x) => 10 * x).reduce(
     (o, key) => Object.assign(o, { [key]: `${key}` }),
     {}
 );
