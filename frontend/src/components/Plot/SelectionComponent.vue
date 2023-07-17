@@ -62,7 +62,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, type ComputedRef } from "vue";
-import { ObjServices, type PDTObject } from "@/models/object.model";
+import { PDTObjServices, type PDTObject } from "@/models/object.model";
 import PDTStore from "@/store/pdt.store";
 import { onMounted } from "vue";
 import { watch } from "vue";
@@ -80,7 +80,7 @@ const globalLoc = ref(false);
 const toggleObjects = ref([[]] as string[][]);
 
 const toggleGlobalLocation = () => {
-    pdt.updateObjects(ObjServices.toggleLocation(globalLoc.value));
+    pdt.updateObjects(PDTObjServices.toggleLocation(globalLoc.value));
     toggleObjects.value.forEach((objToggle) => {
         const index = objToggle.indexOf("loc");
         if (globalLoc.value && index < 0) {

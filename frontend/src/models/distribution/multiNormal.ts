@@ -1,6 +1,6 @@
 import { sqrtm, add, multiply, sum } from "mathjs";
 
-import { Distribution } from "@/models/distribution/dist.model";
+import { Distribution } from "@/models/distribution/dist";
 
 export class MultivariateNormal extends Distribution {
     private mean: number[];

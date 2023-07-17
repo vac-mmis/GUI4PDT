@@ -1,11 +1,11 @@
 import { Group, Vector3 } from "three";
 
-import { Distribution } from "@/models/distribution/dist.model";
-import { UniformContinuous } from "@/models/distribution/uniContinuous.model";
-import { MultivariateNormal } from "@/models/distribution/multiNormal.model";
+import { Distribution } from "@/models/distribution/dist";
+import { UniformContinuous } from "@/models/distribution/uniContinuous";
+import { MultivariateNormal } from "@/models/distribution/multiNormal";
 
-import { Scatter3D } from "@/models/representation/scatter3D.model";
-import { BoxDist } from "@/models/representation/boxDist.model";
+import { Scatter3D } from "@/models/representation/scatter3D";
+import { BoxDist } from "@/models/representation/boxDist";
 
 import type { PDTObject } from "@/models/object.model";
 

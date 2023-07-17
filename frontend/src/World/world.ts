@@ -1,16 +1,18 @@
-import { createScene } from "@/World/components/scene";
+import { Vector2 } from "three";
+import type { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+
 import { createCamera } from "@/World/components/camera";
-import { createLights } from "@/World/components/lights";
-import { createControls } from "@/World/systems/controls";
+import { createScene } from "@/World/components/scene";
 import { createRenderer } from "@/World/systems/renderer";
 import { Resizer } from "@/World/systems/Resizer";
 import { Timer } from "@/World/systems/Timer";
-import type { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { createRaycaster } from "@/World/components/raycaster";
+import { createControls } from "@/World/systems/controls";
+import { createLights } from "@/World/components/lights";
+import { createHelpers } from "@/World/components/helpers";
 
-import { ObjServices, type PDTObject } from "@/models/object.model";
-import { createHelpers } from "./components/helpers";
-import { createRaycaster } from "./components/raycaster";
-import { Vector2 } from "three";
+import { PDTObjServices, type PDTObject } from "@/models/object.model";
+
 export class World {
     private camera: THREE.PerspectiveCamera;
     private scene: THREE.Scene;
@@ -48,7 +50,7 @@ export class World {
             );
             const intersects = this.raycaster.intersectObjects(toIntersect, true);
             if (selectionCallback && intersects.length > 0) {
-                this.selectedObject = ObjServices.getObjectFromIntersect(intersects[0]);
+                this.selectedObject = PDTObjServices.getObjectFromIntersect(intersects[0]);
                 selectionCallback(this.selectedObject);
             }
         };

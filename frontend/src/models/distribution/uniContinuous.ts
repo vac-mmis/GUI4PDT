@@ -1,6 +1,6 @@
 import { mean } from "mathjs";
 
-import { Distribution } from "@/models/distribution/dist.model";
+import { Distribution } from "@/models/distribution/dist";
 
 export class UniformContinuous extends Distribution {
     private mean: number[];

@@ -28,10 +28,10 @@
             </v-tabs>
             <div class="h-auto pa-6">
                 <template v-if="tab === 1">
-                    <ObjectPlot :data="[object.class.representation()]" />
+                    <ObjectPlot :data="[object.class.representation(0)]" />
                 </template>
                 <template v-if="tab === 3">
-                    <ObjectPlot :data="[object.material.representation()]" />
+                    <ObjectPlot :data="[object.material.representation(0)]" />
                 </template>
             </div>
         </v-card-item>
