@@ -76,30 +76,29 @@ const timestampsToPDTJSON = async (pdtFiles: string[]) => {
             return json;
         })
     );
-    const res = {
-        objects: [] as Array<ObjectJSON>,
-    };
-    JSONData.forEach((timestamp: { objects: ObjectTimestamp[] }, i) => {
-        timestamp.objects.forEach((object, i) => {
+
+    const res = { objects: [] as Array<ObjectJSON> };
+    JSONData.forEach((pdtTimestamp: { timestep: number; objects: ObjectTimestamp[] }) => {
+        pdtTimestamp.objects.forEach((object) => {
+            const i = pdtTimestamp.timestep;
             const resObject = res.objects.find((obj) => obj.id === object.id);
-            if (resObject) {
-                resObject.class.push(object.class);
-                resObject.location.push(object.location);
-                resObject.material.push(object.material);
-                resObject.rotation.push(object.rotation);
-                resObject.scale.push(object.scale);
-                resObject.physics.push(object.physics);
-            } else {
-                res.objects.push({
+            if (!resObject) {
+                res.objects[object.id] = {
                     id: object.id,
-                    class: [object.class],
-                    location: [object.location],
-                    material: [object.material],
-                    rotation: [object.rotation],
-                    scale: [object.scale],
-                    physics: [object.physics],
-                });
+                    class: [],
+                    location: [],
+                    material: [],
+                    rotation: [],
+                    scale: [],
+                    physics: [],
+                } as ObjectJSON;
             }
+            res.objects[object.id].class[i] = object.class;
+            res.objects[object.id].location[i] = object.location;
+            res.objects[object.id].material[i] = object.material;
+            res.objects[object.id].rotation[i] = object.rotation;
+            res.objects[object.id].scale[i] = object.scale;
+            res.objects[object.id].physics[i] = object.physics;
         });
     });
     return res;
