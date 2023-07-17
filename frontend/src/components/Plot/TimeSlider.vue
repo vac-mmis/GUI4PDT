@@ -47,6 +47,7 @@ import type { Timer } from "@/World/systems/Timer";
 import PDTStore from "@/store/pdt.store";
 
 const props = defineProps<{ timer?: Timer }>();
+const emits = defineEmits<{ (e: "time", time: number): void }>();
 
 const pdt = PDTStore();
 const timeLength = pdt.length;
@@ -61,7 +62,7 @@ const timer = computed(() => {
     return toRaw(propsTimer);
 });
 
-const slider = ref(timer.value?.getTime() || 0);
+const slider = ref<number>(timer.value?.getTime() || 0);
 const play = ref(false);
 
 const ticks = Array.from({ length: timeLength / 10 + 1 }, (_, x) => 10 * x).reduce(
@@ -81,6 +82,7 @@ const toggleAnimation = () => {
 watch(
     () => slider.value,
     (t: number) => {
+        emits("time", slider.value);
         if (!play.value) {
             timer.value?.setTime(t);
         }

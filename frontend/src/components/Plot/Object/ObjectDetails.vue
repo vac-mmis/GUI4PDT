@@ -22,16 +22,16 @@
         <v-divider></v-divider>
         <v-card-item>
             <v-tabs v-model="tab" color="secondary" align-tabs="center">
-                <v-tab :value="1">Type</v-tab>
-                <v-tab :value="2">Location</v-tab>
-                <v-tab :value="3">Material</v-tab>
+                <v-tab :value="0">Type</v-tab>
+                <v-tab :value="1">Location</v-tab>
+                <v-tab :value="2">Material</v-tab>
             </v-tabs>
             <div class="h-auto pa-6">
-                <template v-if="tab === 1">
-                    <ObjectPlot :data="[object.class.representation(0)]" />
+                <template v-if="tab === 0">
+                    <ObjectPlot :data="[object.class.representation(time)]" />
                 </template>
-                <template v-if="tab === 3">
-                    <ObjectPlot :data="[object.material.representation(0)]" />
+                <template v-if="tab === 2">
+                    <ObjectPlot :data="[object.material.representation(time)]" />
                 </template>
             </div>
         </v-card-item>
@@ -43,9 +43,11 @@ import ObjectPlot from "@/components/Plot/Object/ObjectPlot.vue";
 import type { PDTObject } from "@/models/object.model";
 import { ref, computed, watch } from "vue";
 
-const props = defineProps<{ object: PDTObject }>();
+const props = defineProps<{ object: PDTObject; time: number }>();
 
 const opened = ref(true);
+const time = ref<number>(0);
+
 const object = computed(() => {
     opened.value = true;
     return props.object;
@@ -58,5 +60,12 @@ watch(
     }
 );
 
-const tab = ref(1);
+watch(
+    () => props.time,
+    (t: number) => {
+        time.value = t;
+    }
+);
+
+const tab = ref(0);
 </script>

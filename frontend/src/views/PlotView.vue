@@ -10,11 +10,11 @@
             <SelectionComponent class="position-relative overflow-visible z-1" />
 
             <div v-if="selectedObject" class="position-relative w-25 h-auto pa-6 z-1">
-                <ObjectDetails :object="selectedObject" />
+                <ObjectDetails :object="selectedObject" :time="selectedTime" />
             </div>
         </div>
         <div class="position-relative w-75 ma-6 z-1">
-            <TimeSlider :timer="timer"></TimeSlider>
+            <TimeSlider :timer="timer" @time="updateTime"></TimeSlider>
         </div>
     </div>
     <v-overlay :model-value="isLoading" class="align-center justify-center">
@@ -32,19 +32,22 @@ import PDTStore from "@/store/pdt.store";
 import type { PDTObject } from "@/models/object.model";
 import type { Timer } from "@/World/systems/Timer";
 
+const pdt = PDTStore();
 const isLoading = ref(true);
 
 const timer = ref<Timer>();
+const selectedTime = ref<number>(0);
 const getTimer = (t: Timer) => {
     timer.value = t;
 };
-
-const selectedObject = ref<PDTObject | null | undefined>(null);
-const onSelectedObject = (obj?: PDTObject | null) => {
-    selectedObject.value = obj;
+const updateTime = (t: number) => {
+    selectedTime.value = t;
 };
 
-const pdt = PDTStore();
+const selectedObject = ref<PDTObject>();
+const onSelectedObject = (obj?: PDTObject | null) => {
+    selectedObject.value = obj || ({} as PDTObject);
+};
 
 onBeforeMount(async () => {
     isLoading.value = true;

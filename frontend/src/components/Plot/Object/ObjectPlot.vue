@@ -4,12 +4,12 @@
 
 <script lang="ts" setup>
 import { ref, watch, onMounted } from "vue";
-import { newPlot, type PlotData, type Layout } from "plotly.js-dist-min";
+import { newPlot, react, type PlotData, type Layout } from "plotly.js-dist-min";
 
 const props = defineProps<{ data: Partial<PlotData>[] }>();
 
 const plotContainer = ref<HTMLDivElement | null>(null);
-let chart: Promise<Plotly.PlotlyHTMLElement> | null = null;
+let chart: Promise<Plotly.PlotlyHTMLElement>;
 const layout = {
     font: { size: 14 },
     margin: {
@@ -46,7 +46,15 @@ const init = () => {
     chart.catch((error) => console.error("Error creating plot:", error));
 };
 
-watch(() => props.data, init);
+const update = async () => {
+    if (plotContainer.value === null) {
+        console.error("Error: Invalid container");
+        return;
+    }
+    react(plotContainer.value, props.data);
+};
+
+watch(() => props.data, update);
 
 onMounted(() => {
     init();
