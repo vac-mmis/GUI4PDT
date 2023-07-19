@@ -1,4 +1,4 @@
-import { Group } from "three";
+import { Euler, Group } from "three";
 
 import { Categorical } from "@/models/distribution/categorical";
 import type { PDTObject } from "@/models/object.model";
@@ -13,6 +13,7 @@ export type ClassJSON =
 
 export class Class extends Group {
     declare parent: PDTObject;
+    private timeIndex: number;
     private dist: Categorical[];
     private scaleFactor: (number | undefined)[];
 
@@ -28,6 +29,7 @@ export class Class extends Group {
         this.userData.type = "Class";
         this.dist = Categorical.uniformCatagories(classJSON);
         this.scaleFactor = scale;
+        this.timeIndex = 0;
 
         // Create object representation
         if (!models) {
@@ -53,15 +55,27 @@ export class Class extends Group {
         }
     }
 
-    public update(t: number) {
-        t = Math.trunc(t);
+    public update(time: number) {
+        time = Math.trunc(time);
+        if (Math.abs(time - this.timeIndex) >= 1) {
+            // update class
+            this.children.forEach((type) => {
+                (type as ObjectRepresentation).update(
+                    this.dist[time].getMass()[type.name],
+                    this.scaleFactor[time]
+                );
+            });
+            this.timeIndex = time;
+        }
+    }
+
+    public setRotation(e: Euler) {
         this.children.forEach((type) => {
-            (type as ObjectRepresentation).update(
-                this.dist[t].getMass()[type.name],
-                this.scaleFactor[t]
-            );
+            (type as ObjectRepresentation).setRotationFromEuler(e);
         });
     }
+
+    public getRotation = (): Euler => this.children[0].rotation;
 
     public representation(t: number) {
         t = Math.trunc(t);

@@ -18,7 +18,9 @@ export class Categorical extends Distribution {
 
     public getMean = (): [string, number] => Object.entries<number>(this.mass)[0];
 
-    public setMean(newMean: number[]): void {}
+    public setMean(newMean: number[]): void {
+        return;
+    }
 
     public setMass(newMass: Record<string, number>): void {
         this.mass = newMass;

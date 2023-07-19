@@ -9,11 +9,7 @@ import { BoxDist } from "@/models/representation/boxDist";
 
 import type { PDTObject } from "@/models/object.model";
 
-export type LocationJSON =
-    | {
-          dist: Distribution;
-      }
-    | [number, number, number];
+export type LocationJSON = { dist: Distribution } | [number, number, number];
 
 export const toDistribution = (dist: Distribution) => {
     switch (dist.type) {
@@ -26,15 +22,22 @@ export const toDistribution = (dist: Distribution) => {
 
 export class Location extends Group {
     declare parent: PDTObject;
+    private timeIndex: number;
     private dist: (Distribution | [number, number, number])[];
+
+    private beginPosition: Vector3;
+    private endPosition: Vector3;
+    private direction!: Vector3;
 
     constructor(parent: PDTObject, locJSON: LocationJSON[]) {
         super();
         this.parent = parent;
         this.userData.type = "Location";
         this.visible = false;
+        this.timeIndex = 0;
         this.dist = [];
 
+        // get distributions from JSON data
         locJSON.forEach((timestamp, i) => {
             if (!("dist" in timestamp)) {
                 this.dist.push(timestamp);
@@ -61,6 +64,15 @@ export class Location extends Group {
                 }
             }
         });
+
+        // initialize position
+        this.beginPosition = new Vector3();
+        this.endPosition = new Vector3();
+        this.getWorldPosition(this.beginPosition);
+        this.getWorldPosition(this.endPosition);
+
+        // set initial position
+        this.setPositionDir(this.timeIndex);
     }
 
     public getPosition(t: number, relative: boolean = false): Vector3 {
@@ -72,5 +84,34 @@ export class Location extends Group {
         } else {
             return new Vector3(...dist);
         }
+    }
+
+    private setPositionDir(time: number) {
+        this.beginPosition = this.endPosition;
+        this.endPosition = this.getPosition(time + 1);
+
+        this.direction = this.endPosition.clone().sub(this.beginPosition);
+        this.timeIndex = Math.trunc(time);
+    }
+
+    public updatePosition(time: number) {
+        time = time % this.dist.length;
+        const delta = time - Math.trunc(time);
+
+        // set new direction if needed
+        if (Math.abs(Math.trunc(time) - this.timeIndex) >= 1) {
+            this.setPositionDir(time);
+        }
+
+        // update object position
+        const object = this.parent.getObject();
+        let actualPosition = new Vector3();
+        object.getWorldPosition(actualPosition);
+
+        const ratioVector = this.direction.clone().multiplyScalar(delta);
+        const axis = this.beginPosition.clone().sub(actualPosition).add(ratioVector);
+        const norm = axis.length();
+
+        object.translateOnAxis(axis.normalize(), norm);
     }
 }

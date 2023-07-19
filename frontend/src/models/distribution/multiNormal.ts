@@ -14,11 +14,10 @@ export class MultivariateNormal extends Distribution {
         this.invCov = sqrtm(this.cov);
     }
 
-    private randomGauss() {
+    public static randomGauss() {
         const u1 = Math.random();
         const u2 = Math.random();
-        const z0 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
-        return z0;
+        return Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
     }
 
     public getMean = () => this.mean;
@@ -30,7 +29,9 @@ export class MultivariateNormal extends Distribution {
     public getCov = () => this.cov;
 
     public random(relative: boolean = false) {
-        const X: number[] = Array.from({ length: this.mean.length }, (_, i) => this.randomGauss());
+        const X: number[] = Array.from({ length: this.mean.length }, () =>
+            MultivariateNormal.randomGauss()
+        );
         const XInvCov = multiply(this.invCov, X);
         return (relative ? XInvCov : add(XInvCov, this.mean)) as number[];
     }
