@@ -1,11 +1,9 @@
 <template>
     <v-app-bar color="primary" dark collapse-on-scroll>
-        <v-app-bar-nav-icon @click="toggleDrawer">
-            <font-awesome-icon icon="fa-solid fa-home" />
-        </v-app-bar-nav-icon>
+        <v-app-bar-nav-icon icon="fas fa-home" @click="toggleDrawer"> </v-app-bar-nav-icon>
         <v-toolbar-title>OTC-DaTA GUI</v-toolbar-title>
     </v-app-bar>
-    <v-navigation-drawer color="primary" temporary dark v-model="drawer">
+    <v-navigation-drawer color="primary" temporary dark v-model="drawer" elevation="1">
         <v-list>
             <v-list-item
                 v-for="item of menuItems"
@@ -30,7 +28,7 @@ const toggleDrawer = () => {
 };
 
 const menuItems = [
-    { title: "Plot", icon: "fa fa-chart-network", route: "/" },
-    { title: "About", icon: "fa fa-circle-info", route: "/about" },
+    { title: "Plot", icon: "fas fa-cube", route: "/" },
+    { title: "About", icon: "$info", route: "/about" },
 ];
 </script>

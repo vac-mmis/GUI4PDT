@@ -1,4 +1,4 @@
-import { Group, type MeshStandardMaterial, type Intersection } from "three";
+import { Group, type Intersection } from "three";
 
 import { Location, type LocationJSON } from "@/models/location.model";
 import { Class, type ClassJSON } from "@/models/class.model";
@@ -15,26 +15,21 @@ export type ObjectJSON = {
     physics?: boolean[];
 };
 
-export type ModelFile = {
-    name: string;
-    content: string;
-};
-
 export class PDTObject extends Group {
     objID: number;
     class!: Class;
     material!: Material;
 
-    constructor(objJSON: ObjectJSON, models?: Group[], materials?: MeshStandardMaterial[]) {
+    constructor(objJSON: ObjectJSON) {
         super();
         this.objID = objJSON.id;
         this.userData.type = "Object";
 
         // get material from JSON data
-        this.material = new Material(objJSON.material, materials);
+        this.material = new Material(objJSON.material);
 
         // get class from JSON data and add representation to PDTObject
-        this.class = new Class(this, objJSON.class, this.material, objJSON.scale, models);
+        this.class = new Class(this, objJSON.class, this.material, objJSON.scale);
         this.add(this.class);
 
         // setup rotation from JSON data

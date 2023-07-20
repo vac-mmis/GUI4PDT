@@ -88,7 +88,7 @@ export class Location extends Group {
 
     private setPositionDir(time: number) {
         this.beginPosition = this.endPosition;
-        this.endPosition = this.getPosition(time + 1);
+        this.endPosition = this.getPosition((time + 1) % this.dist.length);
 
         this.direction = this.endPosition.clone().sub(this.beginPosition);
         this.timeIndex = Math.trunc(time);

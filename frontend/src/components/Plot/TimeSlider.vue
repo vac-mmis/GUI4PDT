@@ -1,12 +1,17 @@
 <template>
-    <v-sheet class="d-flex justify-center align-center w-100 h-auto z-1 px-4">
-        <v-btn color="primary" icon @click="toggleAnimation()">
-            <font-awesome-icon :icon="play ? ['fas', 'pause'] : ['fas', 'play']" />
+    <v-sheet class="d-flex justify-center align-center w-100 h-auto z-11 px-4">
+        <v-btn
+            color="primary"
+            size="large"
+            @click="toggleAnimation()"
+            :icon="play ? 'fas fa-pause' : 'fas fa-play'"
+        >
         </v-btn>
         <v-slider
-            :class="`w-100 align-center ${play ? `text-grey-lighten-1` : `text-black`} my-4`"
             v-model="slider"
-            :color="play ? `grey` : `primary`"
+            class="w-100 align-center my-4"
+            color="primary"
+            :disabled="play"
             show-ticks="always"
             hide-details
             :readonly="play"
@@ -18,23 +23,23 @@
             <template v-slot:prepend>
                 <v-btn
                     variant="text"
-                    icon
+                    size="small"
+                    icon="fas fa-backward-step"
                     color="primary"
                     :disabled="play || slider < 1"
                     @click="slider >= 1 ? slider-- : 0"
                 >
-                    <font-awesome-icon :icon="['fas', 'minus']" />
                 </v-btn>
             </template>
             <template v-slot:append>
                 <v-btn
                     variant="text"
-                    icon
+                    size="small"
+                    icon="fas fa-forward-step"
                     color="primary"
                     :disabled="play || slider > timeLength - 2"
                     @click="slider <= timeLength - 2 ? slider++ : timeLength"
                 >
-                    <font-awesome-icon :icon="['fas', 'plus']" />
                 </v-btn>
             </template>
         </v-slider>
@@ -43,6 +48,7 @@
 
 <script setup lang="ts">
 import { ref, computed, toRaw, watch } from "vue";
+
 import type { Timer } from "@/World/systems/Timer";
 import PDTStore from "@/store/pdt.store";
 
@@ -51,11 +57,6 @@ const emits = defineEmits<{ (e: "time", time: number): void }>();
 
 const pdt = PDTStore();
 const timeLength = pdt.length;
-
-const updateSlider = (t: number) => {
-    slider.value = t % timeLength;
-};
-
 const timer = computed(() => {
     const propsTimer = props.timer;
     propsTimer?.setTimerCallback(updateSlider);
@@ -63,13 +64,15 @@ const timer = computed(() => {
 });
 
 const slider = ref<number>(timer.value?.getTime() || 0);
-const play = ref(false);
-
 const ticks = Array.from({ length: timeLength / 10 + 1 }, (_, x) => 10 * x).reduce(
     (o, key) => Object.assign(o, { [key]: `${key}` }),
     {}
 );
+const updateSlider = (t: number) => {
+    slider.value = t % timeLength;
+};
 
+const play = ref(false);
 const toggleAnimation = () => {
     play.value = !play.value;
     if (play.value) {

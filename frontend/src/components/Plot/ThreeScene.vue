@@ -26,8 +26,7 @@ const selectedCallback = (obj?: PDTObject | null) => {
 onMounted(async () => {
     container.value?.focus();
     if (container.value === null) {
-        console.error("Error: Invalid container");
-        return;
+        throw new Error("Error: Invalid container");
     }
     const world = new World(container.value, selectedCallback);
     emits("timer", world.getTimer());

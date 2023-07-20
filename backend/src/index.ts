@@ -3,16 +3,28 @@ import bodyParser from "body-parser";
 import cors from "cors";
 
 import routes from "@/routes/routes";
-import PDTServices from "@/store/pdt.store";
 
-const app = express();
-app.use(cors());
-
-app.use(bodyParser.json({ limit: "50mb" }));
-
-app.use("/api", routes);
+import pdtStore from "@/store/pdt.store";
+import modelStore from "./store/model.store";
+import materialStore from "./store/material.store";
 
 const port = 3000;
-app.listen(port, async () => {
-    await PDTServices.init().then(() => console.log(`Express app listening on port ${port}`));
-});
+const app = express();
+app.use(cors())
+    .use(bodyParser.json({ limit: "50mb" }))
+    .use("/api", routes);
+
+const setup = async () => {
+    await modelStore
+        .load()
+        .then(() => materialStore.load())
+        .then(() => pdtStore.load())
+        .then(() =>
+            app.listen(port, () => {
+                console.log(`Express app listening on port ${port}`);
+            })
+        )
+        .catch((err) => console.error(err));
+};
+
+setup();

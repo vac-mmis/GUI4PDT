@@ -5,7 +5,7 @@ export type MultivariateNormal = {
 };
 
 export type UniformContinuous = {
-    type: "uniform-continous";
+    type: "uniform-continuous";
     params: number[][];
 };
 
@@ -16,6 +16,6 @@ export type Categorical<E extends string> = {
 
 export type VonMises = {
     type: "von-mises";
-    mean: number;
-    dispersion: number;
+    mean: number[];
+    kappa: number[];
 };

@@ -2,7 +2,7 @@ import { Group, MeshStandardMaterial, TextureLoader } from "three";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-import type { MaterialFile } from "@/models/material.model";
+import type { MaterialFile } from "@/store/material.store";
 
 // GLTFLoader with compression
 const loader = new GLTFLoader();

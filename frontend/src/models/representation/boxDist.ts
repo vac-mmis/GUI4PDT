@@ -3,9 +3,10 @@ import { BoxGeometry, Mesh, MeshStandardMaterial } from "three";
 export class BoxDist extends Mesh {
     private previousDim: [number, number, number];
     constructor(dim: [number, number, number]) {
-        if (!dim.every((d) => d !== 0)) {
+        if (dim.every((d) => d === 0)) {
             throw new Error("Cannot create box with size 0");
         }
+
         const geometry = new BoxGeometry(...dim);
         const material = new MeshStandardMaterial({
             color: 0xf0f921,

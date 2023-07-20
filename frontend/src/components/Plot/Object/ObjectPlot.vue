@@ -9,7 +9,7 @@ import { newPlot, react, type PlotData, type Layout } from "plotly.js-dist-min";
 const props = defineProps<{ data: Partial<PlotData>[] }>();
 
 const plotContainer = ref<HTMLDivElement | null>(null);
-let chart: Promise<Plotly.PlotlyHTMLElement>;
+
 const layout = {
     font: { size: 14 },
     margin: {
@@ -31,25 +31,15 @@ const config = { responsive: true };
 
 const init = () => {
     const trace: Partial<Plotly.Data>[] = props.data ? props.data : [];
-
     if (plotContainer.value === null) {
-        console.error("Error: Invalid container");
-        return;
+        throw new Error("Error: Invalid container");
     }
-
-    chart = newPlot(
-        plotContainer.value,
-        trace,
-        layout,
-        config
-    ) as Promise<Plotly.PlotlyHTMLElement>;
-    chart.catch((error) => console.error("Error creating plot:", error));
+    newPlot(plotContainer.value, trace, layout, config) as Promise<Plotly.PlotlyHTMLElement>;
 };
 
-const update = async () => {
+const update = () => {
     if (plotContainer.value === null) {
-        console.error("Error: Invalid container");
-        return;
+        throw new Error("Error: Invalid container");
     }
     react(plotContainer.value, props.data);
 };

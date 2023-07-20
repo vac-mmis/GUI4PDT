@@ -1,6 +1,6 @@
 <template>
     <div
-        v-if="!isLoading"
+        v-if="status.status === `success`"
         class="d-flex flex-column justify-space-between align-center h-100 w-100"
     >
         <div class="position-absolute h-100 w-100 d-flex justify-center align-center z-0">
@@ -13,27 +13,36 @@
                 <ObjectDetails :object="selectedObject" :time="selectedTime" />
             </div>
         </div>
-        <div class="position-relative w-75 ma-6 z-1">
+        <div v-if="pdt.length > 1" class="position-relative w-75 ma-6 z-1">
             <TimeSlider :timer="timer" @time="updateTime"></TimeSlider>
         </div>
     </div>
-    <v-overlay :model-value="isLoading" class="align-center justify-center">
-        <v-progress-circular color="secondary" indeterminate size="64"></v-progress-circular>
-    </v-overlay>
+    <div v-if="status.status === `waiting`" class="d-flex position-relative h-100 w-auto">
+        <PDTLoader @status="getStatus" />
+    </div>
+    <div v-if="status.status === `error`" class="d-flex align-center h-auto w-100 pa-10">
+        <v-alert class="h-auto w-50" closable type="error" title="Error">
+            {{ status.message }}
+        </v-alert>
+    </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount } from "vue";
+import { ref } from "vue";
+import PDTLoader from "@/components/Plot/PDTLoader.vue";
 import ObjectDetails from "@/components/Plot/Object/ObjectDetails.vue";
 import SelectionComponent from "@/components/Plot/SelectionComponent.vue";
 import TimeSlider from "@/components/Plot/TimeSlider.vue";
 import ThreeScene from "@/components/Plot/ThreeScene.vue";
+
 import PDTStore from "@/store/pdt.store";
 import type { PDTObject } from "@/models/object.model";
 import type { Timer } from "@/World/systems/Timer";
+import type { Status } from "@/types/log.types";
 
 const pdt = PDTStore();
-const isLoading = ref(true);
+
+const status = ref<Status>({ status: "waiting", message: "" });
 
 const timer = ref<Timer>();
 const selectedTime = ref<number>(0);
@@ -49,10 +58,7 @@ const onSelectedObject = (obj?: PDTObject | null) => {
     selectedObject.value = obj || ({} as PDTObject);
 };
 
-onBeforeMount(async () => {
-    isLoading.value = true;
-    await pdt.fetchPDT().finally(() => {
-        isLoading.value = false;
-    });
-});
+const getStatus = (s: Status) => {
+    status.value = s;
+};
 </script>

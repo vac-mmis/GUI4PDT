@@ -2,6 +2,7 @@ import { MeshStandardMaterial } from "three";
 
 import { Categorical } from "@/models/distribution/categorical";
 import type { PDTObject } from "@/models/object.model";
+import materialStore from "@/store/material.store";
 
 export type MaterialJSON =
     | string
@@ -9,34 +10,20 @@ export type MaterialJSON =
           dist: Categorical;
       };
 
-export type MaterialFile = {
-    name: string;
-    albedo: string;
-    ao: string;
-    metalness: string;
-    normal: string;
-    roughness: string;
-};
-
 export class Material extends MeshStandardMaterial {
     declare parent: PDTObject;
     private dist: Categorical[];
 
-    constructor(materialJSON: MaterialJSON[], materials?: MeshStandardMaterial[]) {
+    constructor(materialJSON: MaterialJSON[]) {
         super();
         this.dist = Categorical.uniformCatagories(materialJSON);
 
-        if (!materials) {
-            Object.assign(this, new MeshStandardMaterial());
+        const materials = materialStore();
+        const material = materials.find(Object.keys(this.dist[0].getMass())[0]);
+        if (material) {
+            Object.assign(this, material);
         } else {
-            const material = materials.find(
-                (m) => m.name === Object.keys(this.dist[0].getMass())[0]
-            );
-            if (material) {
-                Object.assign(this, material);
-            } else {
-                Object.assign(this, new MeshStandardMaterial());
-            }
+            Object.assign(this, new MeshStandardMaterial());
         }
     }
 

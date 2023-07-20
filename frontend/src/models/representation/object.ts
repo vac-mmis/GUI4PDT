@@ -5,41 +5,39 @@ export class ObjectRepresentation extends Group {
     private previousScale: number;
 
     constructor(
-        model: Group,
-        material: Material,
+        model: Group | undefined,
+        material: Material | undefined,
         position: [number, number, number],
         scale: number = 1,
         opacity: number = 1
     ) {
         super();
+        this.name = model?.name || "default";
         this.previousScale = scale;
-        // Traverse through all children of the model and set transparency for each material
-        model.traverse((child) => {
-            if (child instanceof Mesh) {
-                const newMaterial = material.getMaterial(opacity);
-                const newMesh = new Mesh(child.geometry, newMaterial);
-                if (opacity < 1) {
-                    // Enable alpha sorting
-                    newMesh.renderOrder = 1; // Set a higher render order for transparency
-                    newMesh.material.depthTest = true; // Enable depth testing
-                    newMesh.material.depthWrite = false; // Disable writing to the depth buffer
-                }
-                this.add(newMesh);
-            }
-        });
-
         this.position.set(...position);
-        this.scale.set(scale, scale, scale);
-        this.name = model.name;
-    }
+        const newMaterial = material ? material.getMaterial(opacity) : new MeshStandardMaterial();
 
-    public static emptyObject(position: [number, number, number]): Mesh {
-        const geometry = new BoxGeometry(2, 2, 2);
-        const material = new MeshStandardMaterial();
-
-        const object = new Mesh(geometry, material);
-        object.position.set(...position);
-        return object;
+        if (!model) {
+            // If no model is provided, default mesh is created
+            const geometry = new BoxGeometry(0.5, 0.5, 0.5);
+            this.add(new Mesh(geometry, material));
+        } else {
+            // Traverse through all children of the model and set transparency for each material
+            model.traverse((child) => {
+                if (child instanceof Mesh) {
+                    const newMesh = new Mesh(child.geometry, newMaterial.clone());
+                    if (opacity < 1) {
+                        // Enable alpha sorting
+                        newMesh.renderOrder = 1; // Set a higher render order for transparency
+                        newMesh.material.depthTest = true; // Enable depth testing
+                        newMesh.material.depthWrite = false; // Disable writing to the depth buffer
+                    }
+                    this.add(newMesh);
+                }
+            });
+            // Setup scale only if model provided
+            this.scale.set(scale, scale, scale);
+        }
     }
 
     public update(opacity?: number, scale: number = 1) {

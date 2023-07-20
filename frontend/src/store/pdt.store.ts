@@ -1,36 +1,49 @@
-import { PDT, type PDTJSON } from "@/models/pdt.model";
 import { ref, computed, toRaw } from "vue";
 import axios from "axios";
-
 import { defineStore } from "pinia";
-import { PDTObject } from "@/models/object.model";
 
-const PDTStore: any = defineStore("myPDT", () => {
-    const _PDT = ref({} as PDT);
+import { PDT, type PDTJSON } from "@/models/pdt.model";
+import type { PDTObject } from "@/models/object.model";
 
-    const length = computed(() => _PDT.value.getLength());
+const PDTStore: any = defineStore("PDTs", () => {
+    const _PDTs = ref([] as PDT[]);
+    const _selectedPDT = ref({} as PDT);
 
-    const fetchPDT = async () => {
-        return axios
-            .get("http://localhost:3000/api")
-            .then((res) => {
-                const pdtJSON: PDTJSON = res.data;
-                _PDT.value = new PDT(pdtJSON);
-                return pdtJSON;
-            })
-            .then((pdtJSON: PDTJSON) => toRaw(_PDT.value).init(pdtJSON))
-            .catch((err: Error) => console.error(err));
+    const length = computed(() => _selectedPDT.value.getLength());
+
+    const fetch = async (pdtName: string) => {
+        let pdt = findPDT(pdtName);
+        if (!pdt) {
+            pdt = await axios.get(`pdt/${pdtName}`).then((res) => {
+                const newPDT = new PDT(res.data as PDTJSON);
+                _PDTs.value.push(newPDT);
+                return newPDT;
+            });
+
+            if (!pdt) {
+                throw new Error("PDT not found");
+            }
+        }
+        _selectedPDT.value = pdt;
     };
 
+    async function list(): Promise<string[]> {
+        return await axios.get(`pdts/list`).then((res) => res.data);
+    }
+
+    function findPDT(pdtName: string): PDT | undefined {
+        return (toRaw(_PDTs.value) as PDT[]).find((pdt: PDT) => pdt.name === pdtName);
+    }
+
     function getObjects(): PDTObject[] {
-        return toRaw(_PDT.value).getObjects();
+        return toRaw(_selectedPDT.value).getObjects();
     }
 
     function updateObjects(fun: Function) {
-        _PDT.value.updateObjects(fun);
+        _selectedPDT.value.updateObjects(fun);
     }
 
-    return { length, getObjects, fetchPDT, updateObjects };
+    return { length, list, getObjects, fetch, updateObjects };
 });
 
 export default PDTStore;

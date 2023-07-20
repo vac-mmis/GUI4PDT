@@ -2,28 +2,21 @@
     <v-card
         v-if="opened"
         :title="`Details on object ${object.id}`"
-        append-icon="$close"
+        prepend-icon="fas fa-cubes"
         class="mx-auto"
         elevation="16"
         max-width="500"
     >
-        <template v-slot:prepend>
-            <div class="pa-2">
-                <font-awesome-icon :icon="['fas', 'cubes']" />
-            </div>
-        </template>
-
         <template v-slot:append>
-            <v-btn icon="$close" variant="text" @click="opened = false">
-                <font-awesome-icon :icon="['fas', 'xmark']" />
-            </v-btn>
+            <v-btn icon="$close" variant="text" @click="opened = false"> </v-btn>
         </template>
 
         <v-divider></v-divider>
         <v-card-item>
             <v-tabs v-model="tab" color="secondary" align-tabs="center">
                 <v-tab :value="0">Type</v-tab>
-                <v-tab :value="1">Location</v-tab>
+                <!-- TODO : Implement location details -->
+                <!-- <v-tab :value="1">Location</v-tab> -->
                 <v-tab :value="2">Material</v-tab>
             </v-tabs>
             <div class="h-auto pa-6">
@@ -39,15 +32,17 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, computed, watch } from "vue";
+
 import ObjectPlot from "@/components/Plot/Object/ObjectPlot.vue";
 import type { PDTObject } from "@/models/object.model";
-import { ref, computed, watch } from "vue";
 
 const props = defineProps<{ object: PDTObject; time: number }>();
 
 const opened = ref(true);
-const time = ref<number>(0);
+const tab = ref<number>(0);
 
+const time = ref<number>(0);
 const object = computed(() => {
     opened.value = true;
     return props.object;
@@ -66,6 +61,4 @@ watch(
         time.value = t;
     }
 );
-
-const tab = ref(0);
 </script>

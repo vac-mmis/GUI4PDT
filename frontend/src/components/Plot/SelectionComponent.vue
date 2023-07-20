@@ -1,9 +1,7 @@
 <template>
     <div :class="openList ? `w-auto` : ``">
         <v-toolbar class="w-100" :collapse="!openList" title="Objects">
-            <v-app-bar-nav-icon @click="toggleList">
-                <font-awesome-icon :icon="['fas', 'bars']" />
-            </v-app-bar-nav-icon>
+            <v-app-bar-nav-icon @click="toggleList"></v-app-bar-nav-icon>
         </v-toolbar>
         <v-sheet class="border w-full h-full" v-if="openList">
             <v-switch
@@ -38,7 +36,7 @@
                                     )
                                 "
                             >
-                                <font-awesome-icon :icon="['fas', 'eye']" />
+                                <v-icon icon="far fa-eye" />
                                 <v-tooltip activator="parent" location="bottom">
                                     Show object
                                 </v-tooltip>
@@ -47,7 +45,7 @@
                                 value="loc"
                                 @click="object.toggleLocation(toggleObjects[index].includes(`loc`))"
                             >
-                                <font-awesome-icon :icon="['fas', 'location-crosshairs']" />
+                                <v-icon icon="fas fa-crosshairs" />
                                 <v-tooltip activator="parent" location="bottom">
                                     Show location
                                 </v-tooltip>
@@ -61,11 +59,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, type ComputedRef } from "vue";
+import { ref, computed, watch, onMounted, type ComputedRef } from "vue";
+
 import { PDTObjServices, type PDTObject } from "@/models/object.model";
 import PDTStore from "@/store/pdt.store";
-import { onMounted } from "vue";
-import { watch } from "vue";
 
 const pdt = PDTStore();
 const objects: ComputedRef<PDTObject[]> = computed(() => pdt.getObjects());
@@ -75,10 +72,9 @@ const toggleList = () => {
     openList.value = !openList.value;
 };
 
-const globalLoc = ref(false);
-
 const toggleObjects = ref([[]] as string[][]);
 
+const globalLoc = ref(false);
 const toggleGlobalLocation = () => {
     pdt.updateObjects(PDTObjServices.toggleLocation(globalLoc.value));
     toggleObjects.value.forEach((objToggle) => {

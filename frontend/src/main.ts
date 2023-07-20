@@ -1,27 +1,15 @@
 import { createApp } from "vue";
 import App from "./App.vue";
+
+// Pinia
 import { createPinia } from "pinia";
+
+// Axios
+import axios from "axios";
 
 // Router
 import router from "./router";
 
-// Icons
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-
-import {
-    faHome,
-    faBars,
-    faLocationCrosshairs,
-    faEye,
-    faCubes,
-    faXmark,
-    faWindowMinimize,
-    faMinus,
-    faPlus,
-    faPlay,
-    faPause,
-} from "@fortawesome/free-solid-svg-icons";
 // Vuetify
 import "vuetify/styles";
 import { aliases, fa } from "vuetify/iconsets/fa";
@@ -61,25 +49,10 @@ const vuetify = createVuetify({
     },
 });
 
+// Axios default baseURL
+axios.defaults.baseURL = "http://localhost:3000/api";
+
+// Pinia initialization
 const pinia = createPinia();
 
-library.add(
-    faHome,
-    faBars,
-    faLocationCrosshairs,
-    faEye,
-    faCubes,
-    faXmark,
-    faWindowMinimize,
-    faMinus,
-    faPlus,
-    faPlay,
-    faPause
-);
-
-createApp(App)
-    .component("font-awesome-icon", FontAwesomeIcon)
-    .use(vuetify)
-    .use(pinia)
-    .use(router)
-    .mount("#app");
+createApp(App).use(vuetify).use(pinia).use(router).mount("#app");

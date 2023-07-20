@@ -8,9 +8,6 @@ const router = createRouter({
         {
             path: "/",
             name: "Plot Test",
-            // route level code-splitting
-            // this generates a separate chunk (About.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
             component: ThreeView,
             meta: {
                 icon: "fa fa-chart-scatter",
@@ -19,9 +16,6 @@ const router = createRouter({
         {
             path: "/about",
             name: "About page",
-            // route level code-splitting
-            // this generates a separate chunk (About.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
             component: AboutView,
             meta: {
                 icon: "fa fa-info",

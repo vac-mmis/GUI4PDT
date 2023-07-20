@@ -58,7 +58,7 @@ export class Rotation extends Group {
 
     private setRotationDir(time: number) {
         this.beginRotation = this.endRotation;
-        this.endRotation = this.getRotation(time + 1);
+        this.endRotation = this.getRotation((time + 1) % this.dist.length);
 
         const beginRotArray: [number, number, number] = this.beginRotation.toArray();
         const endRotArray: [number, number, number] = this.endRotation.toArray();
