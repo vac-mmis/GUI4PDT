@@ -29,10 +29,10 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import PDTLoader from "@/components/Plot/PDTLoader.vue";
+import PDTLoader from "@/components/Plot/Controls/PDTLoader.vue";
 import ObjectDetails from "@/components/Plot/Object/ObjectDetails.vue";
-import SelectionComponent from "@/components/Plot/SelectionComponent.vue";
-import TimeSlider from "@/components/Plot/TimeSlider.vue";
+import SelectionComponent from "@/components/Plot/Controls/SelectionComponent.vue";
+import TimeSlider from "@/components/Plot/Controls/TimeSlider.vue";
 import ThreeScene from "@/components/Plot/ThreeScene.vue";
 
 import PDTStore from "@/store/pdt.store";

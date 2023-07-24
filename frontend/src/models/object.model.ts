@@ -46,11 +46,15 @@ export class PDTObject extends Group {
 
     public getLocation = () => this.children[1];
 
-    public toggleVisibility(showObject: boolean = true) {
+    public getObjectVisibility = () => this.children[0].visible;
+
+    public setObjectVisibility(showObject: boolean = true) {
         this.children[0].visible = showObject;
     }
 
-    public toggleLocation(showLocation: boolean = false) {
+    public getLocationVisibility = () => this.children[1].visible;
+
+    public setLocationVisibility(showLocation: boolean = false) {
         this.children[1].visible = showLocation;
     }
 
@@ -68,12 +72,12 @@ export class PDTObject extends Group {
 
 const toggleObjects = (showObject: boolean) => {
     return (obj: PDTObject) => {
-        obj.toggleVisibility(showObject);
+        obj.setObjectVisibility(showObject);
     };
 };
 
 const toggleLocation = (showLocation: boolean) => {
-    return (obj: PDTObject) => obj.toggleLocation(showLocation);
+    return (obj: PDTObject) => obj.setLocationVisibility(showLocation);
 };
 
 const getObjectFromIntersect = (intersect: Intersection): PDTObject => {
