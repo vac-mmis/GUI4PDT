@@ -1,10 +1,11 @@
 {
-    "name": "server",
-    "version": "1.0.0",
-    "description": "",
+    "name": "backend",
+    "version": "0.1.0",
+    "description": "Backend API server for providing PDT data to GUI frontend",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon"
+        "dev": "nodemon",
+        "build:doc": "npx typedoc"
     },
     "keywords": [],
     "author": "",
@@ -27,6 +28,9 @@
         "nodemon": "^3.0.1",
         "ts-node": "^10.9.1",
         "tsconfig-paths": "^4.2.0",
+        "typedoc": "^0.24.8",
+        "typedoc-gitlab-wiki-theme": "^1.1.0",
+        "typedoc-plugin-markdown": "^3.15.4",
         "typescript": "~5.0.4"
     }
 }

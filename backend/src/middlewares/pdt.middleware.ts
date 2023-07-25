@@ -1,10 +1,22 @@
+/**
+ * Middleware bootstrap for file uploading
+ *
+ * @experimental
+ * @namespace pdt.middleware
+ */
+
 import { createHash } from "crypto";
 import { Request } from "express";
 import multer, { Multer } from "multer";
 import { getExtension } from "mime";
 
-const basedir = "database/documents";
+const basedir = "data";
 
+/**
+ * Storage setup
+ *
+ * @experimental
+ */
 const storage = multer.diskStorage({
     destination: function (
         req: Request,
@@ -27,6 +39,11 @@ const storage = multer.diskStorage({
     },
 });
 
+/**
+ * Upload method
+ *
+ * @experimental
+ */
 export const upload: Multer = multer({
     storage: storage,
     fileFilter: function (req, file, cb) {

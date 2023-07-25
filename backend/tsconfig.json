@@ -12,8 +12,22 @@
         "paths": {
             "@/*": ["*"]
         },
-        "types": ["three"],
         "lib": ["dom"]
     },
-    "include": ["src/**/*", "src/*"]
+    "include": ["src/**/*", "src/*"],
+    "typedocOptions": {
+        "entryPoints": ["src"],
+        "exclude": ["**/node_modules/**", "**/*.spec.ts"],
+        "sort": ["source-order"],
+        "out": "doc",
+        "name": "MMIS GUI Backend Documentation",
+        "theme": "default",
+        "plugin": ["typedoc-plugin-markdown", "typedoc-gitlab-wiki-theme"],
+        "readme": "CONTRIBUTING.md",
+        "navigation": {
+            "includeCategories": true,
+            "includeGroups": false
+        },
+        "categorizeByGroup": false
+    }
 }

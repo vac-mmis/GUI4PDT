@@ -1,9 +1,16 @@
+/**
+ * List all available routes for materials
+ *
+ * @module material.route
+ */
 import express from "express";
 
-import materialController from "@/controller/material.controller";
+import * as materialController from "@/controllers/material.controller";
 
-const router = express.Router();
-
-router.get("/materials", materialController.getMaterials);
-router.get("/material/name", materialController.findMaterialByName);
-export default router;
+/**
+ * All routes dedicated to serve materials. Creating a new route for these objects should be added here with its route controller
+ */
+export const materialRoute = express
+    .Router()
+    .get("/materials", materialController.getMaterials)
+    .get("/material/name", materialController.findMaterialByName);

@@ -1,20 +1,25 @@
+/**
+ * This store is used to load, store and provide materials
+ *
+ * @module material.store
+ */
+
 import { readFile, readdir } from "fs/promises";
 import path from "path";
 
+import type { MaterialFile } from "@/types/file.types";
+
 const materialsPath = path.resolve("assets", `materials`).normalize();
-
-export type MaterialFile = {
-    name: string;
-    albedo: string;
-    ao: string;
-    metalness: string;
-    normal: string;
-    roughness: string;
-};
-
 const materials: MaterialFile[] = [];
 
-const serializeMaterial = async (materialPath: string): Promise<MaterialFile> => {
+/**
+ * Transforms a material folder with its files to MaterialFile format for API providing
+ * @param materialPath Path to material folder
+ *
+ * @returns Promise with the generated MaterialFile blob
+ * @internal
+ */
+async function serializeMaterial(materialPath: string): Promise<MaterialFile> {
     const materialFiles = await readdir(materialPath);
     const material = {} as MaterialFile;
     material.name = path.basename(materialPath);
@@ -27,9 +32,12 @@ const serializeMaterial = async (materialPath: string): Promise<MaterialFile> =>
         })
     );
     return material;
-};
+}
 
-const load = async (): Promise<void> => {
+/**
+ * Loads all available materials for API providing
+ */
+export async function load(): Promise<void> {
     await readdir(materialsPath)
         .then((materialFolders) =>
             Promise.all(
@@ -43,14 +51,23 @@ const load = async (): Promise<void> => {
         .catch((err) => {
             throw new Error(`Materials loading failed : ${err}`);
         });
-};
+}
 
-const get = (): MaterialFile[] => materials;
+/**
+ * Get loaded materials
+ *
+ * @returns Array of all loaded materials
+ */
+export function get(): MaterialFile[] {
+    return materials;
+}
 
-const find = (name: string) => materials.find((material) => material.name === name);
-
-export default {
-    load,
-    get,
-    find,
-};
+/**
+ * Find loaded material by its name
+ * @param name Name of the targeted material
+ *
+ * @returns Targeted material if exists, else undefined
+ */
+export function find(name: string) {
+    return materials.find((material) => material.name === name);
+}

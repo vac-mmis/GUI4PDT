@@ -1,11 +1,21 @@
+/**
+ * This store is used to load, store and provide all available PDT
+ *
+ * @module pdt.store
+ */
+
 import { readdir, stat } from "fs/promises";
+import path from "path";
 
-import PDT from "@/models/pdt.model";
+import { PDT } from "@/models/pdt.model";
 
-const dataPath = `${__dirname}/../../data`;
+const dataPath = path.resolve("data").normalize();
 const PDTs: PDT[] = [];
 
-const load = async (): Promise<void> => {
+/**
+ * Loads all available PDT for API providing
+ */
+export async function load(): Promise<void> {
     const pdtDirs = await readdir(dataPath);
     await Promise.all(
         pdtDirs.map(async (PDTDir) => {
@@ -19,17 +29,32 @@ const load = async (): Promise<void> => {
     ).catch((err) => {
         throw new Error(`PDTs loading failed : ${err}`);
     });
-};
+}
 
-const get = (): Partial<PDT>[] => PDTs.map((pdt) => pdt.getPublicData());
+/**
+ * Get loaded PDT
+ *
+ * @returns Array of all loaded materials
+ */
+export function get(): Partial<PDT>[] {
+    return PDTs.map((pdt) => pdt.getPublicPDT());
+}
 
-const list = (): string[] => PDTs.map((pdt) => pdt.getName());
+/**
+ * List all loaded PDT names
+ *
+ * @returns Array of loaded PDT names
+ */
+export function list(): string[] {
+    return PDTs.map((pdt) => pdt.getName());
+}
 
-const find = (name: string): PDT | undefined => PDTs.find((pdt: PDT) => pdt.name === name);
-
-export default {
-    load,
-    get,
-    list,
-    find,
-};
+/**
+ * Find loaded PDT by its name
+ * @param name Name of the targeted PDT
+ *
+ * @returns Targeted PDT if exists, else undefined
+ */
+export function find(name: string): PDT | undefined {
+    return PDTs.find((pdt: PDT) => pdt.name === name);
+}
