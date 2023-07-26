@@ -1,5 +1,5 @@
 import { BoxGeometry, Group, Mesh, MeshStandardMaterial } from "three";
-import { Material } from "../material.model";
+import { Material } from "@/models/Object/Material";
 
 export class ObjectRepresentation extends Group {
     private previousScale: number;

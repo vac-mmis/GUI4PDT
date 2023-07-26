@@ -1,14 +1,10 @@
 import { MeshStandardMaterial } from "three";
 
-import { Categorical } from "@/models/distribution/categorical";
+import { Categorical } from "@/models/Distributions/Categorical";
 import type { PDTObject } from "@/models/object.model";
-import materialStore from "@/store/material.store";
+import { materialStore } from "@/store/material.store";
 
-export type MaterialJSON =
-    | string
-    | {
-          dist: Categorical;
-      };
+export type MaterialJSON = string | { dist: Categorical };
 
 export class Material extends MeshStandardMaterial {
     declare parent: PDTObject;

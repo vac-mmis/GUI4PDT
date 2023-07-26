@@ -46,7 +46,7 @@ import { ref, computed, type ComputedRef } from "vue";
 import ControlButtons from "@/components/Plot/Controls/ControlButtons.vue";
 
 import type { PDTObject } from "@/models/object.model";
-import Command from "@/models/controls/command.model";
+import { Command } from "@/models/UserInterface/Command";
 import PDTStore from "@/store/pdt.store";
 
 const pdt = PDTStore();

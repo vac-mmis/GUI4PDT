@@ -53,7 +53,7 @@ import type { Timer } from "@/World/systems/Timer";
 import PDTStore from "@/store/pdt.store";
 
 const props = defineProps<{ timer?: Timer }>();
-const emits = defineEmits<{ (e: "time", time: number): void }>();
+const emits = defineEmits<(e: "time", time: number) => void>();
 
 const pdt = PDTStore();
 const timeLength = pdt.length;

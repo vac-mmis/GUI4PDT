@@ -1,9 +1,9 @@
 import { Group, type Intersection } from "three";
 
-import { Location, type LocationJSON } from "@/models/location.model";
-import { Class, type ClassJSON } from "@/models/class.model";
-import { Rotation, type RotationJSON } from "@/models/rotation.model";
-import { Material, type MaterialJSON } from "@/models/material.model";
+import { Location, type LocationJSON } from "@/models/Object/Location";
+import { Class, type ClassJSON } from "@/models/Object/Class";
+import { Rotation, type RotationJSON } from "@/models/Object/Rotation";
+import { Material, type MaterialJSON } from "@/models/Object/Material";
 
 export type ObjectJSON = {
     id: number;
@@ -17,12 +17,17 @@ export type ObjectJSON = {
 
 export class PDTObject extends Group {
     objID: number;
+    /** Chosen time index to show. */
+    private time: number;
+    private timeLength: number;
     class!: Class;
     material!: Material;
 
     constructor(objJSON: ObjectJSON) {
         super();
         this.objID = objJSON.id;
+        this.time = 0;
+        this.timeLength = objJSON.class.length;
         this.userData.type = "Object";
 
         // get material from JSON data
@@ -42,6 +47,8 @@ export class PDTObject extends Group {
         this.add(rotation);
     }
 
+    public getTimeIndex = (): number => Math.trunc(this.time);
+
     public getObject = (): Class => this.children[0] as Class;
 
     public getLocation = () => this.children[1];
@@ -59,28 +66,31 @@ export class PDTObject extends Group {
     }
 
     public tick(time: number) {
+        time %= this.timeLength;
         // update class representation
         this.class.update(time);
 
         // update object position
-        (this.children[1] as Location).updatePosition(time);
+        (this.children[1] as Location).update(time);
 
         // update object rotation
-        (this.children[2] as Rotation).updateRotation(time);
+        (this.children[2] as Rotation).update(time);
+
+        this.time = time;
     }
 }
 
-const toggleObjects = (showObject: boolean) => {
+function toggleObjects(showObject: boolean): (obj: PDTObject) => void {
     return (obj: PDTObject) => {
         obj.setObjectVisibility(showObject);
     };
-};
+}
 
-const toggleLocation = (showLocation: boolean) => {
+function toggleLocation(showLocation: boolean): (obj: PDTObject) => void {
     return (obj: PDTObject) => obj.setLocationVisibility(showLocation);
-};
+}
 
-const getObjectFromIntersect = (intersect: Intersection): PDTObject => {
+function getObjectFromIntersect(intersect: Intersection): PDTObject {
     let object = intersect.object;
     while (object.parent && object.userData.type !== "Object") {
         object = object.parent;
@@ -89,7 +99,7 @@ const getObjectFromIntersect = (intersect: Intersection): PDTObject => {
         throw new Error("Object not found, Scene reached");
     }
     return object as PDTObject;
-};
+}
 
 export const PDTObjServices = {
     toggleLocation,

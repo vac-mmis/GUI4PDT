@@ -10,7 +10,7 @@ type ModelFile = {
     content: string;
 };
 
-const modelStore: any = defineStore("models", () => {
+export const modelStore: any = defineStore("models", () => {
     const _models = ref([] as Group[]);
 
     const length = computed(() => _models.value.length);
@@ -31,5 +31,3 @@ const modelStore: any = defineStore("models", () => {
 
     return { length, fetch, find };
 });
-
-export default modelStore;

@@ -15,11 +15,11 @@
 </template>
 
 <script lang="ts" setup>
-import Command from "@/models/controls/command.model";
+import { Command } from "@/models/UserInterface/Command";
 import { ref, watch } from "vue";
 
 const props = defineProps<{ commands: Command[] }>();
-const emits = defineEmits<{ (e: "update", update: number): void }>();
+const emits = defineEmits<(e: "update", update: number) => void>();
 
 const toggle = ref(
     props.commands

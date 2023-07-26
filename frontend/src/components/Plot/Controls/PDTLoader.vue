@@ -36,16 +36,16 @@
 import { ref, onBeforeMount } from "vue";
 
 import PDTStore from "@/store/pdt.store";
-import modelStore from "@/store/model.store";
-import materialStore from "@/store/material.store";
+import { modelStore } from "@/store/model.store";
+import { materialStore } from "@/store/material.store";
 
-import type { Status } from "@/types/log.types";
+import type { Status } from "@/models/UserInterface/status";
 
 const models = modelStore();
 const materials = materialStore();
 const pdt = PDTStore();
 
-const emits = defineEmits<{ (e: "status", status: Status): void }>();
+const emits = defineEmits<(e: "status", status: Status) => void>();
 
 const status = ref<Status>({ status: "loading", message: "" });
 const dialog = ref(false);

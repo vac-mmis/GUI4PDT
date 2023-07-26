@@ -14,7 +14,7 @@ export type MaterialFile = {
     roughness: string;
 };
 
-const materialStore: any = defineStore("materials", () => {
+export const materialStore: any = defineStore("materials", () => {
     const _materials = ref([] as Group[]);
 
     const length = computed(() => _materials.value.length);
@@ -37,5 +37,3 @@ const materialStore: any = defineStore("materials", () => {
 
     return { length, fetch, find };
 });
-
-export default materialStore;

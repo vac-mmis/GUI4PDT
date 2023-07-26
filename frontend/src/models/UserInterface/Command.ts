@@ -1,6 +1,6 @@
 import { ref, type Ref } from "vue";
 
-export default class Command {
+export class Command {
     name: string;
     icon: string;
     tooltip: string;

@@ -1,14 +1,32 @@
-import { Distribution } from "@/models/distribution/dist";
-import { MultivariateNormal } from "@/models/distribution/multiNormal";
+/**
+ * Implementation of multivariate Von Mises distribution.
+ *
+ * @module dist.multiVonMises
+ */
 
-export class MultivariateVonMises extends Distribution {
+import { type Distribution, MultivariateNormal } from "@/models/Distributions";
+
+/**
+ * Implementation of multivariate Von Mises distribution.
+ *
+ * @remark Could be use at any dimension.
+ *
+ * @see {@link https://en.wikipedia.org/wiki/Von_Mises_distribution Von Mises distribution on Wikipedia}
+ */
+export class MultivariateVonMises implements Distribution {
+    type = "von-mises";
     private mean: number[];
+    /** Concentration */
     private kappa: number[];
 
+    /**
+     * Creates new multivariate Von Mises distribution from given distribution data.
+     *
+     * @param dist Multivariate Von Mises distribution data with mean and concentration.
+     * @param units Set `dist` angle units to enable conversion to radians (default :`"rad"`).
+     */
     constructor(dist: MultivariateVonMises, units: "rad" | "deg" = "rad") {
-        super("multivariate-von-mises");
-
-        // converts degrees to radians if needed
+        // Converts degrees to radians if needed.
         switch (units) {
             case "deg":
                 this.mean = dist.mean.map((angle) => (Math.PI * angle) / 180);
@@ -26,7 +44,16 @@ export class MultivariateVonMises extends Distribution {
         this.mean = newMean;
     }
 
-    private randomVonMises(mu: number, kappa: number): number {
+    /**
+     * Draw random number from Von Mises distribution.
+     *
+     * @remark Implementation comes from {@link https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.vonmises.html | NumPy Von Mises random generator}.
+     * @param mu Von Mises mean.
+     * @param kappa Von Mises concentration values.
+     *
+     * @see {@link https://github.com/numpy/numpy/blob/511f77d1202b5f23ca7e8988d9455e803d5303d6/numpy/random/src/distributions/distributions.c#L837 | NumPy Von Mises generator implementation}
+     */
+    private static randomVonMises(mu: number, kappa: number): number {
         let s: number;
         let U: number, V: number, W: number, Y: number, Z: number;
         let result: number, mod: number;
@@ -79,13 +106,32 @@ export class MultivariateVonMises extends Distribution {
     }
 
     public random(relative: boolean = false): number[] {
-        return this.kappa.map((k, i) => this.randomVonMises(relative ? 0 : this.mean[i], k));
+        return this.kappa.map((k, i) =>
+            MultivariateVonMises.randomVonMises(relative ? 0 : this.mean[i], k)
+        );
     }
 
-    private randomN(numPoints: number = 1, relative: boolean = false): number[] {
-        return Array.from({ length: numPoints }, () => this.random(relative)).flat();
+    /**
+     * Give flatten `N` vectors from distribution.
+     *
+     * @param N Number of vectors to draw.
+     * @param relative If true, draw with centered mean (null vector).
+     *
+     * @returns Array of N flatten vectors drawn from distribution
+     * */
+    private randomN(N: number = 1, relative: boolean = false): number[] {
+        return Array.from({ length: N }, () => this.random(relative)).flat();
     }
 
+    /**
+     * Build 1000 vectors drawn from distribution.
+     *
+     * Data format : `[x0,y0,z0, x1,y1,z1, ..., x1000,y1000,z1000]`
+     *
+     * @param relative If `true`, create representation data with centered mean.
+     *
+     * @returns Von Mises representation as 1000 flatten vectors.
+     */
     public representation(relative: boolean = false): number[] {
         return this.randomN(1000, relative);
     }

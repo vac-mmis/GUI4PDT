@@ -91,7 +91,7 @@ export class PDT {
     }
 
     /**
-     * Give PDT but with only puglic data (without PDTDir)
+     * Give PDT but with only public data (without PDTDir)
      *
      * @returns PDT without private attributes
      */

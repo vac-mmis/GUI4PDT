@@ -29,9 +29,9 @@ export type UniformContinuous = {
 };
 
 /**
- * Represents Von-Mises distributions JSON format
+ * Represents Von Mises distributions JSON format
  *
- * @see {@link https://en.wikipedia.org/wiki/Von_Mises_distribution Von-Mises distribution on Wikipedia}
+ * @see {@link https://en.wikipedia.org/wiki/Von_Mises_distribution Von Mises distribution on Wikipedia}
  */
 export type VonMises = {
     type: "von-mises";
