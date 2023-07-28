@@ -34,12 +34,11 @@
 
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
+import type { Status } from "@/components/Utils/status";
 
 import PDTStore from "@/store/pdt.store";
 import { modelStore } from "@/store/model.store";
 import { materialStore } from "@/store/material.store";
-
-import type { Status } from "@/models/UserInterface/status";
 
 const models = modelStore();
 const materials = materialStore();

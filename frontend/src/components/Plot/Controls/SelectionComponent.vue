@@ -44,9 +44,9 @@
 <script setup lang="ts">
 import { ref, computed, type ComputedRef } from "vue";
 import ControlButtons from "@/components/Plot/Controls/ControlButtons.vue";
+import { Command } from "@/components/Utils/Command";
 
 import type { PDTObject } from "@/models/object.model";
-import { Command } from "@/models/UserInterface/Command";
 import PDTStore from "@/store/pdt.store";
 
 const pdt = PDTStore();
@@ -60,7 +60,7 @@ const toggleList = () => {
 const updateObjects = ref(0);
 const updateGlobal = ref(0);
 
-const commands = (object: PDTObject): Command[] => {
+const commands = (object: PDTObject): Command<boolean>[] => {
     return [
         new Command(
             "display",
@@ -79,5 +79,7 @@ const commands = (object: PDTObject): Command[] => {
     ];
 };
 
-const globalCommands = Command.buildGlobalCommand(objects.value.map((object) => commands(object)));
+const globalCommands = Command.buildGlobalBooleanCommand(
+    objects.value.map((object) => commands(object))
+);
 </script>

@@ -5,11 +5,12 @@
  */
 
 import { Euler, Group } from "three";
+import type { PieData } from "plotly.js-dist-min";
 
 import { Categorical } from "@/models/Distributions";
 import type { PDTObject } from "@/models/object.model";
-import { Material } from "@/models/Object/Material";
-import { ObjectRepresentation } from "@/models/Representations/Object";
+import { Material } from "@/models/Properties";
+import { makeRepresentation, type ObjectRepresentation } from "@/models/Representations";
 
 import { modelStore } from "@/store/model.store";
 
@@ -26,7 +27,7 @@ export type ClassJSON = string | { dist: Categorical };
 export class Class extends Group {
     /** Object which has this class. */
     declare parent: PDTObject;
-    /** Categorical distribution through time. */
+    /** Class distribution through time. */
     private dist: Categorical[];
     /** Object scale through time. */
     private scaleFactor: (number | undefined)[];
@@ -53,18 +54,15 @@ export class Class extends Group {
 
         // Create object representation
         const models = modelStore();
-        const object = Object.entries(this.dist[0].getMass())
-            .map((type: [string, number]) => {
-                const model = models.find(type[0]);
-                return new ObjectRepresentation(
-                    model,
-                    material,
-                    [0, 0, 0],
-                    this.scaleFactor[0],
-                    type[1]
-                );
-            })
-            .filter((model): model is ObjectRepresentation => model !== undefined);
+        const object = Object.entries(this.dist[0].getMass()).map((type: [string, number]) =>
+            makeRepresentation(
+                models.find(type[0]),
+                material?.getMaterial(type[1]) || undefined,
+                undefined,
+                this.scaleFactor[0],
+                type[1]
+            )
+        );
         this.add(...object);
     }
 
@@ -109,10 +107,15 @@ export class Class extends Group {
      *
      * @param t Desired representation time index.
      *
-     * @returns Class distribution representation as given time.
+     * @returns Class distribution representation as Plotly.JS pie chart.
      */
-    public representation(t: number) {
+    public representation(t: number): Partial<PieData> {
         t = Math.trunc(t);
-        return this.dist[t].representation();
+        const data = this.dist[t].representation();
+        return {
+            type: "pie",
+            values: data.filter((_, i) => i % 2 == 1),
+            labels: data.filter((_, i) => i % 2 == 0),
+        };
     }
 }

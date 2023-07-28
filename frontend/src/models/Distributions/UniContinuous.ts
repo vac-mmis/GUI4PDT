@@ -16,7 +16,11 @@ import type { Distribution } from "@/models/Distributions";
  * @see {@link https://en.wikipedia.org/wiki/Continuous_uniform_distribution Continuous uniform distribution on Wikipedia}
  */
 export class UniformContinuous implements Distribution {
-    type = "uniform-continuous";
+    /** Distribution class name */
+    static distName = "uniform-continuous";
+    type = UniformContinuous.distName;
+
+    /** Geometric center point of the distribution */
     private mean: number[];
     /** Distributions interval for each dimension : `[[xMin, xMax], [yMin, yMax], [zMin,zMax] ...]` */
     private params: number[][];
@@ -30,6 +34,8 @@ export class UniformContinuous implements Distribution {
         this.params = dist.params;
         this.mean = dist.params.map((p) => mean(p));
     }
+
+    public getType = () => this.type;
 
     public getMean = () => this.mean;
 

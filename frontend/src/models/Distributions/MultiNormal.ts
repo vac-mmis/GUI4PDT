@@ -16,7 +16,10 @@ import type { Distribution } from "@/models/Distributions";
  * @see {@link https://en.wikipedia.org/wiki/Multivariate_normal_distribution Multivariate normal distribution on Wikipedia}
  */
 export class MultivariateNormal implements Distribution {
-    type = "multivariate-normal";
+    /** Distribution class name */
+    static distName = "multivariate-normal";
+    type = MultivariateNormal.distName;
+
     private mean: number[];
     /** Covariance matrix. */
     private cov: number[][];
@@ -33,6 +36,8 @@ export class MultivariateNormal implements Distribution {
         this.cov = dist.cov;
         this.invCov = sqrtm(this.cov);
     }
+
+    public getType = () => this.type;
 
     /**
      * Draw random number from standard normal distribution using Box-Muller method.

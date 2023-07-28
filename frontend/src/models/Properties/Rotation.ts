@@ -9,6 +9,9 @@ import { Euler, Group, Vector3 } from "three";
 import { type Distribution, makeDistribution } from "@/models/Distributions";
 import type { PDTObject } from "@/models/object.model";
 
+/** Angle units used in JSON files */
+const ANGLE_UNIT = "deg" as const;
+
 /**
  * Location data type, following the backend API data format.
  */
@@ -52,7 +55,7 @@ export class Rotation extends Group {
             if (!("dist" in timestamp)) {
                 this.dist.push(timestamp);
             } else {
-                this.dist.push(makeDistribution(timestamp.dist));
+                this.dist.push(makeDistribution(timestamp.dist, ANGLE_UNIT));
             }
         });
 
@@ -116,7 +119,7 @@ export class Rotation extends Group {
             this.updateDirection(time);
         }
 
-        // update object position
+        // update object rotation
         const object = this.parent.getObject();
 
         const delta = time - index;

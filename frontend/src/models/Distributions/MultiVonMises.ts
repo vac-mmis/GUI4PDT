@@ -14,7 +14,10 @@ import { type Distribution, MultivariateNormal } from "@/models/Distributions";
  * @see {@link https://en.wikipedia.org/wiki/Von_Mises_distribution Von Mises distribution on Wikipedia}
  */
 export class MultivariateVonMises implements Distribution {
-    type = "von-mises";
+    /** Distribution class name */
+    static distName = "von-mises";
+    type = MultivariateVonMises.distName;
+
     private mean: number[];
     /** Concentration */
     private kappa: number[];
@@ -37,6 +40,8 @@ export class MultivariateVonMises implements Distribution {
         }
         this.kappa = dist.kappa;
     }
+
+    public getType = () => this.type;
 
     public getMean = () => this.mean;
 

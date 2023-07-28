@@ -6,16 +6,8 @@
 
 import { Group, Vector3 } from "three";
 
-import {
-    type Distribution,
-    UniformContinuous,
-    MultivariateNormal,
-    makeDistribution,
-} from "@/models/Distributions";
-
-import { Scatter3D } from "@/models/Representations/Scatter3D";
-import { BoxDist } from "@/models/Representations/BoxDist";
-
+import { type Distribution, makeDistribution } from "@/models/Distributions";
+import { type Representation, makeRepresentation } from "@/models/Representations";
 import type { PDTObject } from "@/models/object.model";
 
 /**
@@ -61,24 +53,14 @@ export class Location extends Group {
                 this.dist.push(timestamp);
                 if (i === 0) {
                     this.parent.position.set(...timestamp);
-                    const scatterPlot = new Scatter3D([0, 0, 0]);
-                    this.add(scatterPlot);
+                    this.add(makeRepresentation([0.2, 0.2, 0.2]));
                 }
             } else {
                 const dist = makeDistribution(timestamp.dist);
                 this.dist.push(dist);
                 if (i === 0) {
                     this.parent?.position.set(...(dist.getMean() as [number, number, number]));
-                    const dataPoints = dist.representation(true);
-                    if (dist instanceof MultivariateNormal) {
-                        const scatterPlot = new Scatter3D(dataPoints);
-                        this.add(scatterPlot);
-                    } else if (dist instanceof UniformContinuous) {
-                        const continuousPlot = new BoxDist(
-                            dataPoints.splice(0, 3) as [number, number, number]
-                        );
-                        this.add(continuousPlot);
-                    }
+                    this.add(makeRepresentation(dist.representation(true)));
                 }
             }
         });
@@ -105,7 +87,7 @@ export class Location extends Group {
         const index = t < this.dist.length ? Math.trunc(t) : this.dist.length - 1;
         const dist = this.dist[index];
         if ("type" in dist) {
-            (this.children[0] as BoxDist | Scatter3D).update(dist.representation(true));
+            (this.children[0] as Representation).update(dist.representation(true));
             return new Vector3(...dist.random(relative));
         } else {
             return new Vector3(...dist);

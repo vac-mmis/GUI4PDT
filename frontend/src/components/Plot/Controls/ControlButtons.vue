@@ -2,7 +2,7 @@
     <v-btn-toggle v-model="toggle" multiple rounded="xl" color="secondary">
         <v-btn
             v-for="command in commands"
-            :key="`${command.name}-${command.value}`"
+            :key="`${command.name}-${command.state}`"
             :value="command.name"
             @click="command.set(toggle.includes(command.name))"
         >
@@ -15,16 +15,16 @@
 </template>
 
 <script lang="ts" setup>
-import { Command } from "@/models/UserInterface/Command";
+import { Command } from "@/components/Utils/Command";
 import { ref, watch } from "vue";
 
-const props = defineProps<{ commands: Command[] }>();
+const props = defineProps<{ commands: Command<boolean>[] }>();
 const emits = defineEmits<(e: "update", update: number) => void>();
 
 const toggle = ref(
     props.commands
         .filter((command) => {
-            return command.value.value;
+            return command.state.value;
         })
         .map((command) => command.name)
 );

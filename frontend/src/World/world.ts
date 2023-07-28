@@ -11,7 +11,7 @@ import { createControls } from "@/World/systems/controls";
 import { createLights } from "@/World/components/lights";
 import { createHelpers } from "@/World/components/helpers";
 
-import { PDTObjServices, type PDTObject } from "@/models/object.model";
+import { type PDTObject, getObjectFromIntersect } from "@/models/object.model";
 
 export class World {
     private camera: THREE.PerspectiveCamera;
@@ -50,7 +50,7 @@ export class World {
             );
             const intersects = this.raycaster.intersectObjects(toIntersect, true);
             if (selectionCallback && intersects.length > 0) {
-                this.selectedObject = PDTObjServices.getObjectFromIntersect(intersects[0]);
+                this.selectedObject = getObjectFromIntersect(intersects[0]);
                 selectionCallback(this.selectedObject);
             }
         };

@@ -4,8 +4,6 @@
  * @module dist.categorical
  */
 
-import type { PlotData } from "plotly.js-dist-min";
-
 import { type Distribution } from "@/models/Distributions";
 
 /**
@@ -14,8 +12,11 @@ import { type Distribution } from "@/models/Distributions";
  * @see {@link https://en.wikipedia.org/wiki/Categorical_distribution Categorical distribution on Wikipedia}
  */
 export class Categorical implements Distribution {
-    /** values and their probabilities. */
-    type = "categorical";
+    /** Distribution class name */
+    static distName = "categorical";
+    type = Categorical.distName;
+
+    /** Values and their probabilities. */
     private mass: Record<string, number>;
 
     /**
@@ -50,14 +51,10 @@ export class Categorical implements Distribution {
     }
 
     /**
-     * @returns Categorical representation as Plotly.JS pie chart.
+     * @returns Categorical representation as [string, number,...] array.
      */
-    public representation(): Partial<PlotData> {
-        return {
-            type: "pie",
-            values: Object.values(this.mass),
-            labels: Object.keys(this.mass),
-        };
+    public representation(): (string | number)[] {
+        return Object.entries(this.mass).flat();
     }
 
     /**
