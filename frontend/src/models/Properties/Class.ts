@@ -5,7 +5,7 @@
  */
 
 import { Euler, Group } from "three";
-import type { PieData } from "plotly.js-dist-min";
+import type { PlotData } from "plotly.js-dist-min";
 
 import { Categorical } from "@/models/Distributions";
 import type { PDTObject } from "@/models/object.model";
@@ -56,6 +56,7 @@ export class Class extends Group {
         const models = modelStore();
         const object = Object.entries(this.dist[0].getMass()).map((type: [string, number]) =>
             makeRepresentation(
+                "object",
                 models.find(type[0]),
                 material?.getMaterial(type[1]) || undefined,
                 undefined,
@@ -109,7 +110,7 @@ export class Class extends Group {
      *
      * @returns Class distribution representation as Plotly.JS pie chart.
      */
-    public representation(t: number): Partial<PieData> {
+    public representation(t: number): Partial<PlotData> {
         t = Math.trunc(t);
         const data = this.dist[t].representation();
         return {

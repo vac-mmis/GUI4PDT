@@ -19,6 +19,8 @@ import type { Representation } from "@/models/Representations";
  *
  */
 export class Scatter3D extends Points implements Representation {
+    /** Representation name */
+    static repName = "scatter3D";
     /** Minimum color for probability/distance scale */
     private static minColor = new Color(0x0d0887); // Blue
     /** Maximum color for probability/distance scale */

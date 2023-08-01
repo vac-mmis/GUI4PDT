@@ -5,7 +5,7 @@
  */
 
 import { MeshStandardMaterial } from "three";
-import type { PieData } from "plotly.js-dist-min";
+import type { PlotData } from "plotly.js-dist-min";
 
 import { Categorical } from "@/models/Distributions";
 import type { PDTObject } from "@/models/object.model";
@@ -82,7 +82,7 @@ export class Material extends MeshStandardMaterial {
      *
      * @returns Material distribution representation as Plotly.JS pie chart.
      */
-    public representation(t: number): Partial<PieData> {
+    public representation(t: number): Partial<PlotData> {
         t = Math.trunc(t);
         const data = this.dist[t].representation();
         return {

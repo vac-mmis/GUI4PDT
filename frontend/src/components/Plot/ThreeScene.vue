@@ -4,6 +4,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { storeToRefs } from "pinia";
 
 import { World } from "@/World/world";
 import type { Timer } from "@/World/systems/Timer";
@@ -17,7 +18,7 @@ const emits = defineEmits<{
 }>();
 
 const container = ref<HTMLDivElement | null>(null);
-const pdt = PDTStore();
+const { getPDT } = storeToRefs(PDTStore());
 
 const selectedCallback = (obj?: PDTObject | null) => {
     emits("obj", obj);
@@ -30,6 +31,6 @@ onMounted(async () => {
     }
     const world = new World(container.value, selectedCallback);
     emits("timer", world.getTimer());
-    world.append(pdt.getObjects());
+    world.append(getPDT.value);
 });
 </script>

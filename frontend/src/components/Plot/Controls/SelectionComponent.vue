@@ -43,14 +43,16 @@
 
 <script setup lang="ts">
 import { ref, computed, type ComputedRef } from "vue";
+import { storeToRefs } from "pinia";
+
 import ControlButtons from "@/components/Plot/Controls/ControlButtons.vue";
 import { Command } from "@/components/Utils/Command";
 
 import type { PDTObject } from "@/models/object.model";
 import PDTStore from "@/store/pdt.store";
 
-const pdt = PDTStore();
-const objects: ComputedRef<PDTObject[]> = computed(() => pdt.getObjects());
+const { getPDT } = storeToRefs(PDTStore());
+const objects: ComputedRef<PDTObject[]> = computed(() => getPDT.value.getObjects());
 
 const openList = ref(false);
 const toggleList = () => {

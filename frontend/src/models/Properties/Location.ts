@@ -16,6 +16,14 @@ import type { PDTObject } from "@/models/object.model";
 export type LocationJSON = { dist: Distribution } | [number, number, number];
 
 /**
+ * Associates used distributions to their representations
+ */
+const distToRep = {
+    "multivariate-normal": "scatter3D",
+    "uniform-continuous": "box",
+} as Record<string, string>;
+
+/**
  * Implements representation of object position in PDT.
  *
  * @remark Object location is the distribution of where the object could be. This distribution is represented as points cloud which color follows location distribution.
@@ -53,14 +61,14 @@ export class Location extends Group {
                 this.dist.push(timestamp);
                 if (i === 0) {
                     this.parent.position.set(...timestamp);
-                    this.add(makeRepresentation([0.2, 0.2, 0.2]));
+                    this.add(makeRepresentation("box", [0.2, 0.2, 0.2]));
                 }
             } else {
                 const dist = makeDistribution(timestamp.dist);
                 this.dist.push(dist);
                 if (i === 0) {
                     this.parent?.position.set(...(dist.getMean() as [number, number, number]));
-                    this.add(makeRepresentation(dist.representation(true)));
+                    this.add(makeRepresentation(distToRep[dist.type], dist.representation(true)));
                 }
             }
         });

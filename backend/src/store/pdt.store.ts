@@ -7,7 +7,7 @@
 import { readdir, stat } from "fs/promises";
 import path from "path";
 
-import { PDT } from "@/models/pdt.model";
+import { PDT } from "@/models";
 
 const dataPath = path.resolve("data").normalize();
 const PDTs: PDT[] = [];

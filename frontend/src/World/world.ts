@@ -12,6 +12,7 @@ import { createLights } from "@/World/components/lights";
 import { createHelpers } from "@/World/components/helpers";
 
 import { type PDTObject, getObjectFromIntersect } from "@/models/object.model";
+import type { PDT } from "@/models/pdt.model";
 
 export class World {
     private camera: THREE.PerspectiveCamera;
@@ -45,9 +46,10 @@ export class World {
             this.raycaster.setFromCamera(this.pointer, this.camera);
 
             // See if the ray from the camera into the world hits one of our meshes
-            const toIntersect = this.scene.children.filter(
-                (object) => object.userData.type === "Object"
-            );
+            const pdt: PDT = this.scene.children.filter(
+                (child) => child.userData.type === "PDT"
+            )[0] as PDT;
+            const toIntersect = pdt.getObjects();
             const intersects = this.raycaster.intersectObjects(toIntersect, true);
             if (selectionCallback && intersects.length > 0) {
                 this.selectedObject = getObjectFromIntersect(intersects[0]);
@@ -68,9 +70,8 @@ export class World {
         this.renderer.render(this.scene, this.camera);
     }
 
-    public append(objects: PDTObject[]) {
-        const trace: PDTObject[] = objects;
-        this.scene.add(...trace);
+    public append(pdt: PDT) {
+        this.scene.add(pdt);
     }
 
     public getTimer() {

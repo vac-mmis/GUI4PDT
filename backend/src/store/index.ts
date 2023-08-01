@@ -4,6 +4,6 @@
  * @module stores
  */
 
-export * as Material from "@/store/material.store";
-export * as Model from "@/store/model.store";
-export * as PDT from "@/store/pdt.store";
+export * as MaterialStore from "@/store/material.store";
+export * as ModelStore from "@/store/model.store";
+export * as PDTStore from "@/store/pdt.store";

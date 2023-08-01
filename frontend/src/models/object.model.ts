@@ -140,6 +140,17 @@ export function toggleLocation(showLocation: boolean): (obj: PDTObject) => void 
 }
 
 /**
+ * Give function to tick objects in object list.
+ *
+ * @param time Desired time to update objects.
+ *
+ * @returns Function which updates objects in object list at given time.
+ */
+export function tick(time: number): (obj: PDTObject) => void {
+    return (obj: PDTObject) => obj.tick(time);
+}
+
+/**
  * Get object intersected by Three.Js raycaster.
  *
  * @param intersect Intersected objects.

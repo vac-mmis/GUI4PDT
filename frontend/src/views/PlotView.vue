@@ -13,7 +13,7 @@
                 <ObjectDetails :object="selectedObject" :time="selectedTime" />
             </div>
         </div>
-        <div v-if="pdt.length > 1" class="position-relative w-75 ma-6 z-1">
+        <div v-if="timeLength > 1" class="position-relative w-75 ma-6 z-1">
             <TimeSlider :timer="timer" @time="updateTime"></TimeSlider>
         </div>
     </div>
@@ -29,6 +29,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { storeToRefs } from "pinia";
+
 import PDTLoader from "@/components/Plot/Controls/PDTLoader.vue";
 import ObjectDetails from "@/components/Plot/Object/ObjectDetails.vue";
 import SelectionComponent from "@/components/Plot/Controls/SelectionComponent.vue";
@@ -38,9 +40,9 @@ import ThreeScene from "@/components/Plot/ThreeScene.vue";
 import PDTStore from "@/store/pdt.store";
 import type { PDTObject } from "@/models/object.model";
 import type { Timer } from "@/World/systems/Timer";
-import type { Status } from "@/types/log.types";
+import type { Status } from "@/components/Utils/status";
 
-const pdt = PDTStore();
+const { timeLength } = storeToRefs(PDTStore());
 
 const status = ref<Status>({ status: "waiting", message: "" });
 

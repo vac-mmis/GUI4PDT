@@ -13,6 +13,8 @@ import type { Representation } from "@/models/Representations";
  *
  */
 export class ObjectRepresentation extends Group implements Representation {
+    /** Representation name */
+    static repName = "object";
     /** Current scale, used for updates */
     private currentScale: number;
 

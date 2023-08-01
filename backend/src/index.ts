@@ -8,11 +8,8 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 
-import { router } from "@/routes/routes";
-
-import * as PDTStore from "@/store/pdt.store";
-import * as ModelStore from "@/store/model.store";
-import * as MaterialStore from "@/store/material.store";
+import { router } from "@/routes";
+import { PDTStore, ModelStore, MaterialStore } from "@/store";
 
 const port = 3000;
 const app = express();
@@ -37,8 +34,8 @@ const setup = async () => {
 
 setup();
 
-export * as Router from "@/routes/routes";
-export * as Models from "@/models/model";
-export * as Controllers from "@/controllers/controllers";
-export * as Stores from "@/store/store";
-export * as Types from "@/types/types";
+export * as Router from "@/routes";
+export * as Models from "@/models";
+export * as Controllers from "@/controllers";
+export * as Stores from "@/store";
+export * as Types from "@/types";

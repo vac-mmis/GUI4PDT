@@ -16,6 +16,8 @@ const epsilon = 0.001;
  *
  */
 export class Box extends Mesh implements Representation {
+    /** Representation name */
+    static repName = "box";
     /** Current dimensions, used for updates */
     private currentDim: [number, number, number];
 

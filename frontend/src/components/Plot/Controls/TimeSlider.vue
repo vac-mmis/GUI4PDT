@@ -48,6 +48,7 @@
 
 <script setup lang="ts">
 import { ref, computed, toRaw, watch } from "vue";
+import { storeToRefs } from "pinia";
 
 import type { Timer } from "@/World/systems/Timer";
 import PDTStore from "@/store/pdt.store";
@@ -55,8 +56,8 @@ import PDTStore from "@/store/pdt.store";
 const props = defineProps<{ timer?: Timer }>();
 const emits = defineEmits<(e: "time", time: number) => void>();
 
-const pdt = PDTStore();
-const timeLength = pdt.length;
+const { timeLength } = storeToRefs(PDTStore());
+
 const timer = computed(() => {
     const propsTimer = props.timer;
     propsTimer?.setTimerCallback(updateSlider);
@@ -64,12 +65,12 @@ const timer = computed(() => {
 });
 
 const slider = ref<number>(timer.value?.getTime() || 0);
-const ticks = Array.from({ length: timeLength / 10 + 1 }, (_, x) => 10 * x).reduce(
+const ticks = Array.from({ length: timeLength.value / 10 + 1 }, (_, x) => 10 * x).reduce(
     (o, key) => Object.assign(o, { [key]: `${key}` }),
     {}
 );
 const updateSlider = (t: number) => {
-    slider.value = t % timeLength;
+    slider.value = t % timeLength.value;
 };
 
 const play = ref(false);

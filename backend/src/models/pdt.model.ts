@@ -4,7 +4,11 @@
  * @namespace pdt.model
  */
 import { readFile, readdir } from "fs/promises";
+import { createReadStream } from "fs";
+
 import path from "path";
+import { parse } from "csv";
+import { finished } from "stream/promises";
 
 import type { ObjectJSON, ObjectTimestamp } from "@/types/object.types";
 
@@ -17,7 +21,7 @@ import type { ObjectJSON, ObjectTimestamp } from "@/types/object.types";
  *
  * @throws `JSON Data undefined` if JSON files parsing failed.
  */
-export async function timestampsToPDTJSON(
+export async function PDTTimestampsToPDTJSON(
     timestampsFiles: string[]
 ): Promise<{ name: any; objects: ObjectJSON[] }> {
     const JSONData = await Promise.all(
@@ -58,6 +62,35 @@ export async function timestampsToPDTJSON(
 }
 
 /**
+ * Parse depth map from CSV file to array of points.
+ *
+ * @param CSVFile File to parse.
+ *
+ * @returns Array of points representing the depth map.
+ */
+export async function parseMap(CSVFile: string): Promise<number[][]> {
+    const records = [[]] as number[][];
+
+    const rs = createReadStream(CSVFile);
+    const parser = rs.pipe(
+        parse({
+            from_line: 2,
+            skip_empty_lines: true,
+        })
+    );
+    parser.on("readable", function () {
+        let record: string[];
+        while ((record = parser.read()) !== null) {
+            records.push(record.map(Number));
+        }
+    });
+    await finished(rs);
+    rs.resume(); // Drain the stream.
+
+    return records.slice(1); // Remove first empty line
+}
+
+/**
  * Represents PDT model provided by API
  */
 export class PDT {
@@ -67,6 +100,8 @@ export class PDT {
     private PDTDir: string;
     /** PDT objects ready for providing  */
     objects!: ObjectJSON[];
+    /** PDT see elevation map */
+    elevationMap?: number[][];
 
     /**
      * Creates new empty PDT with only its directory path. Should be initialized with init() method
@@ -84,10 +119,15 @@ export class PDT {
         const timestamps = (await readdir(this.PDTDir))
             .filter((file) => file.split(".json")[0] !== file)
             .map((file) => `${this.PDTDir}/${file}`);
-        const json = await timestampsToPDTJSON(timestamps);
+        const json = await PDTTimestampsToPDTJSON(timestamps);
 
         this.name = json.name || path.basename(this.PDTDir);
         this.objects = json.objects;
+        await parseMap(`${this.PDTDir}/gp_elevation_map.csv`)
+            .then((res) => {
+                this.elevationMap = res;
+            })
+            .catch(() => console.log(`No elevation map available for ${this.name}.`));
     }
 
     /**
@@ -95,8 +135,12 @@ export class PDT {
      *
      * @returns PDT without private attributes
      */
-    public getPublicPDT(): { name: string; objects: ObjectJSON[] } {
-        return { name: this.name, objects: this.objects };
+    public getPublicPDT(): {
+        name: string;
+        objects: ObjectJSON[];
+        elevationMap?: number[][];
+    } {
+        return { name: this.name, objects: this.objects, elevationMap: this.elevationMap };
     }
 
     /**
