@@ -1,33 +1,94 @@
-import { ConeGeometry, Group, Mesh, MeshNormalMaterial, Object3D, type Intersection } from "three";
-import { makeRepresentation } from "./Representations";
+import {
+    BoxGeometry,
+    Group,
+    Object3D,
+    InstancedMesh,
+    Matrix4,
+    Color,
+    MeshStandardMaterial,
+    type Intersection,
+} from "three";
+import { makeRepresentation, type Representation } from "@/models/Representations";
 
 import { materialStore } from "@/store/material.store";
 
-function createMapHelper() {
-    const geometryHelper = new ConeGeometry(0.2, 1, 3);
-    geometryHelper.translate(0, 0.5, 0);
-    geometryHelper.rotateX(Math.PI / 2);
-    return new Mesh(geometryHelper, new MeshNormalMaterial());
-}
+const createSurface = (elevationMap: [number, number, number, number][]) => {
+    const { find } = materialStore();
+    const waterMaterial =
+        find("water") ??
+        new MeshStandardMaterial({
+            color: new Color("blue"),
+        });
+    waterMaterial.transparent = true;
+    waterMaterial.opacity = 0.5;
+    return makeRepresentation("surface", elevationMap, waterMaterial);
+};
+
+const createVariations = (mapData: [number, number, number, number][]) => {
+    const mapVariations = new InstancedMesh(
+        new BoxGeometry(0.05, 0.05, 1),
+        new MeshStandardMaterial({
+            color: new Color("black"),
+            transparent: true,
+            opacity: 0.7,
+        }),
+        mapData.length
+    );
+    const matrix = new Matrix4();
+    mapData.forEach((coord, i) => {
+        matrix.makeScale(1, 1, coord[3]);
+        matrix.setPosition(...(coord.splice(0, 3) as [number, number, number]));
+        mapVariations.setMatrixAt(i, matrix);
+    });
+    mapVariations.visible = false;
+    return mapVariations;
+};
 
 export class ElevationMap extends Group {
-    private helper = createMapHelper();
+    private mapData: [number, number, number, number][];
+    private mapSurface: Representation;
+    private mapVariations;
 
     constructor(elevationMap: [number, number, number, number][]) {
         super();
-        const { find } = materialStore();
-        const waterMaterial = find("water");
-        waterMaterial.transparent = true;
-        waterMaterial.opacity = 0.5;
-        this.add(makeRepresentation("surface", elevationMap, waterMaterial));
-        this.add(this.helper);
+        this.mapData = elevationMap;
+
+        // Create map surface
+        this.mapSurface = createSurface(this.mapData);
+        this.add(this.mapSurface);
+
+        // create map variations
+        this.mapVariations = createVariations(this.mapData);
+        this.add(this.mapVariations);
     }
 
-    public updateHelper(intersect: Intersection<Object3D>) {
-        this.helper.position.set(0, 0, 0);
-        if (intersect.face) {
-            this.helper.lookAt(intersect.face.normal);
-        }
-        this.helper.position.copy(intersect.point);
+    public updateHelper(intersect: Intersection<Object3D>) {}
+
+    /**
+     * @returns Map visibility.
+     */
+    public getMapVisibility = () => this.mapSurface.visible;
+
+    /**
+     * Set object visibility.
+     *
+     * @param showMap New visibility.
+     */
+    public setMapVisibility(showMap: boolean = true): void {
+        this.mapSurface.visible = showMap;
+    }
+
+    /**
+     * @returns MapVariation visibility
+     */
+    public getMapVariationVisibility = () => this.mapVariations.visible;
+
+    /**
+     * Set location visibility.
+     *
+     * @param showMapVariation New location visibility.
+     */
+    public setMapVariationVisibility(showMapVariation: boolean = false): void {
+        this.mapVariations.visible = showMapVariation;
     }
 }

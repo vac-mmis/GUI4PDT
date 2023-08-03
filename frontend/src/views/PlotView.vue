@@ -7,7 +7,10 @@
             <ThreeScene @obj="onSelectedObject" @timer="getTimer" />
         </div>
         <div class="w-100 d-flex flex-row justify-space-between">
-            <SelectionComponent class="position-relative overflow-visible z-1" />
+            <SelectionComponent
+                @obj="onSelectedObject"
+                class="position-relative overflow-visible z-1"
+            />
 
             <div v-if="selectedObject" class="position-relative w-25 h-auto pa-6 z-1">
                 <ObjectDetails :object="selectedObject" :time="selectedTime" />
@@ -55,9 +58,9 @@ const updateTime = (t: number) => {
     selectedTime.value = t;
 };
 
-const selectedObject = ref<PDTObject>();
+const selectedObject = ref<PDTObject | null>();
 const onSelectedObject = (obj?: PDTObject | null) => {
-    selectedObject.value = obj ?? ({} as PDTObject);
+    selectedObject.value = obj;
 };
 
 const getStatus = (s: Status) => {

@@ -1,6 +1,6 @@
 <template>
     <v-card
-        v-if="opened"
+        v-if="opened && object"
         :title="`Details on object ${object.id}`"
         prepend-icon="fas fa-cubes"
         class="mx-auto"
@@ -37,21 +37,21 @@ import { ref, computed, watch } from "vue";
 import ObjectPlot from "@/components/Plot/Object/ObjectPlot.vue";
 import type { PDTObject } from "@/models/object.model";
 
-const props = defineProps<{ object: PDTObject; time: number }>();
+const props = defineProps<{ object: PDTObject | null; time: number }>();
 
 const opened = ref(true);
 const tab = ref<number>(0);
 
 const time = ref<number>(0);
 const object = computed(() => {
-    opened.value = true;
+    opened.value = !!props.object;
     return props.object;
 });
 
 watch(
     () => props.object,
     () => {
-        opened.value = true;
+        opened.value = !!props.object;
     }
 );
 
