@@ -57,7 +57,7 @@ const updateTime = (t: number) => {
 
 const selectedObject = ref<PDTObject>();
 const onSelectedObject = (obj?: PDTObject | null) => {
-    selectedObject.value = obj || ({} as PDTObject);
+    selectedObject.value = obj ?? ({} as PDTObject);
 };
 
 const getStatus = (s: Status) => {

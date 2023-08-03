@@ -1,10 +1,10 @@
 import { WebGLRenderer } from "three";
 
-export function createRenderer(): WebGLRenderer {
+export const createRenderer = () => {
     const renderer = new WebGLRenderer({ antialias: true });
-
-    // turn on the physically correct lighting model
     renderer.useLegacyLights = false;
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
     return renderer;
-}
+};

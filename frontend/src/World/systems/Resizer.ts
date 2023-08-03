@@ -9,13 +9,24 @@ const setSize = (container: HTMLDivElement, camera: PerspectiveCamera, renderer:
 };
 
 export class Resizer {
-    constructor(container: HTMLDivElement, camera: PerspectiveCamera, renderer: WebGLRenderer) {
-        // set initial size on load
-        setSize(container, camera, renderer);
+    private container: HTMLDivElement;
+    private camera: PerspectiveCamera;
+    private renderer: WebGLRenderer;
 
-        window.addEventListener("resize", () => {
-            // set the size again if a resize occurs
-            setSize(container, camera, renderer);
-        });
+    private resize = () => setSize(this.container, this.camera, this.renderer);
+
+    constructor(container: HTMLDivElement, camera: PerspectiveCamera, renderer: WebGLRenderer) {
+        this.container = container;
+        this.camera = camera;
+        this.renderer = renderer;
+
+        // set initial size on load
+        this.resize();
+        // set the size again if a resize occurs
+        window.addEventListener("resize", this.resize);
+    }
+
+    public updateContainer(container: HTMLDivElement) {
+        this.container = container;
     }
 }

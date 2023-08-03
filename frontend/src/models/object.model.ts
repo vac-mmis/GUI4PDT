@@ -77,7 +77,7 @@ export class PDTObject extends Group {
      *
      * @param showObject New visibility.
      */
-    public setObjectVisibility(showObject: boolean = true) {
+    public setObjectVisibility(showObject: boolean = true): void {
         this.children[0].visible = showObject;
     }
 
@@ -91,7 +91,7 @@ export class PDTObject extends Group {
      *
      * @param showLocation New location visibility.
      */
-    public setLocationVisibility(showLocation: boolean = false) {
+    public setLocationVisibility(showLocation: boolean = false): void {
         this.children[1].visible = showLocation;
     }
 
@@ -100,7 +100,7 @@ export class PDTObject extends Group {
      *
      * @param time Time when update object.
      */
-    public tick(time: number) {
+    public tick(time: number): void {
         time %= this.timeLength;
         // update class representation
         this.class.update(time);
@@ -146,24 +146,6 @@ export function toggleLocation(showLocation: boolean): (obj: PDTObject) => void 
  *
  * @returns Function which updates objects in object list at given time.
  */
-export function tick(time: number): (obj: PDTObject) => void {
+export function tickObjects(time: number): (obj: PDTObject) => void {
     return (obj: PDTObject) => obj.tick(time);
-}
-
-/**
- * Get object intersected by Three.Js raycaster.
- *
- * @param intersect Intersected objects.
- *
- * @returns Intersected object.
- */
-export function getObjectFromIntersect(intersect: Intersection): PDTObject {
-    let object = intersect.object;
-    while (object.parent && object.userData.type !== "Object") {
-        object = object.parent;
-    }
-    if (object.type === "Scene") {
-        throw new Error("Object not found, Scene reached");
-    }
-    return object as PDTObject;
 }

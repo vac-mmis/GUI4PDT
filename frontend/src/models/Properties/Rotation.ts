@@ -45,7 +45,7 @@ export class Rotation extends Group {
     constructor(parent: PDTObject, rotJSON: RotationJSON[]) {
         super();
         this.parent = parent;
-        this.userData.type = "Location";
+        this.userData.type = "Rotation";
         this.visible = false;
         this.dist = [];
 

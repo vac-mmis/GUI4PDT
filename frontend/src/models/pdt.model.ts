@@ -1,8 +1,7 @@
-import { PDTObject, type ObjectJSON, tick } from "@/models/object.model";
-import { makeRepresentation, type Representation } from "./Representations";
-import { Group } from "three";
+import { Group, Object3D, type Intersection } from "three";
+import { PDTObject, type ObjectJSON, tickObjects } from "@/models/object.model";
+import { ElevationMap } from "@/models/elevation.model";
 
-import { materialStore } from "@/store/material.store";
 export interface PDTJSON {
     name: string;
     objects: ObjectJSON[];
@@ -13,7 +12,7 @@ export class PDT extends Group {
     name: string;
     length: number;
     private objects: PDTObject[];
-    private elevationMap?: Representation;
+    private elevationMap?: ElevationMap;
 
     constructor(pdt: PDTJSON) {
         super();
@@ -24,17 +23,20 @@ export class PDT extends Group {
         this.objects = pdt.objects.map((obj: ObjectJSON) => new PDTObject(obj));
         this.add(new Group().add(...this.objects));
         // Add elevation map as new children
-        const { find } = materialStore();
-        const waterMaterial = find("water");
-        waterMaterial.transparent = true;
-        waterMaterial.opacity = 0.5;
         if (pdt.elevationMap) {
-            this.elevationMap = makeRepresentation("surface", pdt.elevationMap, waterMaterial);
+            this.elevationMap = new ElevationMap(pdt.elevationMap);
             this.add(this.elevationMap);
         }
     }
 
-    public getObjects = (): PDTObject[] => this.children[0].children as PDTObject[];
+    public getHoverables = (): Object3D[] | undefined =>
+        this.elevationMap ? [this.elevationMap] : undefined;
+
+    public getClickables = (): Object3D[] => this.objects;
+
+    public getObjects = (): PDTObject[] => this.objects;
+
+    public getElevationMap = () => this.elevationMap;
 
     public getLength = (): number => this.length;
 
@@ -42,7 +44,37 @@ export class PDT extends Group {
         this.objects.forEach((obj) => fun(obj));
     };
 
+    /**
+     * Get object intersected by Three.JS raycaster on hover.
+     *
+     * @param intersect Intersection result from World Pointer.
+     *
+     * @returns Intersected object.
+     */
+    public onHover(intersect: Intersection<Object3D>): PDTObject | undefined {
+        this.elevationMap?.updateHelper(intersect);
+        return undefined;
+    }
+
+    /**
+     * Get object intersected by Three.JS raycaster on click.
+     *
+     * @param intersect Intersection result from World Pointer.
+     *
+     * @returns Intersected object.
+     */
+    public onClick(intersect: Intersection): PDTObject | undefined {
+        let object = intersect.object;
+        while (object.parent && object.userData.type !== "Object") {
+            object = object.parent;
+        }
+        if (object.type === "Scene") {
+            throw new Error("Object not found, Scene reached");
+        }
+        return object as PDTObject;
+    }
+
     public tick = (time: number) => {
-        this.updateObjects(tick(time));
+        this.updateObjects(tickObjects(time));
     };
 }

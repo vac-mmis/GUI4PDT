@@ -6,11 +6,11 @@
 import { ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 
-import { World } from "@/World/world";
+import type { Object3D } from "three";
+import type { PDTObject } from "@/models/object.model";
 import type { Timer } from "@/World/systems/Timer";
 
-import PDTStore from "@/store/pdt.store";
-import type { PDTObject } from "@/models/object.model";
+import worldStore from "@/store/world.store";
 
 const emits = defineEmits<{
     (e: "obj", object?: PDTObject | null): void;
@@ -18,10 +18,13 @@ const emits = defineEmits<{
 }>();
 
 const container = ref<HTMLDivElement | null>(null);
-const { getPDT } = storeToRefs(PDTStore());
+const { getTimer } = storeToRefs(worldStore());
+const { setWorld } = worldStore();
 
-const selectedCallback = (obj?: PDTObject | null) => {
-    emits("obj", obj);
+const selectedCallback = (obj?: Object3D | null) => {
+    if (obj) {
+        emits("obj", obj as PDTObject);
+    }
 };
 
 onMounted(async () => {
@@ -29,8 +32,7 @@ onMounted(async () => {
     if (container.value === null) {
         throw new Error("Error: Invalid container");
     }
-    const world = new World(container.value, selectedCallback);
-    emits("timer", world.getTimer());
-    world.append(getPDT.value);
+    setWorld(container.value, selectedCallback);
+    emits("timer", getTimer.value);
 });
 </script>
