@@ -1,4 +1,9 @@
-import { Group, type Intersection } from "three";
+/**
+ * Implementation of objects inside PDTs.
+ *
+ * @module object.model
+ */
+import { Group } from "three";
 
 import {
     Location,
@@ -11,6 +16,9 @@ import {
     type MaterialJSON,
 } from "@/models/Properties";
 
+/**
+ * PDT object data type, following the backend API data format.
+ */
 export type ObjectJSON = {
     id: number;
     class: ClassJSON[];
@@ -21,14 +29,26 @@ export type ObjectJSON = {
     physics?: boolean[];
 };
 
+/**
+ * Implements representation of objects in PDT, including class, material, location, rotation etc.
+ */
 export class PDTObject extends Group {
+    /** Object ID */
     objID: number;
-    /** Chosen time index to show. */
+    /** Current time index to show. */
     private time: number;
+    /** Number of timestamps of the object.  */
     private timeLength: number;
-    class!: Class;
-    material!: Material;
+    /** Object class. @remark `this.class = this.children[0]`. */
+    class: Class;
+    /** Object material. Used to create class representation. */
+    material: Material;
 
+    /**
+     * Creates a PDT object from JSON data.
+     *
+     * @param objJSON Object data, from backend API.
+     */
     constructor(objJSON: ObjectJSON) {
         super();
         this.objID = objJSON.id;
@@ -53,21 +73,29 @@ export class PDTObject extends Group {
     }
 
     /**
+     * Returns current object time index.
+     *
      * @returns Object time index.
      */
     public getTimeIndex = (): number => Math.trunc(this.time);
 
     /**
+     * Returns object class.
+     *
      * @returns Object classes.
      */
     public getObject = (): Class => this.children[0] as Class;
 
     /**
+     * Returns object location.
+     *
      * @returns Object location.
      */
     public getLocation = () => this.children[1];
 
     /**
+     * Returns `true` if this object is visible.
+     *
      * @returns Object visibility.
      */
     public getObjectVisibility = () => this.children[0].visible;
@@ -82,6 +110,8 @@ export class PDTObject extends Group {
     }
 
     /**
+     * Returns `true` if object location is visible.
+     *
      * @returns Location visibility
      */
     public getLocationVisibility = () => this.children[1].visible;
@@ -92,6 +122,7 @@ export class PDTObject extends Group {
      * @param showLocation New location visibility.
      */
     public setLocationVisibility(showLocation: boolean = false): void {
+        console.log(this.children);
         this.children[1].visible = showLocation;
     }
 

@@ -4,7 +4,7 @@
             <v-app-bar-nav-icon @click="toggleList"></v-app-bar-nav-icon>
         </v-toolbar>
         <v-list class="w-full h-full" v-if="openList">
-            <v-list-item>
+            <v-list-item v-if="elevationMap">
                 <!-- Elevation map control -->
                 <ControlButtons :commands="elevationMapCommands">
                     <h1 class="text-subtitle-1">Elevation Map</h1>
@@ -72,7 +72,9 @@ import type { ElevationMap } from "@/models/elevation.model";
 import PDTStore from "@/store/pdt.store";
 
 const { getPDT } = storeToRefs(PDTStore());
-const elevationMap: ComputedRef<ElevationMap> = computed(() => getPDT.value.getElevationMap());
+const elevationMap: ComputedRef<ElevationMap | undefined> = computed(() =>
+    getPDT.value.getElevationMap()
+);
 const objects: ComputedRef<PDTObject[]> = computed(() => getPDT.value.getObjects());
 
 const openList = ref(false);
@@ -102,22 +104,24 @@ const objectCommands = (object: PDTObject): Command<boolean>[] => {
     ];
 };
 
-const elevationMapCommands = [
-    new Command<boolean>(
-        "surface",
-        "fas fa-eye",
-        "Show surface",
-        elevationMap.value.getMapVisibility,
-        (visibility: boolean) => elevationMap.value.setMapVisibility(visibility)
-    ),
-    new Command<boolean>(
-        "variations",
-        "fas fa-chart-simple",
-        "Show variations",
-        elevationMap.value.getMapVariationVisibility,
-        (visibility: boolean) => elevationMap.value.setMapVariationVisibility(visibility)
-    ),
-];
+const elevationMapCommands = elevationMap.value
+    ? [
+          new Command<boolean>(
+              "surface",
+              "fas fa-eye",
+              "Show surface",
+              elevationMap.value.getMapVisibility,
+              (visibility: boolean) => elevationMap.value?.setMapVisibility(visibility)
+          ),
+          new Command<boolean>(
+              "variations",
+              "fas fa-chart-simple",
+              "Show variations",
+              elevationMap.value.getMapVariationVisibility,
+              (visibility: boolean) => elevationMap.value?.setMapVariationVisibility(visibility)
+          ),
+      ]
+    : [];
 
 const globalObjectsCommands = Command.buildGlobalBooleanCommand(
     objects.value.map((object) => objectCommands(object))

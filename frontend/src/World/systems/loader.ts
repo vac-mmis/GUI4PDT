@@ -1,8 +1,16 @@
+/**
+ * This wrapper implements a set of functions to load Three.JS elements (Textures, Materials, Models...) from files.
+ *
+ * @remark File format are defined in dedicated {@link Store} modules.
+ *
+ * @model world.loader.
+ */
 import { Group, MeshStandardMaterial, TextureLoader } from "three";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { GLTFLoader, type GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 import type { MaterialFile } from "@/store/material.store";
+import type { ModelFile } from "@/store/model.store";
 
 // GLTFLoader with compression
 const loader = new GLTFLoader();
@@ -13,16 +21,28 @@ loader.setDRACOLoader(dracoLoader);
 // TextureLoader
 const textureLoader = new TextureLoader();
 
+/** Converts strings to Uint8 buffer */
 const stringToBuffer = (content: string) => {
     const base64 = atob(content);
     return new Uint8Array(base64.length).map((_, i) => base64.charCodeAt(i)).buffer;
 };
 
-export async function loadModel(model: { name: string; content: string }): Promise<Group> {
+/**
+ * Loads model from file blobs provided by backend API
+ *
+ * @remark For the moment, this loader only handle GLTF 3D models in `.glb` format.
+ *
+ * @param model Model file blob to load.
+ *
+ * @return Loaded model as Three.JS `Group` object.
+ */
+export async function loadModel(model: ModelFile): Promise<Group> {
+    // Bufferize content for loading
     const buffer = stringToBuffer(model.content);
     return loader
         .parseAsync(buffer, "")
-        .then((gltf) => {
+        .then((gltf: GLTF) => {
+            // Give name to model before return
             const scene = gltf.scene;
             scene.name = model.name.split(".glb")[0].toLowerCase();
             return scene;
@@ -33,6 +53,15 @@ export async function loadModel(model: { name: string; content: string }): Promi
         });
 }
 
+/**
+ * Loads material from file blobs provided by backend API
+ *
+ * @remark For the moment, this loader only PNG and JPEG files as material components. See {@link material.store} and backend API to have details on material ressources format.
+ *
+ * @param model Material file blob to load.
+ *
+ * @return Loaded model as Three.JS `MeshStandardMaterial` object.
+ */
 export async function loadMaterial(materialBlob: MaterialFile): Promise<MeshStandardMaterial> {
     const material = new MeshStandardMaterial();
 

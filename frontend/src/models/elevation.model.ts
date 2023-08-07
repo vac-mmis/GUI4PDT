@@ -1,18 +1,22 @@
-import {
-    BoxGeometry,
-    Group,
-    Object3D,
-    InstancedMesh,
-    Matrix4,
-    Color,
-    MeshStandardMaterial,
-    type Intersection,
-} from "three";
+/**
+ * Elevation map object, represented as {@link Surface} with variations
+ *
+ * @module elevation
+ */
+
+import { BoxGeometry, Group, InstancedMesh, Matrix4, Color, MeshStandardMaterial } from "three";
 import { makeRepresentation, type Representation } from "@/models/Representations";
 
 import { materialStore } from "@/store/material.store";
 
-const createSurface = (elevationMap: [number, number, number, number][]) => {
+/**
+ * Create a surface representation from a coordinates grid with water surface.
+ *
+ * @param mapData Grid dataset with position and z-variations : `[[x0,y0,z0,dz0], [x1,y1,z1,dz1],...]`.
+ *
+ * @returns Desired surface mesh.
+ */
+const createSurface = (mapData: [number, number, number, number][]) => {
     const { find } = materialStore();
     const waterMaterial =
         find("water") ??
@@ -21,9 +25,16 @@ const createSurface = (elevationMap: [number, number, number, number][]) => {
         });
     waterMaterial.transparent = true;
     waterMaterial.opacity = 0.5;
-    return makeRepresentation("surface", elevationMap, waterMaterial);
+    return makeRepresentation("surface", mapData, waterMaterial);
 };
 
+/**
+ * Create a grid of variation bars for map representation.
+ *
+ * @param mapData Grid dataset with position and z-variations : `[[x0,y0,z0,dz0], [x1,y1,z1,dz1],...]`.
+ *
+ * @returns Desired variation plots as grid of vertical bars.
+ */
 const createVariations = (mapData: [number, number, number, number][]) => {
     const mapVariations = new InstancedMesh(
         new BoxGeometry(0.05, 0.05, 1),
@@ -44,11 +55,22 @@ const createVariations = (mapData: [number, number, number, number][]) => {
     return mapVariations;
 };
 
+/**
+ * Implement elevation map object from grid with surface and variations
+ */
 export class ElevationMap extends Group {
+    /** Map dataset with position and z-variations : `[[x0,y0,z0,dz0], [x1,y1,z1,dz1],...]`. */
     private mapData: [number, number, number, number][];
+    /** Elevation surface as {@link Surface} representation. */
     private mapSurface: Representation;
+    /** Representation of variations as vertical bars */
     private mapVariations;
 
+    /**
+     * Creates an elevation map from map grid.
+     *
+     * @param mapData Grid dataset with position and z-variations : `[[x0,y0,z0,dz0], [x1,y1,z1,dz1],...]`.
+     */
     constructor(elevationMap: [number, number, number, number][]) {
         super();
         this.mapData = elevationMap;
@@ -62,9 +84,9 @@ export class ElevationMap extends Group {
         this.add(this.mapVariations);
     }
 
-    public updateHelper(intersect: Intersection<Object3D>) {}
-
     /**
+     * Returns `true` if map is visible.
+     *
      * @returns Map visibility.
      */
     public getMapVisibility = () => this.mapSurface.visible;
@@ -72,21 +94,23 @@ export class ElevationMap extends Group {
     /**
      * Set object visibility.
      *
-     * @param showMap New visibility.
+     * @param showMap Desired visibility.
      */
     public setMapVisibility(showMap: boolean = true): void {
         this.mapSurface.visible = showMap;
     }
 
     /**
-     * @returns MapVariation visibility
+     * Returns `true` if map variations are visible.
+     *
+     * @returns Map variations visibility.
      */
     public getMapVariationVisibility = () => this.mapVariations.visible;
 
     /**
-     * Set location visibility.
+     * Set map variations visibility.
      *
-     * @param showMapVariation New location visibility.
+     * @param showMapVariation Desired variations visibility.
      */
     public setMapVariationVisibility(showMapVariation: boolean = false): void {
         this.mapVariations.visible = showMapVariation;

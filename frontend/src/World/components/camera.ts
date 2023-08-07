@@ -1,5 +1,17 @@
+/**
+ * This is a wrapper of world camera creation.
+ *
+ * @module world.camera
+ */
 import { PerspectiveCamera } from "three";
 
+/**
+ * Creates a new Camera for {@link World} module.
+ *
+ * @remarks Update values used in this function to change camera properties or position.
+ *
+ * @returns New camera.
+ */
 export function createCamera(): PerspectiveCamera {
     const camera = new PerspectiveCamera(
         70, // fov = Field Of View

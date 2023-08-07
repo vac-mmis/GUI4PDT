@@ -1,14 +1,38 @@
+/**
+ * This wrapper implements a tool to control {@link World} time and animations
+ *
+ * @remark For the moment, one second in world animation correspond to a new timestamp in PDT.
+ *
+ * @module world.timer
+ */
 import { Clock, type Camera, type Scene, type WebGLRenderer } from "three";
 
+/**
+ * Implements timer tool to control PDT and world time.
+ */
 export class Timer {
+    /** World camera/ */
     private camera: Camera;
+    /** World scene. */
     private scene: Scene;
+    /** World renderer. */
     private renderer: WebGLRenderer;
 
+    /** Current time. */
     private time: number;
+    /** Internal timer clock. */
     private clock: Clock;
+    /** Callback used when time updating. */
     private timerCallback: (t: number) => void;
 
+    /**
+     * Creates a new timer for world time control.
+     *
+     * @param camera World camera.
+     * @param scene World scene.
+     * @param renderer World renderer.
+     * @param timerCallback Callback called when time updates.
+     */
     constructor(
         camera: Camera,
         scene: Scene,
@@ -28,18 +52,33 @@ export class Timer {
         this.renderer.setAnimationLoop(() => this.renderer.render(this.scene, this.camera));
     }
 
+    /**
+     * @returns Current time.
+     */
     public getTime = (): number => this.time;
 
-    public setTime(t: number) {
+    /**
+     * Set new time to when update world.
+     * @param t Desired time.
+     */
+    public setTime(t: number): void {
         this.time = t;
         this.tick();
     }
 
-    public setTimerCallback(timerCallback: (t: number) => void) {
+    /**
+     * Set new timer callback.
+     *
+     * @param timerCallback New timer callback.
+     */
+    public setTimerCallback(timerCallback: (t: number) => void): void {
         this.timerCallback = timerCallback;
     }
 
-    public start() {
+    /**
+     * Start world animation.
+     */
+    public start(): void {
         this.clock.start();
         this.renderer.setAnimationLoop(() => {
             // tick scene elements
@@ -51,13 +90,15 @@ export class Timer {
         });
     }
 
-    public stop() {
+    /** Stop world animation. */
+    public stop(): void {
         this.clock.stop();
         // Set idle animation loop
         this.renderer.setAnimationLoop(() => this.renderer.render(this.scene, this.camera));
     }
 
-    private tick() {
+    /** Tick world and its elements to current time + clock delta */
+    private tick(): void {
         const delta = this.clock.getDelta();
         this.time += delta;
         this.scene.children.forEach((child: any) => {

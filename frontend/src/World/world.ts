@@ -1,3 +1,12 @@
+/**
+ * This modules is a wrapper to simplify  Three.JS scenes and their elements.
+ * This implementation is inspired by {@link https://discoverthreejs.com/book/ Discover Three.JS book}.
+ *
+ * @see {@link https://discoverthreejs.com/book/ Discover Three.JS book}.
+ *
+ * @module World
+ */
+
 import type { Object3D, WebGLRenderer, PerspectiveCamera, Scene } from "three";
 import type { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
@@ -26,6 +35,14 @@ export class World {
 
     private pdt: PDT;
 
+    /**
+     * Creates a new Three.JS world in adding selected PDT in {@link pdt.store}.
+     *
+     * @param container HTML div container which contains Three.JS world.
+     * @param selectionCallback Callback used when there is a click on a world element.
+     * @param hoverCallback Callback used when mouse hover on an world element.
+     * @param timerCallback Callback used when time changes.
+     */
     constructor(
         container: HTMLDivElement,
         selectionCallback?: (obj?: Object3D | null) => void,
@@ -73,6 +90,13 @@ export class World {
         this.renderer.render(this.scene, this.camera);
     }
 
+    /**
+     * Update world. Used when selected PDT in {@link pdt.store} is changed.
+     *
+     * @param container HTML div container which contains Three.JS world.
+     * @param selectionCallback Callback used when there is a click on a world element.
+     * @param hoverCallback Callback used when mouse hover on an world element.
+     */
     public update(
         container: HTMLDivElement,
         selectionCallback?: (obj?: Object3D | null) => void,
@@ -94,6 +118,11 @@ export class World {
         this.pointer.updatePDT(this.pdt, selectionCallback, hoverCallback);
     }
 
+    /**
+     * Get world timer to control it.
+     *
+     * @returns World timer
+     */
     public getTimer() {
         return this.timer;
     }
