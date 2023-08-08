@@ -7,6 +7,7 @@
 import { Request, Response } from "express";
 
 import * as PDTStore from "@/store/pdt.store";
+import { logger } from "@/utils/logger";
 
 /**
  * Get available PDT names
@@ -14,7 +15,7 @@ import * as PDTStore from "@/store/pdt.store";
  * @param res HTTP Response :
  * - 200 confirmation + PDT names sorted by alphabetic ascending order
  */
-export function getPDTList(req: Request, res: Response) {
+export function getPDTList(req: Request, res: Response): void {
     res.status(200).json(PDTStore.list().sort((a, b) => a.localeCompare(b)));
 }
 
@@ -25,10 +26,11 @@ export function getPDTList(req: Request, res: Response) {
  * - 200 confirmation + requested PDT
  * - 404 error if desired PDT doesn't exist
  */
-export function findPDTByName(req: Request, res: Response) {
+export function findPDTByName(req: Request, res: Response): void {
     const pdt = PDTStore.find(req.params.name);
     if (!pdt) {
-        res.status(404).json("Model not found");
+        logger.warn(`Client ${req.ip} requested PDT "${req.params.name}" which is not available`);
+        res.status(404).json("PDT not found");
     } else {
         res.status(200).json(pdt.getPublicPDT());
     }

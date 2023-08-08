@@ -10,6 +10,7 @@ import path from "path";
 import { parse } from "csv";
 import { finished } from "stream/promises";
 
+import { logger } from "@/utils/logger";
 import type { ObjectJSON, ObjectTimestamp } from "@/types/object.types";
 
 /**
@@ -127,7 +128,7 @@ export class PDT {
             .then((res) => {
                 this.elevationMap = res;
             })
-            .catch(() => console.log(`No elevation map available for ${this.name}.`));
+            .catch(() => logger.warn(`No elevation map available for ${this.name}.`));
     }
 
     /**

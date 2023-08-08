@@ -7,11 +7,14 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
+import "dotenv/config";
 
 import { router } from "@/routes";
 import { PDTStore, ModelStore, MaterialStore } from "@/store";
 
-const port = 3000;
+import { logger } from "@/utils/logger";
+
+const port = process.env.PORT ?? 3000;
 const app = express();
 app.use(cors())
     .use(bodyParser.json({ limit: "50mb" }))
@@ -21,15 +24,16 @@ app.use(cors())
  * This async setup function loads all necessary folders to serve PDTs and starts Express.JS server
  */
 const setup = async () => {
+    logger.info(`Backend starting...`);
     await ModelStore.load()
         .then(() => MaterialStore.load())
         .then(() => PDTStore.load())
         .then(() =>
             app.listen(port, () => {
-                console.log(`Express app listening on port ${port}`);
+                logger.info(`Backend started successfully! Server listen on port ${port}`);
             })
         )
-        .catch((err) => console.error(err));
+        .catch((err) => logger.error(err));
 };
 
 setup();

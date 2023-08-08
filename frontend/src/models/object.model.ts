@@ -122,7 +122,6 @@ export class PDTObject extends Group {
      * @param showLocation New location visibility.
      */
     public setLocationVisibility(showLocation: boolean = false): void {
-        console.log(this.children);
         this.children[1].visible = showLocation;
     }
 

@@ -9,7 +9,7 @@ import path from "path";
 
 import type { MaterialFile } from "@/types/file.types";
 
-const materialsPath = path.resolve("assets", `materials`).normalize();
+const materialsPath = path.resolve(process.env.MATERIALS ?? "").normalize();
 const materials: MaterialFile[] = [];
 
 /**

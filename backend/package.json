@@ -4,19 +4,27 @@
     "description": "Backend API server for providing PDT data to GUI frontend",
     "main": "index.js",
     "scripts": {
+        "start": "node dist/index.js",
         "dev": "nodemon",
-        "build:doc": "npx typedoc"
+        "build": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
+        "build:doc": "npx typedoc",
+        "lint": "eslint src/**/*.ts",
+        "format": "eslint src/**/*.ts --fix",
+        "pretty": "prettier --write \"src/**/*.ts\""
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "compression": "^1.7.4",
         "cors": "^2.8.5",
         "csv": "^6.3.1",
+        "dotenv": "^16.3.1",
         "express": "^4.18.2",
         "mime": "^3.0.0",
         "multer": "^1.4.5-lts.1",
-        "reflect-metadata": "^0.1.13"
+        "reflect-metadata": "^0.1.13",
+        "winston": "^3.10.0"
     },
     "devDependencies": {
         "@tsconfig/node18": "^2.0.1",
@@ -25,9 +33,15 @@
         "@types/mime": "^3.0.1",
         "@types/multer": "^1.4.7",
         "@types/node": "^18.16.8",
+        "@typescript-eslint/eslint-plugin": "^6.3.0",
+        "@typescript-eslint/parser": "^6.3.0",
         "concurrently": "^8.1.0",
+        "eslint": "^8.46.0",
+        "eslint-config-prettier": "^9.0.0",
         "nodemon": "^3.0.1",
+        "prettier": "^3.0.1",
         "ts-node": "^10.9.1",
+        "tsc-alias": "^1.8.7",
         "tsconfig-paths": "^4.2.0",
         "typedoc": "^0.24.8",
         "typedoc-gitlab-wiki-theme": "^1.1.0",

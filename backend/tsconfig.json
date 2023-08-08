@@ -12,7 +12,8 @@
         "paths": {
             "@/*": ["*"]
         },
-        "lib": ["dom"]
+        "lib": ["dom"],
+        "outDir": "./dist"
     },
     "include": ["src/**/*", "src/*"],
     "typedocOptions": {

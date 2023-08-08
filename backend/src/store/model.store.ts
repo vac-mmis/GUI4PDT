@@ -6,10 +6,11 @@
 
 import { readFile, readdir, stat } from "fs/promises";
 import path from "path";
+import "dotenv/config";
 
 import type { ModelFile } from "@/types/file.types";
 
-const modelPath = path.resolve("assets", `models`).normalize();
+const modelPath = path.resolve(process.env.MODELS ?? "").normalize();
 const models: ModelFile[] = [];
 
 /**

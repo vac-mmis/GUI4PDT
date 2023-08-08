@@ -6,10 +6,11 @@
 
 import { readdir, stat } from "fs/promises";
 import path from "path";
+import "dotenv/config";
 
 import { PDT } from "@/models";
 
-const dataPath = path.resolve("data").normalize();
+const dataPath = path.resolve(process.env.DATA ?? "").normalize();
 const PDTs: PDT[] = [];
 
 /**

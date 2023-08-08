@@ -7,6 +7,7 @@
 import { Request, Response } from "express";
 
 import * as ModelStore from "@/store/model.store";
+import { logger } from "@/utils/logger";
 
 /**
  * Get available models
@@ -16,7 +17,7 @@ import * as ModelStore from "@/store/model.store";
  *
  * @module Models
  */
-export function getModels(req: Request, res: Response) {
+export function getModels(req: Request, res: Response): void {
     res.status(200).json(ModelStore.get());
 }
 
@@ -29,9 +30,10 @@ export function getModels(req: Request, res: Response) {
  *
  * @module Models
  */
-export function findModelByName(req: Request, res: Response) {
+export function findModelByName(req: Request, res: Response): void {
     const model = ModelStore.find(req.params.name);
     if (!model) {
+        logger.warn(`Client ${req.ip} requested model "${req.params.name}" which is not available`);
         res.status(404).json("Model not found");
     } else {
         res.status(200).json(model);
