@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+    frontend:
+        image: mmis-gui-frontend
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        ports:
+            - 8080:80
+        networks:
+            - frontend
+            - backend
+
+    backend:
+        image: mmis-gui-backend
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        environment:
+            # Data and assets folders
+            DATA: data
+            MODELS: assets/models
+            MATERIALS: assets/materials
+
+            # Log configuration
+            LOG_FILE: backend.log
+            LOG_LEVEL: info
+        volumes:
+            - ./backend/data:/usr/src/app/data
+            - ./backend/assets:/usr/src/app/assets
+        ports:
+            - 3000:3000
+        networks:
+            - backend
+
+networks:
+    frontend:
+    backend:
