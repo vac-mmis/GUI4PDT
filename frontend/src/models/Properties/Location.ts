@@ -129,7 +129,7 @@ export class Location extends Group {
 
         // update object position
         const object = this.parent.getObject();
-        let actualPosition = new Vector3();
+        const actualPosition = new Vector3();
         object.getWorldPosition(actualPosition);
 
         const delta = time - index;

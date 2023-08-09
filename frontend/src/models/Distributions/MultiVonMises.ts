@@ -61,7 +61,7 @@ export class MultivariateVonMises implements Distribution {
     private static randomVonMises(mu: number, kappa: number): number {
         let s: number;
         let U: number, V: number, W: number, Y: number, Z: number;
-        let result: number, mod: number;
+        let result: number;
 
         if (isNaN(kappa)) {
             return NaN;
@@ -90,22 +90,18 @@ export class MultivariateVonMises implements Distribution {
             return result;
         }
 
-        while (true) {
+        do {
             U = Math.random();
             Z = Math.cos(Math.PI * U);
             W = (1 + s * Z) / (s + Z);
             Y = kappa * (s - W);
             V = Math.random();
-
-            if (Y * (2 - Y) - V >= 0 || Math.log(Y / V) + 1 - Y >= 0) {
-                break;
-            }
-        }
+        } while (Y * (2 - Y) - V < 0 && Math.log(Y / V) + 1 - Y < 0);
 
         U = Math.random();
         result = U < 0.5 ? -Math.acos(W) : Math.acos(W);
         result += mu;
-        mod = ((Math.abs(result) + Math.PI) % (2 * Math.PI)) - Math.PI;
+        const mod = ((Math.abs(result) + Math.PI) % (2 * Math.PI)) - Math.PI;
 
         return result < 0 ? -mod : mod;
     }

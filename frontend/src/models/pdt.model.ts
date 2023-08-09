@@ -98,6 +98,9 @@ export class PDT extends Group {
      * @returns Intersected object.
      */
     public onHover(intersect: Intersection<Object3D>): PDTObject | undefined {
+        if (intersect) {
+            return undefined;
+        }
         return undefined;
     }
 

@@ -52,9 +52,8 @@ export class Material extends MeshStandardMaterial {
      * TODO : Implement material update through time.
      * Update material representation at desired time.
      *
-     * @param time Time to update material.
      */
-    public update(time: number) {
+    public update() {
         throw new Error("Material update through is not yet implemented");
     }
 
@@ -66,7 +65,7 @@ export class Material extends MeshStandardMaterial {
      * @returns Object `MeshStandardMaterial` Three.JS material.
      */
     public getMaterial(opacity: number = 1): MeshStandardMaterial {
-        let material = new MeshStandardMaterial();
+        const material = new MeshStandardMaterial();
         material.copy(this as MeshStandardMaterial);
         if (opacity < 1) {
             material.transparent = true;

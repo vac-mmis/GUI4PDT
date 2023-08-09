@@ -24,7 +24,7 @@ import type { ObjectJSON, ObjectTimestamp } from "@/types/object.types";
  */
 export async function PDTTimestampsToPDTJSON(
     timestampsFiles: string[]
-): Promise<{ name: any; objects: ObjectJSON[] }> {
+): Promise<{ name: string; objects: ObjectJSON[] }> {
     const JSONData = await Promise.all(
         timestampsFiles.map(async (file) => {
             const json = JSON.parse(await readFile(file, { encoding: "utf8" }));

@@ -42,7 +42,7 @@ export class Categorical implements Distribution {
 
     public getMean = (): [string, number] => Object.entries<number>(this.mass)[0];
 
-    public setMean(newMean: number[]): void {
+    public setMean(): void {
         return;
     }
 

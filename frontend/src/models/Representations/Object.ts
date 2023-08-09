@@ -5,7 +5,6 @@
  */
 
 import { BoxGeometry, Group, Mesh, MeshStandardMaterial } from "three";
-import { Material } from "@/models/Properties";
 import type { Representation } from "@/models/Representations";
 
 /**

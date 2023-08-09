@@ -70,7 +70,10 @@ const onPDTSelection = async () => {
             console.error(err);
         })
         .finally(() => {
-            status.value = { status: "success", message: `${selectedPDT} loaded successfully` };
+            status.value = {
+                status: "success",
+                message: `${selectedPDT.value} loaded successfully`,
+            };
             emits("status", status.value);
         });
 };

@@ -1,7 +1,7 @@
 <template>
     <v-card
-        v-if="opened && object"
-        :title="`Details on object ${object.id}`"
+        v-if="opened && props.object"
+        :title="`Details on object ${props.object.id}`"
         prepend-icon="fas fa-cubes"
         class="mx-auto"
         elevation="16"
@@ -21,10 +21,10 @@
             </v-tabs>
             <div class="h-auto pa-6">
                 <template v-if="tab === 0">
-                    <ObjectPlot :data="[object.class.representation(time)]" />
+                    <ObjectPlot :data="[props.object.class.representation(props.time)]" />
                 </template>
                 <template v-if="tab === 2">
-                    <ObjectPlot :data="[object.material.representation(time)]" />
+                    <ObjectPlot :data="[props.object.material.representation(props.time)]" />
                 </template>
             </div>
         </v-card-item>
@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from "vue";
+import { ref } from "vue";
 
 import ObjectPlot from "@/components/Plot/Object/ObjectPlot.vue";
 import type { PDTObject } from "@/models/object.model";
@@ -41,24 +41,4 @@ const props = defineProps<{ object: PDTObject | null; time: number }>();
 
 const opened = ref(true);
 const tab = ref<number>(0);
-
-const time = ref<number>(0);
-const object = computed(() => {
-    opened.value = !!props.object;
-    return props.object;
-});
-
-watch(
-    () => props.object,
-    () => {
-        opened.value = !!props.object;
-    }
-);
-
-watch(
-    () => props.time,
-    (t: number) => {
-        time.value = t;
-    }
-);
 </script>
