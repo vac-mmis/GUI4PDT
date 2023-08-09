@@ -1,8 +1,8 @@
-[MMIS GUI Backend Documentation](../README.md) / [Exports](../modules.md) / [Stores](Stores.md) / Material
+[MMIS GUI Backend Documentation](../README.md) / [Exports](../modules.md) / [Stores](Stores.md) / MaterialStore
 
-# Namespace: Material
+# Namespace: MaterialStore
 
-[Stores](Stores.md).Material
+[Stores](Stores.md).MaterialStore
 
 This store is used to load, store and provide materials
 
@@ -10,9 +10,9 @@ This store is used to load, store and provide materials
 
 ### Functions
 
--   [load](Stores.Material.md#load)
--   [get](Stores.Material.md#get)
--   [find](Stores.Material.md#find)
+-   [load](Stores.MaterialStore.md#load)
+-   [get](Stores.MaterialStore.md#get)
+-   [find](Stores.MaterialStore.md#find)
 
 ## Functions
 

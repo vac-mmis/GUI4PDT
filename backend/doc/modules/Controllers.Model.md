@@ -32,7 +32,7 @@ Express.JS controllers for models
 
 #### Defined in
 
-src/controllers/model.controller.ts:19
+src/controllers/model.controller.ts:20
 
 ---
 
@@ -53,4 +53,4 @@ src/controllers/model.controller.ts:19
 
 #### Defined in
 
-src/controllers/model.controller.ts:32
+src/controllers/model.controller.ts:33

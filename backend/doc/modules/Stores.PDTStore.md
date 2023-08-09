@@ -1,8 +1,8 @@
-[MMIS GUI Backend Documentation](../README.md) / [Exports](../modules.md) / [Stores](Stores.md) / PDT
+[MMIS GUI Backend Documentation](../README.md) / [Exports](../modules.md) / [Stores](Stores.md) / PDTStore
 
-# Namespace: PDT
+# Namespace: PDTStore
 
-[Stores](Stores.md).PDT
+[Stores](Stores.md).PDTStore
 
 This store is used to load, store and provide all available PDT
 
@@ -10,10 +10,10 @@ This store is used to load, store and provide all available PDT
 
 ### Functions
 
--   [load](Stores.PDT.md#load)
--   [get](Stores.PDT.md#get)
--   [list](Stores.PDT.md#list)
--   [find](Stores.PDT.md#find)
+-   [load](Stores.PDTStore.md#load)
+-   [get](Stores.PDTStore.md#get)
+-   [list](Stores.PDTStore.md#list)
+-   [find](Stores.PDTStore.md#find)
 
 ## Functions
 
@@ -29,7 +29,7 @@ Loads all available PDT for API providing
 
 #### Defined in
 
-src/store/pdt.store.ts:18
+src/store/pdt.store.ts:19
 
 ---
 
@@ -47,7 +47,7 @@ Array of all loaded materials
 
 #### Defined in
 
-src/store/pdt.store.ts:39
+src/store/pdt.store.ts:40
 
 ---
 
@@ -65,7 +65,7 @@ Array of loaded PDT names
 
 #### Defined in
 
-src/store/pdt.store.ts:48
+src/store/pdt.store.ts:49
 
 ---
 
@@ -89,4 +89,4 @@ Targeted PDT if exists, else undefined
 
 #### Defined in
 
-src/store/pdt.store.ts:58
+src/store/pdt.store.ts:59

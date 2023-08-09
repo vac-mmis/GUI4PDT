@@ -12,13 +12,14 @@ This folder provides all necessary class for representing PDT data. For the mome
 
 ### Functions
 
--   [timestampsToPDTJSON](Models.md#timestampstopdtjson)
+-   [PDTTimestampsToPDTJSON](Models.md#pdttimestampstopdtjson)
+-   [parseMap](Models.md#parsemap)
 
 ## Functions
 
-### timestampsToPDTJSON
+### PDTTimestampsToPDTJSON
 
-▸ **timestampsToPDTJSON**(`timestampsFiles`): `Promise`<{ `name`: `any` ; `objects`: [`ObjectJSON`](Types.Objects.md#objectjson)[] }\>
+▸ **PDTTimestampsToPDTJSON**(`timestampsFiles`): `Promise`<{ `name`: `string` ; `objects`: [`ObjectJSON`](Types.Objects.md#objectjson)[] }\>
 
 Transforms timestamps PDT files into object attributes.
 
@@ -30,7 +31,7 @@ Transforms timestamps PDT files into object attributes.
 
 #### Returns
 
-`Promise`<{ `name`: `any` ; `objects`: [`ObjectJSON`](Types.Objects.md#objectjson)[] }\>
+`Promise`<{ `name`: `string` ; `objects`: [`ObjectJSON`](Types.Objects.md#objectjson)[] }\>
 
 JSON PDT content with time representation inside object attributes.
 
@@ -40,4 +41,28 @@ JSON PDT content with time representation inside object attributes.
 
 #### Defined in
 
-src/models/pdt.model.ts:20
+src/models/pdt.model.ts:25
+
+---
+
+### parseMap
+
+▸ **parseMap**(`CSVFile`): `Promise`<`number`[][]\>
+
+Parse depth map from CSV file to array of points.
+
+#### Parameters
+
+| Name      | Type     | Description    |
+| :-------- | :------- | :------------- |
+| `CSVFile` | `string` | File to parse. |
+
+#### Returns
+
+`Promise`<`number`[][]\>
+
+Array of points representing the depth map.
+
+#### Defined in
+
+src/models/pdt.model.ts:72

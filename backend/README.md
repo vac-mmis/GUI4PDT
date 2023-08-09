@@ -20,9 +20,17 @@ npm i
 npm run dev
 ```
 
-### Production
+### Build for production
 
-Not implemented for the moment
+```
+NODE_ENV=production npm run build
+```
+
+### Build container
+
+```
+docker run -t mmis-gui-backend .
+```
 
 ## Routes
 

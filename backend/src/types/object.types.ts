@@ -2,7 +2,7 @@
  * This file contains types used to define objects and their attributes
  * PDTs JSON files must follows these representations to be loaded
  *
- * New object attributes must be added here. If it's a distributed property, it should have a `dist` sub-attribute which should contains one of the types available in {@link Distribution} like this :
+ * New object attributes must be added here. If it's a distributed property, it should have a `dist` sub-attribute which should contains one of the types available in {@link Distributions} like this :
  * ```ts
  * export type NewPropertyJSON =
  *      | Type1
@@ -46,7 +46,7 @@ export type RotationJSON = { dist: VonMises } | [number, number, number];
 export type MaterialJSON = string | { dist: Categorical };
 
 /**
- * Represents object type in PDT JSON timestamps **before** the parsing executed in {@link Models.timestampsToPDTJSON | PDT.init()}.
+ * Represents object type in PDT JSON timestamps **before** the parsing executed in {@link Models.PDTTimestampsToPDTJSON | PDT.init()}.
  */
 export type ObjectTimestamp = {
     id: number;
@@ -59,7 +59,7 @@ export type ObjectTimestamp = {
 };
 
 /**
- * Represents object type served to the API, therefore **after** {@link Models.timestampsToPDTJSON | PDT.init()}.
+ * Represents object type served to the API, therefore **after** {@link Models.PDTTimestampsToPDTJSON | PDT.init()}.
  */
 export type ObjectJSON = {
     id: number;

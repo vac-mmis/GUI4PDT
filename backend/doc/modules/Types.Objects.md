@@ -7,7 +7,7 @@
 This file contains types used to define objects and their attributes
 PDTs JSON files must follows these representations to be loaded
 
-New object attributes must be added here. If it's a distributed property, it should have a `dist` sub-attribute which should contains one of the types available in Distribution like this :
+New object attributes must be added here. If it's a distributed property, it should have a `dist` sub-attribute which should contains one of the types available in [Distributions](Types.Distributions.md) like this :
 
 ```ts
 export type NewPropertyJSON =
@@ -89,7 +89,7 @@ src/types/object.types.ts:46
 
 Ƭ **ObjectTimestamp**: `Object`
 
-Represents object type in PDT JSON timestamps **before** the parsing executed in [PDT.init()](Models.md#timestampstopdtjson).
+Represents object type in PDT JSON timestamps **before** the parsing executed in [PDT.init()](Models.md#pdttimestampstopdtjson).
 
 #### Type declaration
 
@@ -113,7 +113,7 @@ src/types/object.types.ts:51
 
 Ƭ **ObjectJSON**: `Object`
 
-Represents object type served to the API, therefore **after** [PDT.init()](Models.md#timestampstopdtjson).
+Represents object type served to the API, therefore **after** [PDT.init()](Models.md#pdttimestampstopdtjson).
 
 #### Type declaration
 

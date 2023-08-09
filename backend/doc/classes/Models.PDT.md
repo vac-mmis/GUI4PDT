@@ -17,6 +17,7 @@ Represents PDT model provided by API
 -   [name](Models.PDT.md#name)
 -   [PDTDir](Models.PDT.md#pdtdir)
 -   [objects](Models.PDT.md#objects)
+-   [elevationMap](Models.PDT.md#elevationmap)
 
 ### Methods
 
@@ -44,7 +45,7 @@ Creates new empty PDT with only its directory path. Should be initialized with i
 
 #### Defined in
 
-src/models/pdt.model.ts:76
+src/models/pdt.model.ts:112
 
 ## Properties
 
@@ -56,7 +57,7 @@ PDT name. Used for identifying PDT
 
 #### Defined in
 
-src/models/pdt.model.ts:65
+src/models/pdt.model.ts:99
 
 ---
 
@@ -68,7 +69,7 @@ PDT directory. Only used for PDT loading
 
 #### Defined in
 
-src/models/pdt.model.ts:67
+src/models/pdt.model.ts:101
 
 ---
 
@@ -80,7 +81,19 @@ PDT objects ready for providing
 
 #### Defined in
 
-src/models/pdt.model.ts:69
+src/models/pdt.model.ts:103
+
+---
+
+### elevationMap
+
+• `Optional` **elevationMap**: `number`[][]
+
+PDT see elevation map
+
+#### Defined in
+
+src/models/pdt.model.ts:105
 
 ## Methods
 
@@ -96,7 +109,7 @@ Initiate PDT with loading all JSON timestamps
 
 #### Defined in
 
-src/models/pdt.model.ts:83
+src/models/pdt.model.ts:119
 
 ---
 
@@ -104,7 +117,7 @@ src/models/pdt.model.ts:83
 
 ▸ **getPublicPDT**(): `Object`
 
-Give PDT but with only puglic data (without PDTDir)
+Give PDT but with only public data (without PDTDir)
 
 #### Returns
 
@@ -112,14 +125,15 @@ Give PDT but with only puglic data (without PDTDir)
 
 PDT without private attributes
 
-| Name      | Type                                                     |
-| :-------- | :------------------------------------------------------- |
-| `name`    | `string`                                                 |
-| `objects` | [`ObjectJSON`](../modules/Types.Objects.md#objectjson)[] |
+| Name            | Type                                                     |
+| :-------------- | :------------------------------------------------------- |
+| `name`          | `string`                                                 |
+| `objects`       | [`ObjectJSON`](../modules/Types.Objects.md#objectjson)[] |
+| `elevationMap?` | `number`[][]                                             |
 
 #### Defined in
 
-src/models/pdt.model.ts:98
+src/models/pdt.model.ts:139
 
 ---
 
@@ -137,4 +151,4 @@ PDT name
 
 #### Defined in
 
-src/models/pdt.model.ts:107
+src/models/pdt.model.ts:152

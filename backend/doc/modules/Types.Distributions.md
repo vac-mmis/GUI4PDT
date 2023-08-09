@@ -71,11 +71,11 @@ src/types/dist.types.ts:26
 
 Ƭ **VonMises**: `Object`
 
-Represents Von-Mises distributions JSON format
+Represents Von Mises distributions JSON format
 
 **`See`**
 
-[Von-Mises distribution on Wikipedia](https://en.wikipedia.org/wiki/Von_Mises_distribution)
+[Von Mises distribution on Wikipedia](https://en.wikipedia.org/wiki/Von_Mises_distribution)
 
 #### Type declaration
 

@@ -32,7 +32,7 @@ Get available materials
 
 #### Defined in
 
-src/controllers/material.controller.ts:17
+src/controllers/material.controller.ts:18
 
 ---
 
@@ -55,4 +55,4 @@ Get material by name
 
 #### Defined in
 
-src/controllers/material.controller.ts:28
+src/controllers/material.controller.ts:29

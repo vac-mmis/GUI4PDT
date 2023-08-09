@@ -1,8 +1,8 @@
-[MMIS GUI Backend Documentation](../README.md) / [Exports](../modules.md) / [Stores](Stores.md) / Model
+[MMIS GUI Backend Documentation](../README.md) / [Exports](../modules.md) / [Stores](Stores.md) / ModelStore
 
-# Namespace: Model
+# Namespace: ModelStore
 
-[Stores](Stores.md).Model
+[Stores](Stores.md).ModelStore
 
 This store is used to load, store and provide models
 
@@ -10,9 +10,9 @@ This store is used to load, store and provide models
 
 ### Functions
 
--   [load](Stores.Model.md#load)
--   [get](Stores.Model.md#get)
--   [find](Stores.Model.md#find)
+-   [load](Stores.ModelStore.md#load)
+-   [get](Stores.ModelStore.md#get)
+-   [find](Stores.ModelStore.md#find)
 
 ## Functions
 
@@ -28,7 +28,7 @@ Loads all available models for API providing
 
 #### Defined in
 
-src/store/model.store.ts:18
+src/store/model.store.ts:19
 
 ---
 
@@ -46,7 +46,7 @@ Array of all loaded models
 
 #### Defined in
 
-src/store/model.store.ts:45
+src/store/model.store.ts:46
 
 ---
 
@@ -70,4 +70,4 @@ Targeted model if exists, else undefined
 
 #### Defined in
 
-src/store/model.store.ts:57
+src/store/model.store.ts:58

@@ -8,6 +8,6 @@ This folder is dedicated to data storing like PDT, model or materials after thei
 
 ### Namespaces
 
--   [Material](Stores.Material.md)
--   [Model](Stores.Model.md)
--   [PDT](Stores.PDT.md)
+-   [MaterialStore](Stores.MaterialStore.md)
+-   [ModelStore](Stores.ModelStore.md)
+-   [PDTStore](Stores.PDTStore.md)

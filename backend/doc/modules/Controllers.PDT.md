@@ -34,7 +34,7 @@ Get available PDT names
 
 #### Defined in
 
-src/controllers/pdt.controller.ts:17
+src/controllers/pdt.controller.ts:18
 
 ---
 
@@ -57,4 +57,4 @@ Get PDT by name
 
 #### Defined in
 
-src/controllers/pdt.controller.ts:28
+src/controllers/pdt.controller.ts:29
