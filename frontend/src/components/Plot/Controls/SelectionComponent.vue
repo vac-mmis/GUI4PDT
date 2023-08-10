@@ -1,21 +1,27 @@
 <template>
-    <div :class="openList ? `w-auto` : ``">
+    <div :class="`${openList ? `w-auto` : ``}`">
         <v-toolbar class="w-100" :collapse="!openList" :title="getPDT.name">
             <v-app-bar-nav-icon @click="toggleList"></v-app-bar-nav-icon>
         </v-toolbar>
-        <v-list class="w-full h-full" v-if="openList">
-            <v-list-item v-if="elevationMap">
+        <v-sheet v-if="openList" class="w-full h-full">
+            <v-expansion-panels>
                 <!-- Elevation map control -->
-                <ControlButtons :commands="elevationMapCommands">
-                    <h1 class="text-subtitle-1">Elevation Map</h1>
-                </ControlButtons>
-            </v-list-item>
+                <v-expansion-panel v-if="elevationMap">
+                    <v-expansion-panel-title>
+                        <h1 class="text-subtitle-1">Elevation Map</h1>
+                    </v-expansion-panel-title>
+                    <v-expansion-panel-text>
+                        <ControlButtons :commands="elevationMapCommands" />
+                    </v-expansion-panel-text>
+                </v-expansion-panel>
 
-            <v-divider></v-divider>
-            <!-- Global object controls -->
-            <v-list-group value="Objects">
-                <template v-slot:activator="{ isOpen, props }">
-                    <v-list-item>
+                <v-expansion-panel>
+                    <v-expansion-panel-title>
+                        <h1 class="text-subtitle-1">Objects</h1>
+                    </v-expansion-panel-title>
+
+                    <v-expansion-panel-text>
+                        <!-- Global object controls -->
                         <ControlButtons
                             :commands="globalObjectsCommands"
                             :key="updateGlobal"
@@ -25,38 +31,30 @@
                                 }
                             "
                         >
-                            <h1 class="text-subtitle-1">Objects</h1>
+                            <h2 class="text-subtitle-2">Global</h2>
                         </ControlButtons>
-                        <template v-slot:append>
-                            <v-btn
-                                v-bind="props"
-                                :icon="isOpen ? `fas fa-minus` : `fas fa-plus`"
-                                variant="text"
-                            ></v-btn>
-                        </template>
-                    </v-list-item>
-                </template>
-
-                <!-- Individual object controls -->
-                <v-virtual-scroll :items="objects" height="480" item-height="48">
-                    <template v-slot:default="{ item }">
-                        <v-list-item>
-                            <ControlButtons
-                                :commands="objectCommands(item)"
-                                :key="updateObjects"
-                                @update="
-                                    (u) => {
-                                        updateGlobal += u;
-                                    }
-                                "
-                            >
-                                <h2 class="text-subtitle-2">Object {{ item.id }}</h2>
-                            </ControlButtons>
-                        </v-list-item>
-                    </template>
-                </v-virtual-scroll>
-            </v-list-group>
-        </v-list>
+                        <v-divider></v-divider>
+                        <!-- Individual object controls -->
+                        <v-virtual-scroll :items="objects" max-height="400" class="pa-2">
+                            <template v-slot:default="{ item }">
+                                <ControlButtons
+                                    class="pa-2"
+                                    :commands="objectCommands(item)"
+                                    :key="updateObjects"
+                                    @update="
+                                        (u) => {
+                                            updateGlobal += u;
+                                        }
+                                    "
+                                >
+                                    <h2 class="text-subtitle-2">Object {{ item.id }}</h2>
+                                </ControlButtons>
+                            </template>
+                        </v-virtual-scroll>
+                    </v-expansion-panel-text>
+                </v-expansion-panel>
+            </v-expansion-panels>
+        </v-sheet>
     </div>
 </template>
 
@@ -89,15 +87,15 @@ const objectCommands = (object: PDTObject): Command<boolean>[] => {
     return [
         new Command<boolean>(
             "display",
-            "fas fa-eye",
-            "Show object",
+            "fas fa-object-group",
+            "Class",
             object.getObjectVisibility,
             (visibility: boolean) => object.setObjectVisibility(visibility)
         ),
         new Command<boolean>(
             "loc",
             "fas fa-crosshairs",
-            "Show location",
+            "Location",
             object.getLocationVisibility,
             (visibility: boolean) => object.setLocationVisibility(visibility)
         ),
@@ -108,16 +106,16 @@ const elevationMapCommands = elevationMap.value
     ? [
           new Command<boolean>(
               "surface",
-              "fas fa-eye",
-              "Show surface",
-              elevationMap.value.getMapVisibility,
+              "fas fa-water",
+              "Surface",
+              elevationMap.value?.getMapVisibility,
               (visibility: boolean) => elevationMap.value?.setMapVisibility(visibility)
           ),
           new Command<boolean>(
               "variations",
               "fas fa-chart-simple",
-              "Show variations",
-              elevationMap.value.getMapVariationVisibility,
+              "Z-variations",
+              elevationMap.value?.getMapVariationVisibility,
               (visibility: boolean) => elevationMap.value?.setMapVariationVisibility(visibility)
           ),
       ]
