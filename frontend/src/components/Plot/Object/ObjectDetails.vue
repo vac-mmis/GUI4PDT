@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 import ObjectPlot from "@/components/Plot/Object/ObjectPlot.vue";
 import type { PDTObject } from "@/models/object.model";
@@ -41,4 +41,11 @@ const props = defineProps<{ object: PDTObject | null; time: number }>();
 
 const opened = ref(true);
 const tab = ref<number>(0);
+
+watch(
+    () => props.object,
+    () => {
+        opened.value = !!props.object;
+    }
+);
 </script>
