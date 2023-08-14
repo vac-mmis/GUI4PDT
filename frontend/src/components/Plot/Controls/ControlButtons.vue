@@ -3,42 +3,51 @@
         <span class="pr-2"><slot /></span>
         <div
             class="d-flex flex-row justify-space-between align-center"
-            v-for="(command, i) in commands"
-            :key="`${command.name}-${command.state}`"
+            v-for="(controller, i) in controllers"
+            :key="`${controller.name}-${controller.state}`"
         >
             <span>
-                <v-icon size="small" variant="text" :icon="command.icon" />
-                <span class="px-2">{{ command.tooltip }}</span>
+                <v-icon size="small" variant="text" :icon="controller.icon" />
+                <span class="px-2">{{ controller.tooltip }}</span>
             </span>
-            <v-btn-toggle
-                v-model="toggle[i]"
-                color="secondary"
-                inline
-                mandatory
-                @update:model-value="command.set(toggle[i])"
-            >
-                <v-btn :value="false" size="small" icon="fas fa-eye-slash"> </v-btn>
-                <v-btn :value="true" size="small" icon="fas fa-eye"> </v-btn>
-                <v-btn :value="true" size="small" icon="fas fa-wave-square" disabled> </v-btn>
-            </v-btn-toggle>
+            <div class="d-flex flex-row justify-col align-start">
+                <v-btn-toggle
+                    v-model="toggle[i]"
+                    color="secondary"
+                    inline
+                    mandatory
+                    @update:model-value="updateValue(controller, toggle[i])"
+                >
+                    <v-btn
+                        v-for="value in controller.values"
+                        :key="value"
+                        :value="value"
+                        size="small"
+                    >
+                        <v-icon :icon="Controller.getValueIcon(value)" />
+                        <v-tooltip
+                            activator="parent"
+                            location="top"
+                            :text="Controller.getValueTip(value)"
+                        />
+                    </v-btn>
+                </v-btn-toggle>
+            </div>
         </div>
     </v-sheet>
 </template>
 
-<script lang="ts" setup>
-import { Command } from "@/components/Utils/Command";
-import { ref, watch } from "vue";
+<script setup lang="ts">
+import { Controller } from "@/models/Controls/Controller";
+import { ref } from "vue";
 
-const props = defineProps<{ commands: Command<boolean>[] }>();
+const props = defineProps<{ controllers: Controller<any>[] }>();
 const emits = defineEmits<(e: "update", update: number) => void>();
 
-const toggle = ref<boolean[]>(props.commands.map((command) => !!command.state.value));
+const toggle = ref<string[]>(props.controllers.map((controller) => controller.state.value));
 
-watch(
-    () => toggle.value,
-    () => {
-        emits("update", 1);
-    },
-    { deep: true }
-);
+const updateValue = (controller: Controller<any>, value: string) => {
+    controller.set(value);
+    emits("update", 1);
+};
 </script>

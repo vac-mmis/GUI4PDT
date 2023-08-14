@@ -7,6 +7,7 @@
 import { Euler, Group } from "three";
 import type { PlotData } from "plotly.js-dist-min";
 
+import { Controller } from "@/models/Controls/Controller";
 import { Categorical } from "@/models/Distributions";
 import type { PDTObject } from "@/models/object.model";
 import { Material } from "@/models/Properties";
@@ -18,6 +19,9 @@ import { modelStore } from "@/store/model.store";
  * Class data type, following the backend API data format.
  */
 export type ClassJSON = string | { dist: Categorical };
+
+const ClassVisibilities = ["invisible", "prob"] as const;
+export type ClassVisibility = (typeof ClassVisibilities)[number];
 
 /**
  * Implements representation of object classes.
@@ -31,6 +35,11 @@ export class Class extends Group {
     private dist: Categorical[];
     /** Object scale through time. */
     private scaleFactor: (number | undefined)[];
+
+    /** `true` if location is shows as probabilistic */
+    private visibility: ClassVisibility;
+    /** Location controller module  */
+    private controller: Controller<ClassVisibility>;
 
     /**
      * Creates object class representation.
@@ -49,6 +58,7 @@ export class Class extends Group {
         super();
         this.parent = parent;
         this.userData.type = "Class";
+        this.visibility = "prob";
         this.dist = Categorical.uniformCatagories(classJSON);
         this.scaleFactor = scale;
 
@@ -58,14 +68,54 @@ export class Class extends Group {
             makeRepresentation(
                 "object",
                 models.find(type[0]),
-                material?.getMaterial(type[1]) || undefined,
+                material?.getMaterial(type[1]) ?? undefined,
                 undefined,
                 this.scaleFactor[0],
                 type[1]
             )
         );
         this.add(...object);
+
+        // init controller
+        this.controller = new Controller<ClassVisibility>(
+            "class",
+            ClassVisibilities,
+            "Class",
+            () => this.getVisibility(),
+            (visibility) => this.setVisibility(visibility)
+        );
     }
+
+    /**
+     * Get actual class visibility
+     *
+     * @returns Class visibility
+     */
+    private getVisibility = (): ClassVisibility => this.visibility;
+
+    /**
+     * Set class visibility
+     *
+     * @param visibility Desired class visibility
+     */
+    private setVisibility(visibility: ClassVisibility) {
+        this.visibility = visibility;
+        switch (visibility) {
+            case "invisible":
+                this.visible = false;
+                break;
+            default:
+                this.visible = true;
+                break;
+        }
+    }
+
+    /**
+     * Give class controller to toggle object visibility
+     *
+     * @returns Class controller
+     */
+    public getController = () => this.controller;
 
     /**
      * Update class representation at desired time.

@@ -11,7 +11,7 @@
                         <h1 class="text-subtitle-1">Elevation Map</h1>
                     </v-expansion-panel-title>
                     <v-expansion-panel-text>
-                        <ControlButtons :commands="elevationMapCommands" />
+                        <ControlButtons :controllers="elevationMapControllers" />
                     </v-expansion-panel-text>
                 </v-expansion-panel>
 
@@ -23,7 +23,7 @@
                     <v-expansion-panel-text>
                         <!-- Global object controls -->
                         <ControlButtons
-                            :commands="globalObjectsCommands"
+                            :controllers="globalObjectsControllers"
                             :key="updateGlobal"
                             @update="
                                 (u) => {
@@ -39,7 +39,7 @@
                             <template v-slot:default="{ item }">
                                 <ControlButtons
                                     class="pa-2"
-                                    :commands="objectCommands(item)"
+                                    :controllers="objectControllers(item)"
                                     :key="updateObjects"
                                     @update="
                                         (u) => {
@@ -47,7 +47,7 @@
                                         }
                                     "
                                 >
-                                    <h2 class="text-subtitle-2">Object {{ item.id }}</h2>
+                                    <h2 class="text-subtitle-2">Object {{ item.objID }}</h2>
                                 </ControlButtons>
                             </template>
                         </v-virtual-scroll>
@@ -63,7 +63,7 @@ import { ref, computed, type ComputedRef } from "vue";
 import { storeToRefs } from "pinia";
 
 import ControlButtons from "@/components/Plot/Controls/ControlButtons.vue";
-import { Command } from "@/components/Utils/Command";
+import { Controller } from "@/models/Controls/Controller";
 
 import type { PDTObject } from "@/models/object.model";
 import type { ElevationMap } from "@/models/elevation.model";
@@ -83,45 +83,15 @@ const toggleList = () => {
 const updateObjects = ref(0);
 const updateGlobal = ref(0);
 
-const objectCommands = (object: PDTObject): Command<boolean>[] => {
-    return [
-        new Command<boolean>(
-            "display",
-            "fas fa-object-group",
-            "Class",
-            object.getObjectVisibility,
-            (visibility: boolean) => object.setObjectVisibility(visibility)
-        ),
-        new Command<boolean>(
-            "loc",
-            "fas fa-crosshairs",
-            "Location",
-            object.getLocationVisibility,
-            (visibility: boolean) => object.setLocationVisibility(visibility)
-        ),
-    ];
+const objectControllers = (object: PDTObject): Controller<any>[] => {
+    return [object.getObject().getController(), object.getLocation().getController()];
 };
 
-const elevationMapCommands = elevationMap.value
-    ? [
-          new Command<boolean>(
-              "surface",
-              "fas fa-water",
-              "Surface",
-              elevationMap.value?.getMapVisibility,
-              (visibility: boolean) => elevationMap.value?.setMapVisibility(visibility)
-          ),
-          new Command<boolean>(
-              "variations",
-              "fas fa-chart-simple",
-              "Z-variations",
-              elevationMap.value?.getMapVariationVisibility,
-              (visibility: boolean) => elevationMap.value?.setMapVariationVisibility(visibility)
-          ),
-      ]
+const elevationMapControllers = elevationMap.value
+    ? [elevationMap.value?.getSurfaceController(), elevationMap.value?.getVariationsController()]
     : [];
 
-const globalObjectsCommands = Command.buildGlobalBooleanCommand(
-    objects.value.map((object) => objectCommands(object))
+const globalObjectsControllers = Controller.buildGlobalBooleanController(
+    objects.value.map((object) => objectControllers(object))
 );
 </script>

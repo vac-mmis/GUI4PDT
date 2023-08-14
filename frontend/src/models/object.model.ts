@@ -15,6 +15,8 @@ import {
     Material,
     type MaterialJSON,
 } from "@/models/Properties";
+import type { LocationVisibility } from "@/models/Properties/Location";
+import type { ClassVisibility } from "@/models/Properties/Class";
 
 /**
  * PDT object data type, following the backend API data format.
@@ -91,39 +93,7 @@ export class PDTObject extends Group {
      *
      * @returns Object location.
      */
-    public getLocation = () => this.children[1];
-
-    /**
-     * Returns `true` if this object is visible.
-     *
-     * @returns Object visibility.
-     */
-    public getObjectVisibility = () => this.children[0].visible;
-
-    /**
-     * Set object visibility.
-     *
-     * @param showObject New visibility.
-     */
-    public setObjectVisibility(showObject: boolean = true): void {
-        this.children[0].visible = showObject;
-    }
-
-    /**
-     * Returns `true` if object location is visible.
-     *
-     * @returns Location visibility
-     */
-    public getLocationVisibility = () => this.children[1].visible;
-
-    /**
-     * Set location visibility.
-     *
-     * @param showLocation New location visibility.
-     */
-    public setLocationVisibility(showLocation: boolean = false): void {
-        this.children[1].visible = showLocation;
-    }
+    public getLocation = (): Location => this.children[1] as Location;
 
     /**
      * Update object to the given time.
@@ -152,9 +122,9 @@ export class PDTObject extends Group {
  *
  * @returns Function which set given visibility to object list.
  */
-export function toggleObjects(showObject: boolean): (obj: PDTObject) => void {
+export function toggleObjects(showObject: ClassVisibility): (obj: PDTObject) => void {
     return (obj: PDTObject) => {
-        obj.setObjectVisibility(showObject);
+        obj.getObject().getController().set(showObject);
     };
 }
 
@@ -165,8 +135,8 @@ export function toggleObjects(showObject: boolean): (obj: PDTObject) => void {
  *
  * @returns Function which set given location visibility to object list.
  */
-export function toggleLocation(showLocation: boolean): (obj: PDTObject) => void {
-    return (obj: PDTObject) => obj.setLocationVisibility(showLocation);
+export function toggleLocation(showLocation: LocationVisibility): (obj: PDTObject) => void {
+    return (obj: PDTObject) => obj.getLocation().getController().set(showLocation);
 }
 
 /**

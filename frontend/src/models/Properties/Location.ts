@@ -6,6 +6,7 @@
 
 import { Group, Vector3 } from "three";
 
+import { Controller, type ControllerValues } from "@/models/Controls/Controller";
 import { type Distribution, makeDistribution } from "@/models/Distributions";
 import { type Representation, makeRepresentation } from "@/models/Representations";
 import type { PDTObject } from "@/models/object.model";
@@ -22,6 +23,9 @@ const distToRep = {
     "multivariate-normal": "scatter3D",
     "uniform-continuous": "box",
 } as Record<string, string>;
+
+const LocationVisibilities = ["invisible", "absolute", "prob"] as const;
+export type LocationVisibility = (typeof LocationVisibilities)[number];
 
 /**
  * Implements representation of object position in PDT.
@@ -42,6 +46,11 @@ export class Location extends Group {
     /** End position of current direction */
     private endPosition: Vector3;
 
+    /** `true` if location is shows as probabilistic */
+    private visibility: LocationVisibility;
+    /** Location controller module  */
+    private controller: Controller<LocationVisibility>;
+
     /**
      * Creates object location representation.
      *
@@ -53,6 +62,7 @@ export class Location extends Group {
         this.parent = parent;
         this.userData.type = "Location";
         this.visible = false;
+        this.visibility = "invisible";
         this.dist = [];
 
         // get distributions from JSON data
@@ -81,7 +91,47 @@ export class Location extends Group {
 
         // set initial position
         this.updateDirection(this.parent.getTimeIndex());
+
+        // init controller
+        this.controller = new Controller<LocationVisibility>(
+            "loc",
+            LocationVisibilities,
+            "Location",
+            () => this.getVisibility(),
+            (visibility) => this.setVisibility(visibility)
+        );
     }
+
+    /**
+     * Get actual location visibility
+     *
+     * @returns Location visibility
+     */
+    private getVisibility = (): LocationVisibility => this.visibility;
+
+    /**
+     * Set location visibility
+     *
+     * @param visibility Desired location visibility
+     */
+    private setVisibility(visibility: LocationVisibility) {
+        this.visibility = visibility;
+        switch (visibility) {
+            case "invisible":
+                this.visible = false;
+                break;
+            default:
+                this.visible = true;
+                break;
+        }
+    }
+
+    /**
+     * Give location controller to toggle its visibility
+     *
+     * @returns Location controller
+     */
+    public getController = (): Controller<LocationVisibility> => this.controller;
 
     /**
      * Give a possible object position in PDT at desired time.
@@ -96,7 +146,9 @@ export class Location extends Group {
         const dist = this.dist[index];
         if ("type" in dist) {
             (this.children[0] as Representation).update(dist.representation(true));
-            return new Vector3(...dist.random(relative));
+            return new Vector3(
+                ...(this.visibility === "prob" ? dist.random(relative) : dist.getMean())
+            );
         } else {
             return new Vector3(...dist);
         }
