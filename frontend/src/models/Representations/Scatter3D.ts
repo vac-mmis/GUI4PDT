@@ -1,5 +1,5 @@
 /**
- * Implementation of box representation. Can be use to represent {@link UniformContinuous} distribution.
+ * Implementation of 3D scatter representation. Can be use to represent {@link Multivariate} distribution.
  *
  * @module representation.scatter3D
  */

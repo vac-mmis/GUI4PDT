@@ -3,7 +3,7 @@
  *
  * @module material.store
  */
-import type { Group } from "three";
+import type { MeshStandardMaterial } from "three";
 import { loadMaterial } from "@/World/systems/loader";
 
 import { ref, computed, toRaw } from "vue";
@@ -26,7 +26,7 @@ export type MaterialFile = {
  * Material store handle by Pinia.
  */
 export const materialStore: any = defineStore("materials", () => {
-    const _materials = ref([] as Group[]);
+    const _materials = ref([] as MeshStandardMaterial[]);
 
     /** Number of fetched material.  */
     const length = computed(() => _materials.value.length);
@@ -53,7 +53,7 @@ export const materialStore: any = defineStore("materials", () => {
      *
      * @returns Desired material.
      */
-    function find(name: string): Group | undefined {
+    function find(name: string): MeshStandardMaterial | undefined {
         return toRaw(_materials.value).find((material) => material.name === name);
     }
 

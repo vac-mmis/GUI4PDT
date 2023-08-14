@@ -1,14 +1,12 @@
 /**
- * Elevation map object, represented as {@link Surface} with variations
+ * PDT map representation, represented as {@link Surface} with variations.
  *
- * @module elevation
+ * @module map.model
  */
+import { Group, Color, MeshStandardMaterial } from "three";
 
-import { Controller } from "./Controls/Controller";
-import { BoxGeometry, Group, InstancedMesh, Matrix4, Color, MeshStandardMaterial } from "three";
+import { Controller } from "@/models/Controls/Controller";
 import { makeRepresentation, type Representation } from "@/models/Representations";
-
-import { materialStore } from "@/store/material.store";
 
 const MapVisibilities = ["invisible", "absolute"] as const;
 export type MapVisibility = (typeof MapVisibilities)[number];
@@ -17,61 +15,15 @@ const MapVariationsVisibilities = ["invisible", "prob"] as const;
 export type MapVariationsVisibility = (typeof MapVariationsVisibilities)[number];
 
 /**
- * Create a surface representation from a coordinates grid with water surface.
- *
- * @param mapData Grid dataset with position and z-variations : `[[x0,y0,z0,dz0], [x1,y1,z1,dz1],...]`.
- *
- * @returns Desired surface mesh.
+ * Implements map from grid with surface and variations
  */
-const createSurface = (mapData: [number, number, number, number][]) => {
-    const { find } = materialStore();
-    const waterMaterial =
-        find("water") ??
-        new MeshStandardMaterial({
-            color: new Color("blue"),
-        });
-    waterMaterial.transparent = true;
-    waterMaterial.opacity = 0.5;
-    return makeRepresentation("surface", mapData, waterMaterial);
-};
-
-/**
- * Create a grid of variation bars for map representation.
- *
- * @param mapData Grid dataset with position and z-variations : `[[x0,y0,z0,dz0], [x1,y1,z1,dz1],...]`.
- *
- * @returns Desired variation plots as grid of vertical bars.
- */
-const createVariations = (mapData: [number, number, number, number][]) => {
-    const mapVariations = new InstancedMesh(
-        new BoxGeometry(0.05, 0.05, 1),
-        new MeshStandardMaterial({
-            color: new Color("black"),
-            transparent: true,
-            opacity: 0.7,
-        }),
-        mapData.length
-    );
-    const matrix = new Matrix4();
-    mapData.forEach((coord, i) => {
-        matrix.makeScale(1, 1, coord[3]);
-        matrix.setPosition(...(coord.splice(0, 3) as [number, number, number]));
-        mapVariations.setMatrixAt(i, matrix);
-    });
-    mapVariations.visible = false;
-    return mapVariations;
-};
-
-/**
- * Implement elevation map object from grid with surface and variations
- */
-export class ElevationMap extends Group {
+export class Map extends Group {
     /** Map dataset with position and z-variations : `[[x0,y0,z0,dz0], [x1,y1,z1,dz1],...]`. */
     private mapData: [number, number, number, number][];
     /** Elevation surface as {@link Surface} representation. */
     private mapSurface: Representation;
     /** Representation of variations as vertical bars */
-    private mapVariations;
+    private mapVariations: Representation;
 
     /** Surface map controller module  */
     private surfaceController: Controller<MapVisibility>;
@@ -79,20 +31,27 @@ export class ElevationMap extends Group {
     private variationsController: Controller<MapVariationsVisibility>;
 
     /**
-     * Creates an elevation map from map grid.
+     * Creates a map from data grid.
      *
      * @param mapData Grid dataset with position and z-variations : `[[x0,y0,z0,dz0], [x1,y1,z1,dz1],...]`.
      */
-    constructor(elevationMap: [number, number, number, number][]) {
+    constructor(
+        mapData: [number, number, number, number][],
+        material: MeshStandardMaterial = new MeshStandardMaterial({
+            color: new Color("blue"),
+            transparent: true,
+            opacity: 0.5,
+        })
+    ) {
         super();
-        this.mapData = elevationMap;
+        this.mapData = mapData;
 
         // Create map surface
-        this.mapSurface = createSurface(this.mapData);
+        this.mapSurface = makeRepresentation("surface", this.mapData, material);
         this.add(this.mapSurface);
 
         // create map variations
-        this.mapVariations = createVariations(this.mapData);
+        this.mapVariations = makeRepresentation("z-var", this.mapData);
         this.add(this.mapVariations);
 
         // init controllers

@@ -4,10 +4,11 @@
  * @module PDT.model
  */
 
-import { Group, Object3D, type Intersection } from "three";
+import { Group, Object3D, type Intersection, MeshStandardMaterial } from "three";
 import { PDTObject, type ObjectJSON, tickObjects } from "@/models/object.model";
-import { ElevationMap } from "@/models/elevation.model";
+import { Map } from "@/models/map.model";
 
+import { materialStore } from "@/store/material.store";
 /**
  * PDT data type, following the backend API data format.
  */
@@ -28,7 +29,7 @@ export class PDT extends Group {
     /** Objects inside PDT. */
     private objects: PDTObject[];
     /** Elevation map of the sea in PDT. */
-    private elevationMap?: ElevationMap;
+    private elevationMap?: Map;
 
     /**
      * Creates a PDT object from JSON data.
@@ -47,7 +48,14 @@ export class PDT extends Group {
 
         // Add elevation map as new children
         if (pdt.elevationMap) {
-            this.elevationMap = new ElevationMap(pdt.elevationMap);
+            const { find }: { find: (name: string) => MeshStandardMaterial | undefined } =
+                materialStore();
+            const mapMaterial = find("water");
+            if (mapMaterial) {
+                mapMaterial.opacity = 0.7;
+                mapMaterial.transparent = true;
+            }
+            this.elevationMap = new Map(pdt.elevationMap, mapMaterial);
             this.add(this.elevationMap);
         }
     }
@@ -74,7 +82,7 @@ export class PDT extends Group {
     /**
      * @returns PDT Elevation map.
      */
-    public getElevationMap = (): ElevationMap | undefined => this.elevationMap;
+    public getElevationMap = (): Map | undefined => this.elevationMap;
 
     /**
      * @returns Number of timestamps.

@@ -6,7 +6,7 @@
 
 import { Group, Vector3 } from "three";
 
-import { Controller, type ControllerValues } from "@/models/Controls/Controller";
+import { Controller } from "@/models/Controls/Controller";
 import { type Distribution, makeDistribution } from "@/models/Distributions";
 import { type Representation, makeRepresentation } from "@/models/Representations";
 import type { PDTObject } from "@/models/object.model";

@@ -17,11 +17,12 @@ import { ObjectRepresentation } from "./Object";
 import { Box } from "./Box";
 import { Scatter3D } from "./Scatter3D";
 import { Surface } from "./Surface";
+import { ZVariations } from "./ZVar";
 
 /**
  * List of available representation classes. New ones must be added here.
  */
-const repClassList = [Scatter3D, Box, ObjectRepresentation, Surface] as const;
+const repClassList = [Scatter3D, Box, ObjectRepresentation, Surface, ZVariations] as const;
 
 /**
  * Dictionary which associates representation names to their constructors
@@ -76,3 +77,4 @@ export { Box } from "./Box";
 export { ObjectRepresentation } from "./Object";
 export { Scatter3D } from "./Scatter3D";
 export { Surface } from "./Surface";
+export { ZVariations } from "./ZVar";

@@ -34,7 +34,7 @@ export class ObjectRepresentation extends Group implements Representation {
         opacity: number = 1
     ) {
         super();
-        this.name = model?.name || "default";
+        this.name = model?.name ?? "default";
         this.currentScale = scale;
         this.position.set(...position);
 

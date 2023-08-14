@@ -1,7 +1,7 @@
 /**
- * Implementation of box representation. Can be use to represent {@link UniformContinuous} distribution.
+ * Implementation of surface representation.
  *
- * @module representation.scatter3D
+ * @module representation.surface
  */
 
 import {
@@ -16,7 +16,7 @@ import type { Representation } from "@/models/Representations";
 import { transpose } from "mathjs";
 
 /**
- * Implementation of scatter3D representation.
+ * Implementation of surface representation.
  *
  */
 export class Surface extends Mesh implements Representation {
@@ -26,7 +26,7 @@ export class Surface extends Mesh implements Representation {
     /**
      * Implementation of surface representation.
      *
-     * @param dataPoints Points with probabilities to plot : `[x1,y1,z1,p1, ...]`.
+     * @param dataPoints Points with z variations to plot : `[x1,y1,z1,dz1, ...]`.
      * @param material Desired surface material (default : blue semi-transparent).
      */
     constructor(
@@ -49,10 +49,8 @@ export class Surface extends Mesh implements Representation {
             rows++;
         }
         const cols = data.length / rows;
-        const xLength = Math.max(...transposed[0]) - Math.min(...transposed[0]);
-        const yLength = Math.max(...transposed[1]) - Math.min(...transposed[1]);
 
-        const geometry = new PlaneGeometry(xLength, yLength, rows - 1, cols - 1);
+        const geometry = new PlaneGeometry(undefined, undefined, rows - 1, cols - 1);
 
         // setup double-sided material
         material.side = DoubleSide;
@@ -67,10 +65,23 @@ export class Surface extends Mesh implements Representation {
     /**
      * Update surface grid;
      *
-     * @param dataPoints New points with probabilities : `[x1,y1,z1,p1, ...]`.
+     * @param dataPoints New points with z variations : `[[x1,y1,z1,dz1], ...]`.
      */
     public update(data: [number, number, number, number][]): void {
+        // Sort data from -X to X and then from Y to -Y coordinates
+        data.sort((pointA, pointB) => {
+            const [xA, yA] = [pointA[0], pointA[1]];
+            const [xB, yB] = [pointB[0], pointB[1]];
+
+            if (xA === xB) {
+                return yA >= yB ? 1 : -1; // Sort by Y if X is the same
+            } else {
+                return xA >= xB ? 1 : -1; // Sort by X
+            }
+        });
+        // Get vertices from data
         const vertices = data.flat().filter((_, i) => i % 4 !== 3);
+        // Upgate geometry coordinates
         this.geometry.setAttribute("position", new Float32BufferAttribute(vertices, 3));
     }
 }
