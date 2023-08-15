@@ -3,7 +3,7 @@
  *
  * @module material.store
  */
-import type { Group } from "three";
+import { BoxGeometry, Mesh, MeshStandardMaterial, Group } from "three";
 import { loadModel } from "@/World/systems/loader";
 
 import { ref, computed, toRaw } from "vue";
@@ -23,9 +23,28 @@ export type ModelFile = {
  */
 export const modelStore: any = defineStore("models", () => {
     const _models = ref([] as Group[]);
+    /** Default model */
+    const _default = computed(() => {
+        const group = new Group();
+        group.add(new Mesh(new BoxGeometry(1, 1, 1), new MeshStandardMaterial()));
+        return group;
+    });
 
     /** Number of fetched material.  */
     const length = computed(() => _models.value.length);
+
+    /**
+     * Gives a copy of default model.
+     *
+     * @param name Desired default model name.
+     *
+     * @return A default model.
+     */
+    function getDefault(name?: string): Group {
+        const defaultModel = toRaw(_default.value.clone());
+        defaultModel.name = name ?? "default";
+        return defaultModel;
+    }
 
     /**
      * Fetch, load and store models from backend API.
@@ -45,10 +64,10 @@ export const modelStore: any = defineStore("models", () => {
      *
      * @param name Desired model name.
      *
-     * @returns Desired model.
+     * @returns Desired model or default is not exist.
      */
-    function find(name: string): Group | undefined {
-        return toRaw(_models.value).find((model) => model.name === name);
+    function find(name: string): Group {
+        return toRaw(_models.value).find((model) => model.name === name) ?? getDefault(name);
     }
 
     return { length, fetch, find };

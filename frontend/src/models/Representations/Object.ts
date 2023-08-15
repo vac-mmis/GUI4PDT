@@ -4,7 +4,7 @@
  * @module representation.object
  */
 
-import { BoxGeometry, Group, Mesh, MeshStandardMaterial } from "three";
+import { Group, Mesh, MeshStandardMaterial } from "three";
 import type { Representation } from "@/models/Representations";
 
 /**
@@ -27,16 +27,14 @@ export class ObjectRepresentation extends Group implements Representation {
      * @param opacity Object opacity (default : `1`). Only used if `material` is undefined
      */
     constructor(
-        model?: Group,
+        model: Group,
         material: MeshStandardMaterial = new MeshStandardMaterial(),
-        position: [number, number, number] = [0, 0, 0],
         scale: number = 1,
         opacity: number = 1
     ) {
         super();
         this.name = model?.name ?? "default";
         this.currentScale = scale;
-        this.position.set(...position);
 
         // Setup opacity on material is required
         if (opacity < 1) {
@@ -44,27 +42,21 @@ export class ObjectRepresentation extends Group implements Representation {
             material.opacity = opacity;
         }
 
-        if (!model) {
-            // If no model is provided, default mesh is created
-            const geometry = new BoxGeometry(scale, scale, scale);
-            this.add(new Mesh(geometry, material));
-        } else {
-            // Else, traverse through all children of the model and enable transparency for each material
-            model.traverse((child) => {
-                if (child instanceof Mesh) {
-                    const newMesh = new Mesh(child.geometry, material.clone());
-                    if (opacity < 1) {
-                        // Enable alpha sorting
-                        newMesh.renderOrder = 1; // Set a higher render order for transparency
-                        newMesh.material.depthTest = true; // Enable depth testing
-                        newMesh.material.depthWrite = false; // Disable writing to the depth buffer
-                    }
-                    this.add(newMesh);
+        // Else, traverse through all children of the model and enable transparency for each material
+        model.traverse((child) => {
+            if (child instanceof Mesh) {
+                const newMesh = new Mesh(child.geometry, material.clone());
+                if (opacity < 1) {
+                    // Enable alpha sorting
+                    newMesh.renderOrder = 1; // Set a higher render order for transparency
+                    newMesh.material.depthTest = true; // Enable depth testing
+                    newMesh.material.depthWrite = false; // Disable writing to the depth buffer
                 }
-            });
-            // Setup scale only if model provided
-            this.scale.set(scale, scale, scale);
-        }
+                this.add(newMesh);
+            }
+        });
+        // Setup scale only if model provided
+        this.scale.set(scale, scale, scale);
     }
 
     /**
@@ -74,17 +66,18 @@ export class ObjectRepresentation extends Group implements Representation {
      * @param scale New scale.
      */
     public update(opacity?: number, scale: number = 1): void {
-        // Traverse through all children of the model and set transparency for each material
-        if (opacity) {
-            this.traverse((child) => {
-                if (child instanceof Mesh) {
-                    if (opacity < 1) {
-                        // Enable alpha sorting
-                        child.material.transparent = true;
+        if (opacity !== undefined && opacity !== null) {
+            this.visible = opacity > 0;
+            if (this.visible) {
+                // Traverse through all children of the model and set transparency for each material
+
+                this.traverse((child) => {
+                    if (child instanceof Mesh) {
+                        child.material.transparent = opacity < 1;
                         child.material.opacity = opacity;
                     }
-                }
-            });
+                });
+            }
         }
         // Update scale
         if (scale !== this.currentScale) {

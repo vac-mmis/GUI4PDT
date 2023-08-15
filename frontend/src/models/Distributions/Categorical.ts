@@ -26,9 +26,9 @@ export class Categorical implements Distribution {
      */
     constructor(dist?: Categorical | string) {
         if (typeof dist === "string") {
-            this.mass = { [dist]: 100 };
+            this.mass = { [dist]: 1 };
         } else {
-            this.mass = dist?.mass || {};
+            this.mass = dist?.mass ?? {};
         }
     }
 

@@ -20,7 +20,7 @@ import { modelStore } from "@/store/model.store";
  */
 export type ClassJSON = string | { dist: Categorical };
 
-const ClassVisibilities = ["invisible", "prob"] as const;
+const ClassVisibilities = ["invisible", "absolute", "prob"] as const;
 export type ClassVisibility = (typeof ClassVisibilities)[number];
 
 /**
@@ -37,7 +37,7 @@ export class Class extends Group {
     private scaleFactor: (number | undefined)[];
 
     /** `true` if location is shows as probabilistic */
-    private visibility: ClassVisibility;
+    private visibility: ClassVisibility = "prob";
     /** Location controller module  */
     private controller: Controller<ClassVisibility>;
 
@@ -58,18 +58,15 @@ export class Class extends Group {
         super();
         this.parent = parent;
         this.userData.type = "Class";
-        this.visibility = "prob";
         this.dist = Categorical.uniformCatagories(classJSON);
         this.scaleFactor = scale;
 
         // Create object representation
-        const models = modelStore();
         const object = Object.entries(this.dist[0].getMass()).map((type: [string, number]) =>
             makeRepresentation(
                 "object",
-                models.find(type[0]),
+                modelStore().find(type[0]),
                 material?.getMaterial(type[1]) ?? undefined,
-                undefined,
                 this.scaleFactor[0],
                 type[1]
             )
@@ -104,9 +101,11 @@ export class Class extends Group {
             case "invisible":
                 this.visible = false;
                 break;
-            default:
+            default: {
                 this.visible = true;
+                this.updateClass(this.parent.getTimeIndex());
                 break;
+            }
         }
     }
 
@@ -115,23 +114,40 @@ export class Class extends Group {
      *
      * @returns Class controller
      */
-    public getController = () => this.controller;
+    public getController = (): Controller<ClassVisibility> => this.controller;
+
+    /**
+     * Update object class at given index.
+     *
+     * @param index Time index to update class.
+     */
+    private updateClass(index: number): void {
+        const visibility = this.visibility;
+        const dist = this.dist[index];
+        function getOpacity(type: ObjectRepresentation) {
+            if (visibility === "prob") {
+                return dist.getMass()[type.name];
+            } else {
+                const absolute = Object.entries(dist.getMass()).sort((a, b) => b[1] - a[1])[0][0];
+                return type.name === absolute ? 1 : 0;
+            }
+        }
+
+        (this.children as ObjectRepresentation[]).forEach((type) => {
+            type.update(getOpacity(type), this.scaleFactor[index]);
+        });
+    }
 
     /**
      * Update class representation at desired time.
      *
      * @param time Time to update class.
      */
-    public update(time: number) {
-        const index = Math.trunc(time);
+    public update(time?: number): void {
+        const index = time ? Math.trunc(time) : this.parent.getTimeIndex();
         if (Math.abs(index - this.parent.getTimeIndex()) >= 1) {
             // update class
-            this.children.forEach((type) => {
-                (type as ObjectRepresentation).update(
-                    this.dist[index].getMass()[type.name],
-                    this.scaleFactor[index]
-                );
-            });
+            this.updateClass(index);
         }
     }
 
@@ -140,7 +156,7 @@ export class Class extends Group {
      *
      * @param e Euler vector representing angles to apply for rotation.
      */
-    public setRotation(e: Euler) {
+    public setRotation(e: Euler): void {
         this.children.forEach((type) => {
             (type as ObjectRepresentation).setRotationFromEuler(e);
         });
