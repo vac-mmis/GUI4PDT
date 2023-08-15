@@ -15,8 +15,7 @@ import {
     Material,
     type MaterialJSON,
 } from "@/models/Properties";
-import type { LocationVisibility } from "@/models/Properties/Location";
-import type { ClassVisibility } from "@/models/Properties/Class";
+import type { PDT } from "./pdt.model";
 
 /**
  * PDT object data type, following the backend API data format.
@@ -35,27 +34,25 @@ export type ObjectJSON = {
  * Implements representation of objects in PDT, including class, material, location, rotation etc.
  */
 export class PDTObject extends Group {
+    /** Object which has this location. */
+    declare parent: PDT;
     /** Object ID */
-    objID: number;
-    /** Current time index to show. */
-    private time: number;
-    /** Number of timestamps of the object.  */
-    private timeLength: number;
+    readonly objID: number;
+
     /** Object class. @remark `this.class = this.children[0]`. */
-    class: Class;
+    readonly class: Class;
     /** Object material. Used to create class representation. */
-    material: Material;
+    readonly material: Material;
 
     /**
      * Creates a PDT object from JSON data.
      *
      * @param objJSON Object data, from backend API.
      */
-    constructor(objJSON: ObjectJSON) {
+    constructor(parent: PDT, objJSON: ObjectJSON) {
         super();
+        this.parent = parent;
         this.objID = objJSON.id;
-        this.time = 0;
-        this.timeLength = objJSON.class.length;
         this.userData.type = "Object";
 
         // get material from JSON data
@@ -79,14 +76,7 @@ export class PDTObject extends Group {
      *
      * @returns Object time index.
      */
-    public getTimeIndex = (): number => Math.trunc(this.time);
-
-    /**
-     * Returns object class.
-     *
-     * @returns Object classes.
-     */
-    public getObject = (): Class => this.children[0] as Class;
+    public getTimeIndex = (): number => Math.trunc(this.parent.getTimeIndex());
 
     /**
      * Returns object location.
@@ -100,52 +90,15 @@ export class PDTObject extends Group {
      *
      * @param time Time when update object.
      */
-    public tick(time: number): void {
-        time %= this.timeLength;
+    public tick(time?: number): void {
+        const PDTTimeIndex = this.parent.getTimeIndex();
         // update class representation
-        this.class.update(time);
+        this.class.update(time ?? PDTTimeIndex);
 
         // update object position
         (this.children[1] as Location).update(time);
 
         // update object rotation
-        (this.children[2] as Rotation).update(time);
-
-        this.time = time;
+        (this.children[2] as Rotation).update(time ?? PDTTimeIndex);
     }
-}
-
-/**
- * Give function to set visibility of an object list.
- *
- * @param showObject Desired visibility to set.
- *
- * @returns Function which set given visibility to object list.
- */
-export function toggleObjects(showObject: ClassVisibility): (obj: PDTObject) => void {
-    return (obj: PDTObject) => {
-        obj.getObject().getController().set(showObject);
-    };
-}
-
-/**
- * Give function to set location visibility of an object list.
- *
- * @param showObject Desired location visibility to set.
- *
- * @returns Function which set given location visibility to object list.
- */
-export function toggleLocation(showLocation: LocationVisibility): (obj: PDTObject) => void {
-    return (obj: PDTObject) => obj.getLocation().getController().set(showLocation);
-}
-
-/**
- * Give function to tick objects in object list.
- *
- * @param time Desired time to update objects.
- *
- * @returns Function which updates objects in object list at given time.
- */
-export function tickObjects(time: number): (obj: PDTObject) => void {
-    return (obj: PDTObject) => obj.tick(time);
 }

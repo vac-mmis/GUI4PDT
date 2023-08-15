@@ -50,7 +50,7 @@ export class Rotation extends Group {
         this.dist = [];
 
         // get distributions from JSON data
-        const object = this.parent.getObject();
+        const object = this.parent.class;
         rotJSON.forEach((timestamp) => {
             if (!("dist" in timestamp)) {
                 this.dist.push(timestamp);
@@ -120,7 +120,7 @@ export class Rotation extends Group {
         }
 
         // update object rotation
-        const object = this.parent.getObject();
+        const object = this.parent.class;
 
         const delta = time - index;
         const ratioVector = this.rotationDelta.clone().multiplyScalar(delta);

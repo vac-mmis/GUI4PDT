@@ -48,8 +48,15 @@ export class Timer {
         this.clock = new Clock(false);
         this.timerCallback = timerCallback ?? ((): void => {});
 
-        // Set idle animation loop
-        this.renderer.setAnimationLoop(() => this.renderer.render(this.scene, this.camera));
+        // Set animation loop
+        this.renderer.setAnimationLoop(() => {
+            // tick scene elements
+            this.tick();
+            // return time value to callback
+            this.timerCallback(this.time);
+            // render a frame
+            this.renderer.render(this.scene, this.camera);
+        });
     }
 
     /**
@@ -63,7 +70,7 @@ export class Timer {
      */
     public setTime(t: number): void {
         this.time = t;
-        this.tick();
+        this.tick(true);
     }
 
     /**
@@ -76,34 +83,30 @@ export class Timer {
     }
 
     /**
-     * Start world animation.
+     * Start world timer.
      */
     public start(): void {
         this.clock.start();
-        this.renderer.setAnimationLoop(() => {
-            // tick scene elements
-            this.tick();
-            // return time value to callback
-            this.timerCallback(this.time);
-            // render a frame
-            this.renderer.render(this.scene, this.camera);
-        });
     }
 
-    /** Stop world animation. */
+    /**
+     * Stop world timer.
+     */
     public stop(): void {
         this.clock.stop();
-        // Set idle animation loop
-        this.renderer.setAnimationLoop(() => this.renderer.render(this.scene, this.camera));
     }
 
-    /** Tick world and its elements to current time + clock delta */
-    private tick(): void {
+    /**
+     * Tick world and its elements to current time + clock delta.
+     *
+     * @param update Force object tick with actual timestamp.
+     */
+    private tick(update: boolean = false): void {
         const delta = this.clock.getDelta();
         this.time += delta;
         this.scene.children.forEach((child: any) => {
             if (child.tick && typeof child.tick === "function") {
-                child.tick(this.time);
+                child.tick(this.clock.running || update ? this.time : undefined);
             }
         });
     }

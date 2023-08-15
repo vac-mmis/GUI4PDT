@@ -37,17 +37,19 @@ export class Location extends Group {
     declare parent: PDTObject;
 
     /** Location distribution through time. */
-    private dist: (Distribution | [number, number, number])[];
+    private dist: (Distribution | [number, number, number])[] = [];
 
     /** Current direction of object*/
-    private direction!: Vector3;
+    private direction: Vector3 = new Vector3();
     /** Begin position of current direction */
-    private beginPosition: Vector3;
+    private beginPosition: Vector3 = new Vector3();
     /** End position of current direction */
-    private endPosition: Vector3;
+    private endPosition: Vector3 = new Vector3();
+    /** Proportion of direction to follow */
+    private delta = 1;
 
     /** `true` if location is shows as probabilistic */
-    private visibility: LocationVisibility;
+    private visibility: LocationVisibility = "invisible";
     /** Location controller module  */
     private controller: Controller<LocationVisibility>;
 
@@ -62,8 +64,6 @@ export class Location extends Group {
         this.parent = parent;
         this.userData.type = "Location";
         this.visible = false;
-        this.visibility = "invisible";
-        this.dist = [];
 
         // get distributions from JSON data
         locJSON.forEach((timestamp, i) => {
@@ -84,8 +84,6 @@ export class Location extends Group {
         });
 
         // initialize position
-        this.beginPosition = new Vector3();
-        this.endPosition = new Vector3();
         this.getWorldPosition(this.beginPosition);
         this.getWorldPosition(this.endPosition);
 
@@ -145,7 +143,6 @@ export class Location extends Group {
         const index = t < this.dist.length ? Math.trunc(t) : this.dist.length - 1;
         const dist = this.dist[index];
         if ("type" in dist) {
-            (this.children[0] as Representation).update(dist.representation(true));
             return new Vector3(
                 ...(this.visibility === "prob" ? dist.random(relative) : dist.getMean())
             );
@@ -162,8 +159,20 @@ export class Location extends Group {
     private updateDirection(time: number): void {
         this.beginPosition = this.endPosition;
         this.endPosition = this.getPosition((time + 1) % this.dist.length);
-
         this.direction = this.endPosition.clone().sub(this.beginPosition);
+    }
+
+    private tick(delta: number): void {
+        // update object position
+        const object = this.parent.class;
+        const actualPosition = new Vector3();
+        object.getWorldPosition(actualPosition);
+
+        const ratioVector = this.direction.clone().multiplyScalar(delta);
+        const axis = this.beginPosition.clone().sub(actualPosition).add(ratioVector);
+        const norm = axis.length();
+
+        object.translateOnAxis(axis.normalize(), norm);
     }
 
     /**
@@ -171,24 +180,28 @@ export class Location extends Group {
      *
      * @param time Time to update position.
      */
-    public update(time: number): void {
-        const index = Math.trunc(time);
-
-        // set new direction if needed
-        if (Math.abs(index - Math.trunc(this.parent.getTimeIndex())) >= 1) {
-            this.updateDirection(time);
+    public update(time?: number): void {
+        if (time) {
+            const index = Math.trunc(time);
+            // set new direction if needed
+            if (Math.abs(index - Math.trunc(this.parent.getTimeIndex())) >= 1) {
+                this.updateDirection(time);
+                const dist = this.dist[index];
+                if ("type" in dist) {
+                    (this.children[0] as Representation).update(dist.representation(true));
+                }
+            }
+            this.delta = time - index;
+        } else {
+            time = this.parent.getTimeIndex();
+            this.delta += 0.01;
+            // set new direction on delta reset
+            if (this.delta > 1) {
+                this.delta -= Math.trunc(this.delta);
+                this.updateDirection(time);
+            }
         }
 
-        // update object position
-        const object = this.parent.getObject();
-        const actualPosition = new Vector3();
-        object.getWorldPosition(actualPosition);
-
-        const delta = time - index;
-        const ratioVector = this.direction.clone().multiplyScalar(delta);
-        const axis = this.beginPosition.clone().sub(actualPosition).add(ratioVector);
-        const norm = axis.length();
-
-        object.translateOnAxis(axis.normalize(), norm);
+        this.tick(this.delta);
     }
 }

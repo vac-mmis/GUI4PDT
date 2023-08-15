@@ -66,13 +66,11 @@ import ControlButtons from "@/components/Plot/Controls/ControlButtons.vue";
 import { Controller } from "@/models/Controls/Controller";
 
 import type { PDTObject } from "@/models/object.model";
-import type { ElevationMap } from "@/models/elevation.model";
+import type { Map } from "@/models/map.model";
 import PDTStore from "@/store/pdt.store";
 
 const { getPDT } = storeToRefs(PDTStore());
-const elevationMap: ComputedRef<ElevationMap | undefined> = computed(() =>
-    getPDT.value.getElevationMap()
-);
+const elevationMap: ComputedRef<Map | undefined> = computed(() => getPDT.value.getElevationMap());
 const objects: ComputedRef<PDTObject[]> = computed(() => getPDT.value.getObjects());
 
 const openList = ref(false);
@@ -84,7 +82,7 @@ const updateObjects = ref(0);
 const updateGlobal = ref(0);
 
 const objectControllers = (object: PDTObject): Controller<any>[] => {
-    return [object.getObject().getController(), object.getLocation().getController()];
+    return [object.class.getController(), object.getLocation().getController()];
 };
 
 const elevationMapControllers = elevationMap.value

@@ -5,7 +5,7 @@
  */
 
 import { Group, Object3D, type Intersection, MeshStandardMaterial } from "three";
-import { PDTObject, type ObjectJSON, tickObjects } from "@/models/object.model";
+import { PDTObject, type ObjectJSON } from "@/models/object.model";
 import { Map } from "@/models/map.model";
 
 import { materialStore } from "@/store/material.store";
@@ -24,10 +24,14 @@ export interface PDTJSON {
 export class PDT extends Group {
     /** PDT name */
     name: string;
+
+    /** Current time index to show. */
+    private time: number = 0;
     /** Number of timestamps of the object.  */
     private timeLength: number;
+
     /** Objects inside PDT. */
-    private objects: PDTObject[];
+    readonly objects: PDTObject[];
     /** Elevation map of the sea in PDT. */
     private elevationMap?: Map;
 
@@ -43,7 +47,7 @@ export class PDT extends Group {
         this.timeLength = pdt.objects[0].location.length;
 
         // Add objects as new children group
-        this.objects = pdt.objects.map((obj: ObjectJSON) => new PDTObject(obj));
+        this.objects = pdt.objects.map((obj: ObjectJSON) => new PDTObject(this, obj));
         this.add(new Group().add(...this.objects));
 
         // Add elevation map as new children
@@ -75,6 +79,13 @@ export class PDT extends Group {
     public getClickables = (): Object3D[] => this.objects;
 
     /**
+     * Returns PDT current time index.
+     *
+     * @returns PDT time index.
+     */
+    public getTimeIndex = (): number => Math.trunc(this.time);
+
+    /**
      * @returns PDT objects.
      */
     public getObjects = (): PDTObject[] => this.objects;
@@ -90,11 +101,11 @@ export class PDT extends Group {
     public getTimeLength = (): number => this.timeLength;
 
     /**
-     * UApply given function on all PDT objects
+     * Apply given function on all PDT objects
      *
      * @param fun Function to apply on all objects in PDT.
      */
-    public updateObjects = (fun: Function): void => {
+    private updateObjects = (fun: Function): void => {
         this.objects.forEach((obj) => fun(obj));
     };
 
@@ -135,7 +146,13 @@ export class PDT extends Group {
      *
      * @param time Desired timestamp.
      */
-    public tick = (time: number) => {
-        this.updateObjects(tickObjects(time));
+    public tick = (time?: number) => {
+        if (time) {
+            time %= this.timeLength;
+        }
+        this.updateObjects((obj: PDTObject) => obj.tick(time));
+        if (time) {
+            this.time = time;
+        }
     };
 }
