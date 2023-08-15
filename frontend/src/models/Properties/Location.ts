@@ -162,13 +162,16 @@ export class Location extends Group {
         this.direction = this.endPosition.clone().sub(this.beginPosition);
     }
 
-    private tick(delta: number): void {
+    /**
+     * Changes object position with a `delta` position.
+     */
+    private tick(): void {
         // update object position
         const object = this.parent.class;
         const actualPosition = new Vector3();
         object.getWorldPosition(actualPosition);
 
-        const ratioVector = this.direction.clone().multiplyScalar(delta);
+        const ratioVector = this.direction.clone().multiplyScalar(this.delta);
         const axis = this.beginPosition.clone().sub(actualPosition).add(ratioVector);
         const norm = axis.length();
 
@@ -202,6 +205,6 @@ export class Location extends Group {
             }
         }
 
-        this.tick(this.delta);
+        this.tick();
     }
 }

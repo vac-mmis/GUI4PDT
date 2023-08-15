@@ -8,6 +8,7 @@ import { ref } from "vue";
 
 const NameIcon = {
     loc: "fas fa-crosshairs",
+    rot: "fas fa-arrows-rotate",
     class: "fas fa-object-group",
     surface: "fas fa-water",
     "z-var": "fas fa-chart-simple",

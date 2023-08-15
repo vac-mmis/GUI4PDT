@@ -147,13 +147,6 @@ export class Class extends Group {
     }
 
     /**
-     * Get Euler rotation vector of the object class.
-     *
-     * @returns Euler rotation vector of the object class rotation.
-     */
-    public getRotation = (): Euler => this.children[0].rotation;
-
-    /**
      * Get object class representation at desired time.
      *
      * @param t Desired representation time index.

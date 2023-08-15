@@ -16,6 +16,7 @@ import {
     type MaterialJSON,
 } from "@/models/Properties";
 import type { PDT } from "./pdt.model";
+import type { Controller } from "./Controls/Controller";
 
 /**
  * PDT object data type, following the backend API data format.
@@ -38,11 +39,17 @@ export class PDTObject extends Group {
     declare parent: PDT;
     /** Object ID */
     readonly objID: number;
+    /** Current time index to show. */
+    private time: number = 0;
 
     /** Object class. @remark `this.class = this.children[0]`. */
     readonly class: Class;
     /** Object material. Used to create class representation. */
     readonly material: Material;
+    /** Object location. @remark `this._location = this.children[1]`. */
+    private _location: Location;
+    /** Object rotation. @remark `this._rotation = this.children[2]`. */
+    private _rotation: Rotation;
 
     /**
      * Creates a PDT object from JSON data.
@@ -63,12 +70,12 @@ export class PDTObject extends Group {
         this.add(this.class);
 
         // setup location from JSON data
-        const location = new Location(this, objJSON.location);
-        this.add(location);
+        this._location = new Location(this, objJSON.location);
+        this.add(this._location);
 
         // setup rotation from JSON data
-        const rotation = new Rotation(this, objJSON.rotation);
-        this.add(rotation);
+        this._rotation = new Rotation(this, objJSON.rotation);
+        this.add(this._rotation);
     }
 
     /**
@@ -76,29 +83,30 @@ export class PDTObject extends Group {
      *
      * @returns Object time index.
      */
-    public getTimeIndex = (): number => Math.trunc(this.parent.getTimeIndex());
+    public getTimeIndex = (): number => Math.trunc(this.time);
 
-    /**
-     * Returns object location.
-     *
-     * @returns Object location.
-     */
-    public getLocation = (): Location => this.children[1] as Location;
-
+    public getControllers = (): Controller<any>[] => [
+        this.class.getController(),
+        this._location.getController(),
+        this._rotation.getController(),
+    ];
     /**
      * Update object to the given time.
      *
      * @param time Time when update object.
      */
     public tick(time?: number): void {
-        const PDTTimeIndex = this.parent.getTimeIndex();
         // update class representation
-        this.class.update(time ?? PDTTimeIndex);
+        this.class.update(time ?? this.time);
 
         // update object position
         (this.children[1] as Location).update(time);
 
         // update object rotation
-        (this.children[2] as Rotation).update(time ?? PDTTimeIndex);
+        (this.children[2] as Rotation).update(time);
+
+        if (time) {
+            this.time = time;
+        }
     }
 }

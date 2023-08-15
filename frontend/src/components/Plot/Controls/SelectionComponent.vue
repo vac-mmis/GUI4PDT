@@ -81,9 +81,7 @@ const toggleList = () => {
 const updateObjects = ref(0);
 const updateGlobal = ref(0);
 
-const objectControllers = (object: PDTObject): Controller<any>[] => {
-    return [object.class.getController(), object.getLocation().getController()];
-};
+const objectControllers = (object: PDTObject): Controller<any>[] => object.getControllers();
 
 const elevationMapControllers = elevationMap.value
     ? [elevationMap.value?.getSurfaceController(), elevationMap.value?.getVariationsController()]
