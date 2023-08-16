@@ -26,69 +26,52 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-
-    <v-overlay
-        :model-value="status.status === `loading`"
-        contained
-        class="align-center justify-center"
-    >
-        <div class="d-flex flex-column align-center">
-            <span class="text-h5 text-primary pa-4">{{ status.message }}</span>
-            <v-progress-linear indeterminate color="primary"></v-progress-linear>
-        </div>
-    </v-overlay>
 </template>
 
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
-import type { Status } from "@/components/Utils/status";
 
 import PDTStore from "@/store/pdt.store";
-import { modelStore } from "@/store/model.store";
-import { materialStore } from "@/store/material.store";
+import worldStore from "@/store/world.store";
+import modelStore from "@/store/model.store";
+import materialStore from "@/store/material.store";
 
 const models = modelStore();
 const materials = materialStore();
 const pdt = PDTStore();
+const world = worldStore();
 
-const emits = defineEmits<(e: "status", status: Status) => void>();
-
-const status = ref<Status>({ status: "loading", message: "" });
 const dialog = ref(false);
 
 const PDTList = ref<string[]>();
 const selectedPDT = ref("");
 
 const onPDTSelection = async () => {
-    status.value.status = "loading";
-    status.value.message = "Fetching selected PDT...";
+    world.setStatus({ status: "loading PDT", message: "Fetching selected PDT..." });
     dialog.value = false;
     pdt.fetch(selectedPDT.value)
         .catch((err: string) => {
-            status.value = { status: "error", message: err };
-            emits("status", status.value);
+            world.setStatus({ status: "error", message: err });
             console.error(err);
         })
         .finally(() => {
-            status.value = {
-                status: "success",
+            world.setStatus({
+                status: "loading world",
                 message: `${selectedPDT.value} loaded successfully`,
-            };
-            emits("status", status.value);
+            });
         });
 };
 
 onBeforeMount(async () => {
-    status.value = { status: "waiting", message: `Wait for user PDT selection` };
+    world.setStatus({ status: "waiting", message: `Wait for user PDT selection` });
     pdt.list()
         .then((pdtList: string[]) => {
             PDTList.value = pdtList;
             dialog.value = true;
         })
         .catch((err: string) => {
-            status.value = { status: "error", message: "No PDT found or server unavailable" };
+            world.setStatus({ status: "error", message: "No PDT found or server unavailable" });
             console.error(err);
-            emits("status", status.value);
         });
     await models.fetch();
     await materials.fetch();

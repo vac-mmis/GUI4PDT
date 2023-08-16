@@ -8,7 +8,7 @@ import { Group, Object3D, type Intersection, MeshStandardMaterial } from "three"
 import { PDTObject, type ObjectJSON } from "@/models/object.model";
 import { Map } from "@/models/map.model";
 
-import { materialStore } from "@/store/material.store";
+import materialStore from "@/store/material.store";
 /**
  * PDT data type, following the backend API data format.
  */

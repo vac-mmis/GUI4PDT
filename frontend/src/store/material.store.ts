@@ -25,7 +25,7 @@ export type MaterialFile = {
 /**
  * Material store handle by Pinia.
  */
-export const materialStore: any = defineStore("materials", () => {
+const materialStore: any = defineStore("materials", () => {
     const _materials = ref([] as MeshStandardMaterial[]);
 
     /** Number of fetched material.  */
@@ -59,3 +59,5 @@ export const materialStore: any = defineStore("materials", () => {
 
     return { length, fetch, find };
 });
+
+export default materialStore;

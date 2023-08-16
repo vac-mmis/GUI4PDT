@@ -13,7 +13,7 @@ import { Material } from "@/models/Properties";
 import type { PDTObject } from "@/models/object.model";
 import { makeRepresentation, type ObjectRepresentation } from "@/models/Representations";
 
-import { modelStore } from "@/store/model.store";
+import modelStore from "@/store/model.store";
 
 /**
  * Class data type, following the backend API data format.

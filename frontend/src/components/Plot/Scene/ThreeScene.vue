@@ -4,9 +4,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { storeToRefs } from "pinia";
-
 import type { Object3D } from "three";
+
 import type { PDTObject } from "@/models/object.model";
 import type { Timer } from "@/World/systems/Timer";
 
@@ -18,8 +17,7 @@ const emits = defineEmits<{
 }>();
 
 const container = ref<HTMLDivElement | null>(null);
-const { getTimer } = storeToRefs(worldStore());
-const { setWorld } = worldStore();
+const { setWorld, setStatus } = worldStore();
 
 const selectedCallback = (obj?: Object3D | null) => {
     if (obj) {
@@ -33,6 +31,6 @@ onMounted(async () => {
         throw new Error("Error: Invalid container");
     }
     setWorld(container.value, selectedCallback);
-    emits("timer", getTimer.value);
+    setStatus({ status: "success", message: "Scene loaded successfully" });
 });
 </script>

@@ -1,9 +1,14 @@
 <template>
-    <div :class="`${openList ? `w-auto` : ``}`">
-        <v-toolbar class="w-100" :collapse="!openList" :title="getPDT.name">
-            <v-app-bar-nav-icon @click="toggleList"></v-app-bar-nav-icon>
+    <div :class="`${openMenu ? `w-auto` : ``}`">
+        <v-toolbar class="w-100" :collapse="!openMenu" title="PDT Menu">
+            <v-btn v-if="openMenu" @click="changePDT" icon="">
+                <v-icon icon="far fa-folder-open" />
+                <v-tooltip activator="parent" location="bottom" text="Change PDT" />
+            </v-btn>
+            <v-app-bar-nav-icon @click="() => (openMenu = !openMenu)"></v-app-bar-nav-icon>
         </v-toolbar>
-        <v-sheet v-if="openList" class="w-full h-full">
+
+        <v-sheet v-if="openMenu && getPDT.name" class="w-full h-full">
             <v-expansion-panels>
                 <!-- Elevation map control -->
                 <v-expansion-panel v-if="elevationMapController">
@@ -62,21 +67,23 @@
 import { ref, computed, type ComputedRef } from "vue";
 import { storeToRefs } from "pinia";
 
-import ControlButtons from "@/components/Plot/Controls/ControlButtons.vue";
+import ControlButtons from "@/components/Generics/ControlButtons.vue";
 import { Controller } from "@/models/Controls/Controller";
 
 import type { PDTObject } from "@/models/object.model";
 import type { Map } from "@/models/map.model";
 import PDTStore from "@/store/pdt.store";
+import worldStore from "@/store/world.store";
 
 const { getPDT } = storeToRefs(PDTStore());
+const { setStatus } = worldStore();
+
+const changePDT = () => setStatus({ status: `waiting`, message: `Wait for user PDT selection` });
+
 const elevationMap: ComputedRef<Map | undefined> = computed(() => getPDT.value.getElevationMap());
 const objects: ComputedRef<PDTObject[]> = computed(() => getPDT.value.getObjects());
 
-const openList = ref(false);
-const toggleList = () => {
-    openList.value = !openList.value;
-};
+const openMenu = ref(false);
 
 const updateObjects = ref(0);
 const updateGlobal = ref(0);

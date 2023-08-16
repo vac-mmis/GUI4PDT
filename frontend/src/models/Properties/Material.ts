@@ -9,7 +9,7 @@ import type { PlotData } from "plotly.js-dist-min";
 
 import { Categorical } from "@/models/Distributions";
 import type { PDTObject } from "@/models/object.model";
-import { materialStore } from "@/store/material.store";
+import materialStore from "@/store/material.store";
 
 /**
  * Material data type, following the backend API data format.

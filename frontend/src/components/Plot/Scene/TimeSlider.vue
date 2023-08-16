@@ -47,31 +47,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, toRaw, watch } from "vue";
+import { ref, computed, toRaw, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 
-import type { Timer } from "@/World/systems/Timer";
 import PDTStore from "@/store/pdt.store";
-
-const props = defineProps<{ timer?: Timer }>();
-const emits = defineEmits<(e: "time", time: number) => void>();
+import WorldStore from "@/store/world.store";
 
 const { timeLength } = storeToRefs(PDTStore());
+const { getTimer } = storeToRefs(WorldStore());
+const { setStatus } = WorldStore();
+
+const emits = defineEmits<(e: "time", time: number) => void>();
+
+const updateSlider = (t: number) => {
+    slider.value = t % timeLength.value;
+};
 
 const timer = computed(() => {
-    const propsTimer = props.timer;
+    const propsTimer = getTimer.value;
     propsTimer?.setTimerCallback(updateSlider);
     return toRaw(propsTimer);
 });
 
-const slider = ref<number>(timer.value?.getTime() || 0);
-const ticks = Array.from({ length: timeLength.value / 10 + 1 }, (_, x) => 10 * x).reduce(
-    (o, key) => Object.assign(o, { [key]: `${key}` }),
-    {}
-);
-const updateSlider = (t: number) => {
-    slider.value = t % timeLength.value;
-};
+const slider = ref<number>(timer.value?.getTime() ?? 0);
+const ticks = Array.from(
+    {
+        length: timeLength.value / 10 + 1,
+    },
+    (_, x) => 10 * x
+).reduce((o, key) => Object.assign(o, { [key]: `${key}` }), {});
 
 const play = ref(false);
 const toggleAnimation = () => {
@@ -92,4 +96,8 @@ watch(
         }
     }
 );
+
+onMounted(() => {
+    setStatus({ status: "success", message: "Scene loaded successfully" });
+});
 </script>

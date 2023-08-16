@@ -21,7 +21,7 @@ export type ModelFile = {
 /**
  * Model store handle by Pinia.
  */
-export const modelStore: any = defineStore("models", () => {
+const modelStore: any = defineStore("models", () => {
     const _models = ref([] as Group[]);
     /** Default model */
     const _default = computed(() => {
@@ -72,3 +72,5 @@ export const modelStore: any = defineStore("models", () => {
 
     return { length, fetch, find };
 });
+
+export default modelStore;

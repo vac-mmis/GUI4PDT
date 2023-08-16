@@ -17,6 +17,8 @@ const PDTStore: any = defineStore("PDTs", () => {
     const _PDTs = ref([] as PDT[]);
     /** Current selected PDT. */
     const _selectedPDT = ref<PDT>({} as PDT);
+    /** PDT names list */
+    const _list = ref<string[]>([]);
 
     /** Number of timestamps. */
     const timeLength = computed(() => _selectedPDT.value.getTimeLength());
@@ -25,6 +27,23 @@ const PDTStore: any = defineStore("PDTs", () => {
      * Get selected PDT.
      */
     const getPDT = computed((): PDT => toRaw(_selectedPDT.value as PDT));
+
+    /**
+     * Get available PDT List
+     */
+    const getPDTList = computed((): string[] => toRaw(_list.value));
+
+    /**
+     * Fetch and returns List of available PDT.
+     *
+     * @returns PDT list
+     */
+    async function list(): Promise<string[]> {
+        if (_list.value.length === 0) {
+            _list.value = await axios.get(`pdts/list`).then((res) => res.data);
+        }
+        return _list.value;
+    }
 
     /**
      * Returns desired PDT from storage with given name.
@@ -55,16 +74,7 @@ const PDTStore: any = defineStore("PDTs", () => {
         _selectedPDT.value = pdt;
     };
 
-    /**
-     * Fetch and returns List of available PDT.
-     *
-     * @returns PDT list
-     */
-    async function list(): Promise<string[]> {
-        return await axios.get(`pdts/list`).then((res) => res.data);
-    }
-
-    return { timeLength, getPDT, list, fetch, find };
+    return { timeLength, getPDT, getPDTList, list, fetch, find };
 });
 
 export default PDTStore;

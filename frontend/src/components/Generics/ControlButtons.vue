@@ -38,8 +38,9 @@
 </template>
 
 <script setup lang="ts">
-import { Controller, type ControllerValues } from "@/models/Controls/Controller";
 import { ref } from "vue";
+
+import { Controller, type ControllerValues } from "@/models/Controls/Controller";
 
 const props = defineProps<{ controllers: Controller<any>[] }>();
 const emits = defineEmits<(e: "update", update: number) => void>();

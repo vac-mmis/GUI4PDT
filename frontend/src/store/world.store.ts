@@ -11,14 +11,36 @@ import { World } from "@/World/world";
 import type { Timer } from "@/World/systems/Timer";
 
 /**
+ * Defines world status message format
+ */
+export type Status = {
+    status: "waiting" | "loading PDT" | "loading world" | "error" | "success";
+    message: string;
+};
+
+/**
  * World store handle by Pinia.
  */
 const worldStore: any = defineStore("worldStore", () => {
     /** World internal store */
     const _World = ref<World>();
+    /** World loading status */
+    const _status = ref<Status>({ status: "waiting", message: "" });
 
     /** Returns stored world */
     const getWorld = computed((): World => toRaw(_World.value as World));
+
+    /** Returns world loading status */
+    const getStatus = computed((): Status => toRaw(_status.value));
+
+    /**
+     * Set world loading status.
+     *
+     * @param status New status.
+     */
+    function setStatus(status: Status) {
+        _status.value = status;
+    }
 
     /** Returns world time controller */
     const getTimer = computed((): Timer => {
@@ -40,7 +62,7 @@ const worldStore: any = defineStore("worldStore", () => {
         } else _World.value.update(params[0], params[1], params[2]);
     }
 
-    return { getWorld, getTimer, setWorld };
+    return { getWorld, getStatus, getTimer, setWorld, setStatus };
 });
 
 export default worldStore;
