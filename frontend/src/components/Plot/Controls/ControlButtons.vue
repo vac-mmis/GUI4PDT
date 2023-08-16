@@ -15,7 +15,7 @@
                     v-model="toggle[i]"
                     color="secondary"
                     inline
-                    mandatory
+                    multiple
                     @update:model-value="updateValue(controller, toggle[i])"
                 >
                     <v-btn
@@ -38,15 +38,15 @@
 </template>
 
 <script setup lang="ts">
-import { Controller } from "@/models/Controls/Controller";
+import { Controller, type ControllerValues } from "@/models/Controls/Controller";
 import { ref } from "vue";
 
 const props = defineProps<{ controllers: Controller<any>[] }>();
 const emits = defineEmits<(e: "update", update: number) => void>();
 
-const toggle = ref<string[]>(props.controllers.map((controller) => controller.state.value));
+const toggle = ref<ControllerValues[][]>(props.controllers.map((controller) => controller.state));
 
-const updateValue = (controller: Controller<any>, value: string) => {
+const updateValue = (controller: Controller<any>, value: ControllerValues[]) => {
     controller.set(value);
     emits("update", 1);
 };

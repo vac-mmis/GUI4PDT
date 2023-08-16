@@ -6,12 +6,12 @@
         <v-sheet v-if="openList" class="w-full h-full">
             <v-expansion-panels>
                 <!-- Elevation map control -->
-                <v-expansion-panel v-if="elevationMap">
+                <v-expansion-panel v-if="elevationMapController">
                     <v-expansion-panel-title>
                         <h1 class="text-subtitle-1">Elevation Map</h1>
                     </v-expansion-panel-title>
                     <v-expansion-panel-text>
-                        <ControlButtons :controllers="elevationMapControllers" />
+                        <ControlButtons :controllers="[elevationMapController]" />
                     </v-expansion-panel-text>
                 </v-expansion-panel>
 
@@ -83,9 +83,7 @@ const updateGlobal = ref(0);
 
 const objectControllers = (object: PDTObject): Controller<any>[] => object.getControllers();
 
-const elevationMapControllers = elevationMap.value
-    ? [elevationMap.value?.getSurfaceController(), elevationMap.value?.getVariationsController()]
-    : [];
+const elevationMapController = elevationMap.value?.getController();
 
 const globalObjectsControllers = Controller.buildGlobalBooleanController(
     objects.value.map((object) => objectControllers(object))

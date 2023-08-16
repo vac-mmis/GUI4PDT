@@ -24,8 +24,8 @@ const distToRep = {
     "uniform-continuous": "box",
 } as Record<string, string>;
 
-const LocationVisibilities = ["invisible", "absolute", "prob"] as const;
-export type LocationVisibility = (typeof LocationVisibilities)[number];
+const LocationVisibilities = ["plot", "move"] as const;
+type LocationVisibility = (typeof LocationVisibilities)[number];
 
 /**
  * Implements representation of object position in PDT.
@@ -49,7 +49,7 @@ export class Location extends Group {
     private delta = 1;
 
     /** `true` if location is shows as probabilistic */
-    private visibility: LocationVisibility = "invisible";
+    private visibility: LocationVisibility[] = [];
     /** Location controller module  */
     private controller: Controller<LocationVisibility>;
 
@@ -105,23 +105,16 @@ export class Location extends Group {
      *
      * @returns Location visibility
      */
-    private getVisibility = (): LocationVisibility => this.visibility;
+    private getVisibility = (): LocationVisibility[] => this.visibility;
 
     /**
      * Set location visibility
      *
      * @param visibility Desired location visibility
      */
-    private setVisibility(visibility: LocationVisibility) {
+    private setVisibility(visibility: LocationVisibility[]) {
         this.visibility = visibility;
-        switch (visibility) {
-            case "invisible":
-                this.visible = false;
-                break;
-            default:
-                this.visible = true;
-                break;
-        }
+        this.visible = visibility.includes("plot");
     }
 
     /**
@@ -144,7 +137,7 @@ export class Location extends Group {
         const dist = this.dist[index];
         if ("type" in dist) {
             return new Vector3(
-                ...(this.visibility === "prob" ? dist.random(relative) : dist.getMean())
+                ...(this.visibility.includes("move") ? dist.random(relative) : dist.getMean())
             );
         } else {
             return new Vector3(...dist);

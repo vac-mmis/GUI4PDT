@@ -18,8 +18,8 @@ const ANGLE_UNIT = "deg" as const;
  */
 export type RotationJSON = { dist: Distribution } | [number, number, number];
 
-const RotationVisibilities = ["absolute", "prob"] as const;
-export type RotationVisibility = (typeof RotationVisibilities)[number];
+const RotationVisibilities = ["move"] as const;
+type RotationVisibility = (typeof RotationVisibilities)[number];
 
 /**
  * Implements representation of object rotation.
@@ -44,7 +44,7 @@ export class Rotation extends Group {
     private delta = 1;
 
     /** `true` if location is shows as probabilistic */
-    private visibility: RotationVisibility = "absolute";
+    private visibility: RotationVisibility[] = [];
     /** Location controller module  */
     private controller: Controller<RotationVisibility>;
 
@@ -91,14 +91,14 @@ export class Rotation extends Group {
      *
      * @returns Location visibility
      */
-    private getVisibility = (): RotationVisibility => this.visibility;
+    private getVisibility = (): RotationVisibility[] => this.visibility;
 
     /**
      * Set location visibility
      *
      * @param visibility Desired location visibility
      */
-    private setVisibility(visibility: RotationVisibility) {
+    private setVisibility(visibility: RotationVisibility[]) {
         this.visibility = visibility;
     }
 
@@ -122,7 +122,7 @@ export class Rotation extends Group {
         const dist = this.dist[index];
         if ("type" in dist) {
             return new Vector3(
-                ...(this.visibility === "prob" ? dist.random(relative) : dist.getMean())
+                ...(this.visibility.includes("move") ? dist.random(relative) : dist.getMean())
             );
         } else {
             return new Vector3(...dist);

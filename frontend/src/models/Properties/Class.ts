@@ -4,13 +4,13 @@
  * @module object.class
  */
 
-import { Euler, Group } from "three";
+import { type Euler, Group } from "three";
 import type { PlotData } from "plotly.js-dist-min";
 
 import { Controller } from "@/models/Controls/Controller";
 import { Categorical } from "@/models/Distributions";
-import type { PDTObject } from "@/models/object.model";
 import { Material } from "@/models/Properties";
+import type { PDTObject } from "@/models/object.model";
 import { makeRepresentation, type ObjectRepresentation } from "@/models/Representations";
 
 import { modelStore } from "@/store/model.store";
@@ -20,8 +20,8 @@ import { modelStore } from "@/store/model.store";
  */
 export type ClassJSON = string | { dist: Categorical };
 
-const ClassVisibilities = ["invisible", "absolute", "prob"] as const;
-export type ClassVisibility = (typeof ClassVisibilities)[number];
+const ClassVisibilities = ["visible", "alpha"] as const;
+type ClassVisibility = (typeof ClassVisibilities)[number];
 
 /**
  * Implements representation of object classes.
@@ -37,7 +37,7 @@ export class Class extends Group {
     private scaleFactor: (number | undefined)[];
 
     /** `true` if location is shows as probabilistic */
-    private visibility: ClassVisibility = "prob";
+    private visibility: ClassVisibility[] = ["visible", "alpha"];
     /** Location controller module  */
     private controller: Controller<ClassVisibility>;
 
@@ -88,24 +88,20 @@ export class Class extends Group {
      *
      * @returns Class visibility
      */
-    private getVisibility = (): ClassVisibility => this.visibility;
+    private getVisibility = (): ClassVisibility[] => this.visibility;
 
     /**
      * Set class visibility
      *
      * @param visibility Desired class visibility
      */
-    private setVisibility(visibility: ClassVisibility) {
+    private setVisibility(visibility: ClassVisibility[]) {
         this.visibility = visibility;
-        switch (visibility) {
-            case "invisible":
-                this.visible = false;
-                break;
-            default: {
-                this.visible = true;
-                this.updateClass(this.parent.getTimeIndex());
-                break;
-            }
+        if (!visibility.includes("visible")) {
+            this.visible = false;
+        } else {
+            this.visible = true;
+            this.updateClass(this.parent.getTimeIndex());
         }
     }
 
@@ -125,7 +121,7 @@ export class Class extends Group {
         const visibility = this.visibility;
         const dist = this.dist[index];
         function getOpacity(type: ObjectRepresentation) {
-            if (visibility === "prob") {
+            if (visibility.includes("alpha")) {
                 return dist.getMass()[type.name];
             } else {
                 const absolute = Object.entries(dist.getMass()).sort((a, b) => b[1] - a[1])[0][0];

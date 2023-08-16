@@ -4,8 +4,6 @@
  * @module controller
  */
 
-import { ref } from "vue";
-
 const NameIcon = {
     loc: "fas fa-crosshairs",
     rot: "fas fa-arrows-rotate",
@@ -15,18 +13,20 @@ const NameIcon = {
 };
 
 const ValueIcon = {
-    invisible: "fas fa-eye-slash",
-    absolute: "fas fa-eye",
-    prob: "fas fa-wave-square",
+    visible: "fas fa-eye",
+    alpha: "fas fa-clone",
+    plot: "fas fa-chart-simple",
+    move: "fas fa-arrows-turn-to-dots",
 };
 
 const ValueTip = {
-    invisible: "Hide",
-    absolute: "Show most probable",
-    prob: "Show distribution",
+    visible: "Show",
+    alpha: "Distribution as transparency",
+    plot: "Distribution as points",
+    move: "Distribution as random mouvement",
 };
 
-export type ControllerValues = keyof typeof ValueIcon | undefined;
+export type ControllerValues = keyof typeof ValueIcon;
 
 /**
  * Implementation of generic controller for user interface.
@@ -42,12 +42,12 @@ export class Controller<T extends ControllerValues> {
     /** Controller tooltip */
     tooltip: string;
     /** Controller reactive state, used to watch controller state */
-    state = ref<T>();
+    state: T[] = [];
 
     /** Controller internal getter */
-    private getter: () => T | undefined;
+    private getter: () => T[];
     /** Controller internal setter */
-    private setter: (newValue: T) => void;
+    private setter: (newValue: T[]) => void;
 
     /**
      * Create a controller object for button management
@@ -61,8 +61,8 @@ export class Controller<T extends ControllerValues> {
         name: keyof typeof NameIcon,
         values: Readonly<Array<T>>,
         tooltip: string,
-        getter: () => T | undefined,
-        setter: (newValue: T) => void
+        getter: () => T[],
+        setter: (newValue: T[]) => void
     ) {
         this.name = name;
         this.values = values;
@@ -70,7 +70,7 @@ export class Controller<T extends ControllerValues> {
         this.tooltip = tooltip;
         this.getter = getter;
         this.setter = setter;
-        this.state.value = this.getter();
+        this.state = this.getter();
     }
 
     /**
@@ -87,19 +87,20 @@ export class Controller<T extends ControllerValues> {
             (previous: Controller<T>[], current: Controller<T>[], currentIndex) =>
                 current.map((controller, i) => {
                     const reducedGetter = () => {
-                        if (previous[i].get().value === controller.getter()) {
-                            return controller.getter();
-                        } else {
-                            return undefined;
-                        }
+                        const array1 = previous[i].get();
+                        const array2 = controller.getter();
+                        return array1.length === array2.length &&
+                            array1.every((value) => array2.includes(value))
+                            ? array2
+                            : [];
                     };
                     const reducedSetter =
                         currentIndex <= 1
-                            ? (newValue: T) => {
+                            ? (newValue: T[]) => {
                                   previous[i].set(newValue);
                                   controller.set(newValue);
                               }
-                            : (newValue: T) => {
+                            : (newValue: T[]) => {
                                   previous[i].setter(newValue);
                                   controller.set(newValue);
                               };
@@ -146,8 +147,8 @@ export class Controller<T extends ControllerValues> {
      *
      * @param newValue New controller value.
      */
-    public set = (newValue: T) => {
-        this.state.value = newValue;
+    public set = (newValue: T[]) => {
+        this.state = newValue;
         this.setter(newValue);
     };
 }

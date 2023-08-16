@@ -8,11 +8,8 @@ import { Group, Color, MeshStandardMaterial } from "three";
 import { Controller } from "@/models/Controls/Controller";
 import { makeRepresentation, type Representation } from "@/models/Representations";
 
-const MapVisibilities = ["invisible", "absolute"] as const;
-export type MapVisibility = (typeof MapVisibilities)[number];
-
-const MapVariationsVisibilities = ["invisible", "prob"] as const;
-export type MapVariationsVisibility = (typeof MapVariationsVisibilities)[number];
+const MapVisibilities = ["visible", "plot"] as const;
+type MapVisibility = (typeof MapVisibilities)[number];
 
 /**
  * Implements map from grid with surface and variations
@@ -25,10 +22,10 @@ export class Map extends Group {
     /** Representation of variations as vertical bars */
     private mapVariations: Representation;
 
-    /** Surface map controller module  */
-    private surfaceController: Controller<MapVisibility>;
-    /** Z-variations map controller module  */
-    private variationsController: Controller<MapVariationsVisibility>;
+    /** `true` if location is shows as probabilistic */
+    private visibility: MapVisibility[] = ["visible"];
+    /** Map controller module  */
+    private controller: Controller<MapVisibility>;
 
     /**
      * Creates a map from data grid.
@@ -55,37 +52,37 @@ export class Map extends Group {
         this.add(this.mapVariations);
 
         // init controllers
-        this.surfaceController = new Controller<MapVisibility>(
+        this.controller = new Controller<MapVisibility>(
             "surface",
             MapVisibilities,
-            "Map surface",
-            () => (this.mapSurface.visible ? "absolute" : "invisible"),
-            (visibility) => {
-                this.mapSurface.visible = visibility === "absolute";
-            }
-        );
-        this.variationsController = new Controller<MapVariationsVisibility>(
-            "z-var",
-            MapVariationsVisibilities,
-            "Map variations",
-            () => (this.mapVariations.visible ? "prob" : "invisible"),
-            (visibility) => {
-                this.mapVariations.visible = visibility === "prob";
-            }
+            "Elevation surface",
+            () => this.getVisibility(),
+            (visibility: MapVisibility[]) => this.setVisibility(visibility)
         );
     }
 
     /**
-     * Give map surface controller to toggle surface visibility
+     * Get actual map visibility
+     *
+     * @returns Location visibility
+     */
+    private getVisibility = (): MapVisibility[] => this.visibility;
+
+    /**
+     * Set map visibility
+     *
+     * @param visibility Desired location visibility
+     */
+    private setVisibility(visibility: MapVisibility[]) {
+        this.visibility = visibility;
+        this.mapSurface.visible = this.visibility.includes("visible");
+        this.mapVariations.visible = this.visibility.includes("plot");
+    }
+
+    /**
+     * Give map controller to toggle surface visibility
      *
      * @returns Map surface controller
      */
-    public getSurfaceController = (): Controller<MapVisibility> => this.surfaceController;
-
-    /**
-     * Give map variations controller to toggle variations visibility
-     *
-     * @returns Map variations controller
-     */
-    public getVariationsController = () => this.variationsController;
+    public getController = (): Controller<MapVisibility> => this.controller;
 }
