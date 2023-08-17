@@ -2,23 +2,24 @@
     <v-dialog v-model="dialog" scrollable contained persistent width="auto">
         <v-card>
             <v-card-title>Select available PDT</v-card-title>
-            <v-divider></v-divider>
+
             <v-card-text>
-                <v-radio-group v-model="selectedPDT" column>
-                    <v-radio
-                        v-for="pdtName in PDTList"
-                        :key="pdtName"
-                        :label="pdtName"
-                        :value="pdtName"
-                    ></v-radio>
-                </v-radio-group>
+                <v-autocomplete
+                    v-model="selectedPDT"
+                    label="PDT"
+                    :items="PDTList"
+                    variant="outlined"
+                />
             </v-card-text>
-            <v-divider></v-divider>
-            <v-card-actions>
+
+            <v-card-actions class="d-flex flex-row justify-space-between">
+                <v-btn color="red" variant="text" @click="onCancel" :disabled="!pdt.getPDT.name">
+                    Cancel</v-btn
+                >
                 <v-btn
                     color="primary"
                     variant="text"
-                    @click="onPDTSelection"
+                    @click="onSelect"
                     :disabled="selectedPDT === ``"
                 >
                     Ok
@@ -44,9 +45,9 @@ const world = worldStore();
 const dialog = ref(false);
 
 const PDTList = ref<string[]>();
-const selectedPDT = ref("");
+const selectedPDT = ref(pdt.getPDT.name ?? "");
 
-const onPDTSelection = async () => {
+const onSelect = async () => {
     world.setStatus({ status: "loading PDT", message: "Fetching selected PDT..." });
     dialog.value = false;
     pdt.fetch(selectedPDT.value)
@@ -61,6 +62,12 @@ const onPDTSelection = async () => {
             });
         });
 };
+
+const onCancel = () =>
+    world.setStatus({
+        status: "success",
+        message: `Selection cancelled`,
+    });
 
 onBeforeMount(async () => {
     world.setStatus({ status: "waiting", message: `Wait for user PDT selection` });
