@@ -7,8 +7,10 @@
 import { Group, Object3D, type Intersection, MeshStandardMaterial } from "three";
 import { PDTObject, type ObjectJSON } from "@/models/object.model";
 import { Map } from "@/models/map.model";
+import type { WorldContent } from "@/World/interface";
 
 import materialStore from "@/store/material.store";
+
 /**
  * PDT data type, following the backend API data format.
  */
@@ -21,7 +23,7 @@ export interface PDTJSON {
 /**
  * Implements PDT representation, including objects and global data.
  */
-export class PDT extends Group {
+export class PDT extends Group implements WorldContent {
     /** PDT name */
     name: string;
 
@@ -76,7 +78,7 @@ export class PDT extends Group {
      *
      * @returns Clickable objects if defined.
      */
-    public getClickables = (): Object3D[] => this.objects;
+    public getClickables = (): Object3D[] | undefined => this.objects;
 
     /**
      * Returns PDT current time index.
@@ -130,7 +132,7 @@ export class PDT extends Group {
      *
      * @returns Intersected object.
      */
-    public onClick(intersect: Intersection): PDTObject | undefined {
+    public onClick(intersect: Intersection): Object3D | undefined {
         let object = intersect.object;
         while (object.parent && object.userData.type !== "Object") {
             object = object.parent;
@@ -138,7 +140,7 @@ export class PDT extends Group {
         if (object.type === "Scene") {
             throw new Error("Object not found, Scene reached");
         }
-        return object as PDTObject;
+        return object;
     }
 
     /**

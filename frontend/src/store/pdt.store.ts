@@ -69,9 +69,11 @@ const PDTStore: any = defineStore("PDTs", () => {
                 throw new Error("PDT not found");
             } else {
                 _PDTs.value.push(pdt);
+                _selectedPDT.value = pdt;
             }
+        } else {
+            _selectedPDT.value = pdt;
         }
-        _selectedPDT.value = pdt;
     };
 
     return { timeLength, getPDT, getPDTList, list, fetch, find };

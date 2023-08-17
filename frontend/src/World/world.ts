@@ -7,7 +7,7 @@
  * @module World
  */
 
-import type { Object3D, WebGLRenderer, PerspectiveCamera, Scene } from "three";
+import type { WebGLRenderer, PerspectiveCamera, Scene, Object3D } from "three";
 import type { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 import { createCamera } from "@/World/components/camera";
@@ -20,30 +20,30 @@ import { Resizer } from "@/World/systems/Resizer";
 import { Timer } from "@/World/systems/Timer";
 import { Pointer } from "@/World/components/Pointer";
 
-import { storeToRefs } from "pinia";
-import type { PDT } from "@/models/pdt.model";
-import PDTStore from "@/store/pdt.store";
+import type { WorldContent } from "@/World/interface";
 
-export class World {
+export class World<T extends WorldContent> {
     private camera: PerspectiveCamera;
     private scene: Scene;
     private renderer: WebGLRenderer;
     private timer: Timer;
     private resizer: Resizer;
     private controls: OrbitControls;
-    private pointer: Pointer;
+    private pointer: Pointer<T>;
 
-    private pdt: PDT;
+    private content: T;
 
     /**
-     * Creates a new Three.JS world in adding selected PDT in {@link pdt.store}.
+     * Creates a new Three.JS world in adding selected set in {@link World.interface}.
      *
+     * @param content World content.
      * @param container HTML div container which contains Three.JS world.
      * @param selectionCallback Callback used when there is a click on a world element.
      * @param hoverCallback Callback used when mouse hover on an world element.
      * @param timerCallback Callback used when time changes.
      */
     constructor(
+        content: T,
         container: HTMLDivElement,
         selectionCallback?: (obj?: Object3D | null) => void,
         hoverCallback?: (obj?: Object3D | null) => void,
@@ -53,10 +53,9 @@ export class World {
         this.camera = createCamera();
         this.scene = createScene();
 
-        // Add PDT to scene
-        const { getPDT } = storeToRefs(PDTStore());
-        this.pdt = getPDT.value;
-        this.scene.add(this.pdt);
+        // Add content to scene
+        this.content = content;
+        this.scene.add(this.content);
 
         // Create renderer and enable resizing
         this.renderer = createRenderer();
@@ -68,9 +67,9 @@ export class World {
 
         // Create object pointer
         this.pointer = new Pointer(
+            this.content,
             this.renderer.domElement,
             this.camera,
-            this.pdt,
             selectionCallback,
             hoverCallback
         );
@@ -91,31 +90,32 @@ export class World {
     }
 
     /**
-     * Update world. Used when selected PDT in {@link pdt.store} is changed.
+     * Update world. Used when selected set in {@link World.interface} is changed.
      *
+     * @param content World content.
      * @param container HTML div container which contains Three.JS world.
      * @param selectionCallback Callback used when there is a click on a world element.
      * @param hoverCallback Callback used when mouse hover on an world element.
      */
     public update(
+        content: T,
         container: HTMLDivElement,
         selectionCallback?: (obj?: Object3D | null) => void,
         hoverCallback?: (obj?: Object3D | null) => void
     ) {
-        // remove old pdt
-        this.scene.remove(this.pdt);
+        // remove old content
+        this.scene.remove(this.content);
 
         // update world container
         container.appendChild(this.renderer.domElement);
         this.resizer.updateContainer(container);
 
-        // change PDT
-        const { getPDT } = storeToRefs(PDTStore());
-        this.pdt = getPDT.value;
-        this.scene.add(this.pdt);
+        // change content
+        this.content = content;
+        this.scene.add(this.content);
 
         // update pointer
-        this.pointer.updatePDT(this.pdt, selectionCallback, hoverCallback);
+        this.pointer.updateSet(this.content, selectionCallback, hoverCallback);
     }
 
     /**

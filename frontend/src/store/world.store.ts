@@ -5,10 +5,14 @@
  */
 
 import { ref, computed, toRaw } from "vue";
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
+import type { Object3D } from "three";
 
 import { World } from "@/World/world";
 import type { Timer } from "@/World/systems/Timer";
+import type { PDT } from "@/models/pdt.model";
+
+import PDTStore from "@/store/pdt.store";
 
 /**
  * Defines world status message format
@@ -23,12 +27,12 @@ export type Status = {
  */
 const worldStore: any = defineStore("worldStore", () => {
     /** World internal store */
-    const _World = ref<World>();
+    const _World = ref<World<PDT>>();
     /** World loading status */
     const _status = ref<Status>({ status: "waiting", message: "" });
 
     /** Returns stored world */
-    const getWorld = computed((): World => toRaw(_World.value as World));
+    const getWorld = computed((): World<PDT> => toRaw(_World.value as World<PDT>));
 
     /** Returns world loading status */
     const getStatus = computed((): Status => toRaw(_status.value));
@@ -56,10 +60,22 @@ const worldStore: any = defineStore("worldStore", () => {
      * @param hoverCallback Callback used when mouse hover on an world element.
      * @param timerCallback Callback used when time changes.
      */
-    function setWorld(...params: ConstructorParameters<typeof World>) {
+    function setWorld(
+        container: HTMLDivElement,
+        selectionCallback?: (obj?: Object3D | null) => void,
+        hoverCallback?: (obj?: Object3D | null) => void,
+        timerCallback?: (t: number) => number
+    ) {
+        const { getPDT } = storeToRefs(PDTStore());
         if (!_World.value) {
-            _World.value = new World(...params);
-        } else _World.value.update(params[0], params[1], params[2]);
+            _World.value = new World<PDT>(
+                getPDT.value,
+                container,
+                selectionCallback,
+                hoverCallback,
+                timerCallback
+            );
+        } else _World.value.update(getPDT.value, container, selectionCallback, hoverCallback);
     }
 
     return { getWorld, getStatus, getTimer, setWorld, setStatus };
