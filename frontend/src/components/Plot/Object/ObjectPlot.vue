@@ -1,5 +1,5 @@
 <template>
-    <div class="h-100 w-100" ref="plotContainer" />
+    <div ref="plotContainer" />
 </template>
 
 <script lang="ts" setup>
@@ -12,19 +12,14 @@ const plotContainer = ref<HTMLDivElement | null>(null);
 
 const layout = {
     font: { size: 14 },
-    margin: {
-        l: 12,
-        r: 12,
-        b: 12,
-        t: 24,
-    },
+    margin: { t: 15, b: 0, l: 5, r: 5 },
+    height: 400,
+    width: 400,
     scene: {
         aspectmode: "data",
         aspectratio: { x: 1, y: 1, z: 1 },
-        xaxis: { title: "X Axis" },
-        yaxis: { title: "Y Axis" },
-        zaxis: { title: "Z Axis" },
     },
+    colorway: ["#004a99", "#7d48a3", "#c44094", "#f54872", "#ff6e46", "#ffa100"],
 } as Partial<Layout>;
 
 const config = { responsive: true };
@@ -34,14 +29,14 @@ const init = () => {
     if (plotContainer.value === null) {
         throw new Error("Error: Invalid container");
     }
-    newPlot(plotContainer.value, trace, layout, config) as Promise<Plotly.PlotlyHTMLElement>;
+    newPlot(plotContainer.value, trace, layout, config);
 };
 
 const update = () => {
     if (plotContainer.value === null) {
         throw new Error("Error: Invalid container");
     }
-    react(plotContainer.value, props.data);
+    react(plotContainer.value, props.data, layout);
 };
 
 watch(() => props.data, update);

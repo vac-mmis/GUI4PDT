@@ -4,25 +4,16 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import type { Object3D } from "three";
-
-import type { PDTObject } from "@/models/object.model";
-import type { Timer } from "@/World/systems/Timer";
 
 import worldStore from "@/store/world.store";
 
-const emits = defineEmits<{
-    (e: "obj", object?: PDTObject | null): void;
-    (e: "timer", timer: Timer): void;
-}>();
+const emits = defineEmits<(e: "update", update: number) => void>();
 
 const container = ref<HTMLDivElement | null>(null);
 const { setWorld, setStatus } = worldStore();
 
-const selectedCallback = (obj?: Object3D | null) => {
-    if (obj) {
-        emits("obj", obj as PDTObject);
-    }
+const selectedCallback = () => {
+    emits("update", 1);
 };
 
 onMounted(async () => {

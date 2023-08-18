@@ -37,6 +37,8 @@ export class PDT extends Group implements WorldContent {
     /** Elevation map of the sea in PDT. */
     private elevationMap?: Map;
 
+    /** Selected object */
+    public selectedObject?: PDTObject;
     /**
      * Creates a PDT object from JSON data.
      *
@@ -140,6 +142,7 @@ export class PDT extends Group implements WorldContent {
         if (object.type === "Scene") {
             throw new Error("Object not found, Scene reached");
         }
+        this.selectedObject = object as PDTObject;
         return object;
     }
 

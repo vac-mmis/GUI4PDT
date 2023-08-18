@@ -4,7 +4,7 @@
         v-if="getStatus.status === `loading world` || getStatus.status === `success`"
         class="position-absolute h-100 w-100 d-flex justify-center align-center z-0"
     >
-        <ThreeScene @obj="onSelectedObject" />
+        <ThreeScene @update="updateDetails" />
     </div>
 
     <!-- Scene controllers (menu, slider) -->
@@ -13,10 +13,10 @@
         class="d-flex flex-column justify-space-between align-center h-100 w-100"
     >
         <div class="w-100 d-flex flex-row justify-space-between">
-            <SceneMenu @obj="onSelectedObject" class="position-relative overflow-visible z-1" />
+            <SceneMenu @update="updateDetails" class="position-relative overflow-visible z-1" />
 
-            <div v-if="selectedObject" class="position-relative w-25 h-auto pa-6 z-1">
-                <ObjectDetails :object="selectedObject" :time="selectedTime" />
+            <div class="position-relative pa-6 z-1">
+                <ObjectDetails :key="detailsKey" :time="selectedTime" />
             </div>
         </div>
         <div v-if="timeLength > 1" class="position-relative w-75 ma-6 z-1">
@@ -59,7 +59,6 @@ import SceneMenu from "@/components/Plot/Scene/SceneMenu.vue";
 import TimeSlider from "@/components/Plot/Scene/TimeSlider.vue";
 import ThreeScene from "@/components/Plot/Scene/ThreeScene.vue";
 
-import type { PDTObject } from "@/models/object.model";
 import PDTStore from "@/store/pdt.store";
 import worldStore from "@/store/world.store";
 
@@ -67,9 +66,10 @@ const { timeLength } = storeToRefs(PDTStore());
 const { getStatus } = storeToRefs(worldStore());
 
 const selectedTime = ref<number>(0);
+const detailsKey = ref(0);
 
-const selectedObject = ref<PDTObject | null>();
-const onSelectedObject = (obj?: PDTObject | null) => {
-    selectedObject.value = obj;
+const updateDetails = () => {
+    detailsKey.value += 1;
+    detailsKey.value %= 2;
 };
 </script>

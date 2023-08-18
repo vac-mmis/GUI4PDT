@@ -36,7 +36,12 @@ const vuetify = createVuetify({
     directives,
     icons: {
         defaultSet: "fa",
-        aliases,
+        aliases: {
+            ...aliases,
+            close: "fas fa-close",
+            minimize: "fas fa-window-minimize",
+            maximize: "fas fa-window-maximize",
+        },
         sets: {
             fa,
         },
