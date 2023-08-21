@@ -7,6 +7,7 @@
             :icon="play ? 'fas fa-pause' : 'fas fa-play'"
         >
         </v-btn>
+        <!-- Slider which control world timer-->
         <v-slider
             v-model="slider"
             class="w-100 align-center my-4"
@@ -57,6 +58,7 @@ const { timeLength } = storeToRefs(PDTStore());
 const { getTimer } = storeToRefs(WorldStore());
 const { setStatus } = WorldStore();
 
+// Slider emitted timer value
 const emits = defineEmits<(e: "time", time: number) => void>();
 
 const updateSlider = (t: number) => {

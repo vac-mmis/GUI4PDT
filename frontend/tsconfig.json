@@ -1,11 +1,17 @@
 {
-    "files": [],
+    "extends": "@vue/tsconfig/tsconfig.dom.json",
+    "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "src/**/*.ts"],
+    "exclude": ["src/**/__tests__/*"],
+    "compilerOptions": {
+        "composite": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./src/*"]
+        }
+    },
     "references": [
         {
             "path": "./tsconfig.node.json"
-        },
-        {
-            "path": "./tsconfig.app.json"
         },
         {
             "path": "./tsconfig.vitest.json"

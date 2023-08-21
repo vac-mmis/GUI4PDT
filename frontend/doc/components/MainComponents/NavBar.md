@@ -1,0 +1,7 @@
+# NavBar
+
+---
+
+```vue live
+<NavBar />
+```

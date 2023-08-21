@@ -1,0 +1,7 @@
+# AboutView
+
+---
+
+```vue live
+<AboutView />
+```

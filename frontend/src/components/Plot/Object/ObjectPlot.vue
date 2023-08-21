@@ -6,6 +6,7 @@
 import { ref, watch, onMounted } from "vue";
 import { newPlot, react, type PlotData, type Layout } from "plotly.js-dist-min";
 
+// Plot data
 const props = defineProps<{ data: Partial<PlotData>[] }>();
 
 const plotContainer = ref<HTMLDivElement | null>(null);
@@ -24,13 +25,16 @@ const layout = {
 
 const config = { responsive: true };
 
-const init = () => {
+/**
+ * Use to init plot
+ */
+function init() {
     const trace: Partial<Plotly.Data>[] = props.data ? props.data : [];
     if (plotContainer.value === null) {
         throw new Error("Error: Invalid container");
     }
     newPlot(plotContainer.value, trace, layout, config);
-};
+}
 
 const update = () => {
     if (plotContainer.value === null) {

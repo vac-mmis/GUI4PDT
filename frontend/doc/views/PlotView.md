@@ -1,0 +1,7 @@
+# PlotView
+
+---
+
+```vue live
+<PlotView />
+```

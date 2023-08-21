@@ -1,6 +1,9 @@
 <template>
     <v-sheet class="d-flex ma-2 flex-column">
-        <span class="pr-2"><slot /></span>
+        <span class="pr-2">
+            <!-- Controller header -->
+            <slot />
+        </span>
         <div
             class="d-flex flex-row justify-space-between align-center"
             v-for="(controller, i) in controllers"
