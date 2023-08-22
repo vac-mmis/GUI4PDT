@@ -1,35 +1,14 @@
 /**
  * Implementation of objects inside PDTs.
  *
- * @module object.model
+ * @module PDT.Object
  */
 import { Group } from "three";
 
-import {
-    Location,
-    type LocationJSON,
-    Class,
-    type ClassJSON,
-    Rotation,
-    type RotationJSON,
-    Material,
-    type MaterialJSON,
-} from "@/models/Properties";
+import { Location, Class, Rotation, Material } from "@/models/Properties";
+import type { ObjectJSON } from "@/interfaces/pdt";
 import type { PDT } from "./pdt.model";
 import type { Controller } from "./Controls/Controller";
-
-/**
- * PDT object data type, following the backend API data format.
- */
-export type ObjectJSON = {
-    id: number;
-    class: ClassJSON[];
-    location: LocationJSON[];
-    rotation: RotationJSON[];
-    material: MaterialJSON[];
-    scale: (number | undefined)[];
-    physics?: boolean[];
-};
 
 /**
  * Implements representation of objects in PDT, including class, material, location, rotation etc.

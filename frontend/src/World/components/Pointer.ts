@@ -1,7 +1,7 @@
 /**
  * This wrapper implements a module to handle mouse actions (click, hover) and allow control on visible objects.
  *
- * @module world.pointer
+ * @module World.Pointer
  */
 import { Raycaster, Vector2, type Object3D, type PerspectiveCamera } from "three";
 

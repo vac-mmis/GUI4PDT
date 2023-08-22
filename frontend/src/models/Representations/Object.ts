@@ -1,7 +1,7 @@
 /**
  * Implementation of object representation. Can be use to represent {@link Categorical} distribution.
  *
- * @module representation.object
+ * @module Representation.Object
  */
 
 import { Group, Mesh, MeshStandardMaterial } from "three";

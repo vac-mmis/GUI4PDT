@@ -1,18 +1,19 @@
 /**
  * Stores and loads available pdt provided by backend API.
  *
- * @module pdt.store
+ * @module Store.PDT
  */
 import { ref, computed, toRaw } from "vue";
 import axios from "axios";
 import { defineStore } from "pinia";
 
-import { PDT, type PDTJSON } from "@/models/pdt.model";
+import type { PDTJSON } from "@/interfaces/pdt";
+import { PDT } from "@/models/pdt.model";
 
 /**
  * PDT store handle by Pinia.
  */
-const PDTStore: any = defineStore("PDTs", () => {
+export const PDTStore: any = defineStore("PDTs", () => {
     /** Stored PDT. */
     const _PDTs = ref([] as PDT[]);
     /** Current selected PDT. */
@@ -78,5 +79,3 @@ const PDTStore: any = defineStore("PDTs", () => {
 
     return { timeLength, getPDT, getPDTList, list, fetch, find };
 });
-
-export default PDTStore;

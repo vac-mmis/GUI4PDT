@@ -72,8 +72,8 @@ import { Controller } from "@/models/Controls/Controller";
 
 import type { PDTObject } from "@/models/object.model";
 import type { Map } from "@/models/map.model";
-import PDTStore from "@/store/pdt.store";
-import worldStore from "@/store/world.store";
+import { PDTStore } from "@/store/pdt.store";
+import { worldStore } from "@/store/world.store";
 
 const { getPDT } = storeToRefs(PDTStore());
 const { setStatus } = worldStore();

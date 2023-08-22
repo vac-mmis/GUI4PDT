@@ -1,20 +1,16 @@
 /**
  * Implementation of object location (where object could be is in space).
  *
- * @module object.location
+ * @module Object.Location
  */
 
 import { Group, Vector3 } from "three";
 
 import { Controller } from "@/models/Controls/Controller";
+import type { LocationJSON } from "@/interfaces/properties";
 import { type Distribution, makeDistribution } from "@/models/Distributions";
 import { type Representation, makeRepresentation } from "@/models/Representations";
 import type { PDTObject } from "@/models/object.model";
-
-/**
- * Location data type, following the backend API data format.
- */
-export type LocationJSON = { dist: Distribution } | [number, number, number];
 
 /**
  * Associates used distributions to their representations

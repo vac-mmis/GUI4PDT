@@ -1,3 +1,8 @@
+/**
+ * Main file for MMIS frontend application
+ *
+ * @module index
+ */
 import { createApp } from "vue";
 import App from "./App.vue";
 
@@ -61,3 +66,9 @@ axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL ?? "";
 const pinia = createPinia();
 
 createApp(App).use(vuetify).use(pinia).use(router).mount("#app");
+
+export * as Interfaces from "@/interfaces";
+export * as Models from "@/models";
+export * as Router from "@/router";
+export * as Stores from "@/store";
+export * as World from "@/World";

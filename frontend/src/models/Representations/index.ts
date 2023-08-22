@@ -8,7 +8,7 @@
  * 4. Add it to {@link repClassList} variable, as existing representations.
  * 5. Export it at the bottom of this index, as existing representations.
  *
- * @module representation
+ * @module Representation
  */
 
 import type { Object3D } from "three";
@@ -22,14 +22,14 @@ import { ZVariations } from "./ZVar";
 /**
  * List of available representation classes. New ones must be added here.
  */
-const repClassList = [Scatter3D, Box, ObjectRepresentation, Surface, ZVariations] as const;
+export const repClassList = [Scatter3D, Box, ObjectRepresentation, Surface, ZVariations] as const;
 
 /**
  * Dictionary which associates representation names to their constructors
  *
  * @remark Please add `static repName` attribute to each new implementation, this is used here to build this dictionary.
  */
-const representations = repClassList.reduce(
+export const representations = repClassList.reduce(
     (o, repClass) =>
         Object.assign(o, {
             [repClass.repName]: repClass,
@@ -55,7 +55,7 @@ export interface Representation extends Object3D {
 /**
  * Available representation parameters type.
  */
-type RepParams = ConstructorParameters<(typeof repClassList)[number]>;
+export type RepParams = ConstructorParameters<(typeof repClassList)[number]>;
 
 /**
  * Factory method to create a representation from any data.

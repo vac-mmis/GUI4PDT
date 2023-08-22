@@ -1,7 +1,7 @@
 /**
  * Implementation of 3D scatter representation. Can be use to represent {@link Multivariate} distribution.
  *
- * @module representation.scatter3D
+ * @module Representation.Scatter3D
  */
 
 import {

@@ -32,10 +32,10 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 
-import PDTStore from "@/store/pdt.store";
-import worldStore from "@/store/world.store";
-import modelStore from "@/store/model.store";
-import materialStore from "@/store/material.store";
+import { PDTStore } from "@/store/pdt.store";
+import { worldStore } from "@/store/world.store";
+import { modelStore } from "@/store/model.store";
+import { materialStore } from "@/store/material.store";
 
 const models = modelStore();
 const materials = materialStore();

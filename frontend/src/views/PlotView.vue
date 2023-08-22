@@ -20,7 +20,7 @@
             </div>
         </div>
         <div v-if="timeLength > 1" class="position-relative w-75 ma-6 z-1">
-            <TimeSlider @time="(t : number) => selectedTime = t" />
+            <TimeSlider @time="(t: number) => (selectedTime = t)" />
         </div>
     </div>
 
@@ -59,8 +59,8 @@ import SceneMenu from "@/components/Plot/Scene/SceneMenu.vue";
 import TimeSlider from "@/components/Plot/Scene/TimeSlider.vue";
 import ThreeScene from "@/components/Plot/Scene/ThreeScene.vue";
 
-import PDTStore from "@/store/pdt.store";
-import worldStore from "@/store/world.store";
+import { PDTStore } from "@/store/pdt.store";
+import { worldStore } from "@/store/world.store";
 
 const { timeLength } = storeToRefs(PDTStore());
 const { getStatus } = storeToRefs(worldStore());

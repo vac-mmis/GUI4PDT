@@ -2,6 +2,8 @@ import * as path from "path";
 import fs, { readdirSync } from "fs";
 import { defineConfig } from "vitepress";
 
+import typedocSidebar from "../modules/typedoc-sidebar.json";
+
 const getSideBar = (root, dir, ignorePath = []) => {
     const components = readdirSync(dir).filter((fileName) => !ignorePath.includes(fileName));
     if (components.length <= 0) {
@@ -26,8 +28,25 @@ const getSideBar = (root, dir, ignorePath = []) => {
 
 export default defineConfig({
     outDir: path.resolve(__dirname, "../dist"),
+    name: "MMIS GUI PDT Visualizer Documentation",
     base: "/",
     themeConfig: {
-        sidebar: getSideBar("doc", "doc", [".vitepress", "index.md", "vite.config.mjs"]),
+        sidebar: [
+            {
+                text: "Components",
+                items: getSideBar("doc", "doc/components"),
+            },
+            {
+                text: "Views",
+                items: getSideBar("doc", "doc/views"),
+            },
+            {
+                text: "Modules",
+                items: typedocSidebar,
+            },
+        ],
+    },
+    rewrites: {
+        "/doc/modules/(.*)": "/modules/(.*)",
     },
 });

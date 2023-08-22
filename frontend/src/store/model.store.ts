@@ -1,7 +1,7 @@
 /**
  * Stores and loads available models provided by backend API.
  *
- * @module material.store
+ * @module Store.Models
  */
 import { BoxGeometry, Mesh, MeshStandardMaterial, Group } from "three";
 import { loadModel } from "@/World/systems/loader";
@@ -10,18 +10,12 @@ import { ref, computed, toRaw } from "vue";
 import axios from "axios";
 import { defineStore } from "pinia";
 
-/**
- * Model file format provided by the backend API.
- */
-export type ModelFile = {
-    name: string;
-    content: string;
-};
+import type { ModelFile } from "@/interfaces/assets";
 
 /**
  * Model store handle by Pinia.
  */
-const modelStore: any = defineStore("models", () => {
+export const modelStore: any = defineStore("models", () => {
     const _models = ref([] as Group[]);
     /** Default model */
     const _default = computed(() => {
@@ -72,5 +66,3 @@ const modelStore: any = defineStore("models", () => {
 
     return { length, fetch, find };
 });
-
-export default modelStore;

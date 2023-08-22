@@ -1,7 +1,7 @@
 /**
  * This wrapper provides a tool to auto resize world.
  *
- * @module world.resizer
+ * @module World.Resizer
  */
 
 import type { PerspectiveCamera, WebGLRenderer } from "three";

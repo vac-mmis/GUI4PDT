@@ -1,7 +1,7 @@
 /**
  * Stores and loads available material provided by backend API.
  *
- * @module material.store
+ * @module Store.Material
  */
 import type { MeshStandardMaterial } from "three";
 import { loadMaterial } from "@/World/systems/loader";
@@ -10,22 +10,12 @@ import { ref, computed, toRaw } from "vue";
 import axios from "axios";
 import { defineStore } from "pinia";
 
-/**
- * Material file format provided by the backend API.
- */
-export type MaterialFile = {
-    name: string;
-    albedo: string;
-    ao: string;
-    metalness: string;
-    normal: string;
-    roughness: string;
-};
+import type { MaterialFile } from "@/interfaces/assets";
 
 /**
  * Material store handle by Pinia.
  */
-const materialStore: any = defineStore("materials", () => {
+export const materialStore: any = defineStore("materials", () => {
     const _materials = ref([] as MeshStandardMaterial[]);
 
     /** Number of fetched material.  */
@@ -59,5 +49,3 @@ const materialStore: any = defineStore("materials", () => {
 
     return { length, fetch, find };
 });
-
-export default materialStore;

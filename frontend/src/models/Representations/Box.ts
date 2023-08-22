@@ -1,7 +1,7 @@
 /**
  * Implementation of box representation. Can be use to represent {@link UniformContinuous} distribution.
  *
- * @module representation.box
+ * @module Representation.Box
  */
 
 import { BoxGeometry, Mesh, MeshStandardMaterial } from "three";
@@ -9,7 +9,7 @@ import { BoxGeometry, Mesh, MeshStandardMaterial } from "three";
 import type { Representation } from "@/models/Representations";
 
 /** Epsilon value to change zero coordinates. */
-const epsilon = 0.001;
+export const epsilon = 0.001;
 
 /**
  * Implementation of box representation.

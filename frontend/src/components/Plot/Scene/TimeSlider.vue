@@ -51,12 +51,12 @@
 import { ref, computed, toRaw, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 
-import PDTStore from "@/store/pdt.store";
-import WorldStore from "@/store/world.store";
+import { PDTStore } from "@/store/pdt.store";
+import { worldStore } from "@/store/world.store";
 
 const { timeLength } = storeToRefs(PDTStore());
-const { getTimer } = storeToRefs(WorldStore());
-const { setStatus } = WorldStore();
+const { getTimer } = storeToRefs(worldStore());
+const { setStatus } = worldStore();
 
 // Slider emitted timer value
 const emits = defineEmits<(e: "time", time: number) => void>();

@@ -1,7 +1,7 @@
 /**
  * Implementation of surface representation.
  *
- * @module representation.surface
+ * @module Representation.Surface
  */
 
 import {

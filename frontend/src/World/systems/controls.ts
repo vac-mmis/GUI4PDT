@@ -1,7 +1,7 @@
 /**
  * This wrapper gives controller plugin to {@link World} module.
  *
- * @module world.controls
+ * @module World.Controls
  */
 import type { Camera } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";

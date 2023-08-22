@@ -34,7 +34,7 @@ export class World<T extends WorldContent> {
     private content: T;
 
     /**
-     * Creates a new Three.JS world in adding selected set in {@link World.interface}.
+     * Creates a new Three.JS world in adding selected set in {@link World.WorldContent}.
      *
      * @param content World content.
      * @param container HTML div container which contains Three.JS world.
@@ -90,7 +90,7 @@ export class World<T extends WorldContent> {
     }
 
     /**
-     * Update world. Used when selected set in {@link World.interface} is changed.
+     * Update world. Used when selected set in {@link World.WorldContent} is changed.
      *
      * @param content World content.
      * @param container HTML div container which contains Three.JS world.
@@ -127,3 +127,7 @@ export class World<T extends WorldContent> {
         return this.timer;
     }
 }
+
+export * from "./components";
+export * from "./interface";
+export * from "./systems";

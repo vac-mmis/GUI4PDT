@@ -1,20 +1,16 @@
 /**
  * Implementation of object class (what kind of object it could be).
  *
- * @module object.material
+ * @module Object.Material
  */
 
 import { MeshStandardMaterial } from "three";
 import type { PlotData } from "plotly.js-dist-min";
 
+import type { MaterialJSON } from "@/interfaces/properties";
 import { Categorical } from "@/models/Distributions";
 import type { PDTObject } from "@/models/object.model";
-import materialStore from "@/store/material.store";
-
-/**
- * Material data type, following the backend API data format.
- */
-export type MaterialJSON = string | { dist: Categorical };
+import { materialStore } from "@/store/material.store";
 
 /**
  * Implements representation of object material.

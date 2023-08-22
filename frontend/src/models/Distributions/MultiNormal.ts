@@ -1,12 +1,12 @@
 /**
  * Implementation of multivariate normal distribution.
  *
- * @module dist.multiNormal
+ * @module Distribution.MultivariateNormal
  */
 
 import { sqrtm, add, multiply, sum } from "mathjs";
 
-import type { Distribution } from "@/models/Distributions";
+import type { MultiNormalJSON } from "@/interfaces/distribution";
 
 /**
  * Implementation of multivariate normal distribution.
@@ -15,14 +15,13 @@ import type { Distribution } from "@/models/Distributions";
  *
  * @see {@link https://en.wikipedia.org/wiki/Multivariate_normal_distribution Multivariate normal distribution on Wikipedia}
  */
-export class MultivariateNormal implements Distribution {
+export class MultivariateNormal implements MultiNormalJSON {
     /** Distribution class name */
     static distName = "multivariate-normal";
-    type = MultivariateNormal.distName;
+    type: "multivariate-normal";
 
-    private mean: number[];
-    /** Covariance matrix. */
-    private cov: number[][];
+    mean: number[];
+    cov: number[][];
     /** Inverted covariance matrix. Stored for computation efficiency. */
     private invCov: number[][];
 
@@ -32,6 +31,7 @@ export class MultivariateNormal implements Distribution {
      * @param dist Multivariate normal distribution data with mean and covariance matrix.
      */
     constructor(dist: MultivariateNormal) {
+        this.type = "multivariate-normal";
         this.mean = dist.mean;
         this.cov = dist.cov;
         this.invCov = sqrtm(this.cov);

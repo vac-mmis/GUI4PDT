@@ -3,14 +3,13 @@
  *
  * @remark File format are defined in dedicated {@link Store} modules.
  *
- * @model world.loader.
+ * @module World.Loader
  */
 import { Group, MeshStandardMaterial, TextureLoader } from "three";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { GLTFLoader, type GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-import type { MaterialFile } from "@/store/material.store";
-import type { ModelFile } from "@/store/model.store";
+import type { ModelFile, MaterialFile } from "@/interfaces/assets";
 
 // GLTFLoader with compression
 const loader = new GLTFLoader();
@@ -56,7 +55,7 @@ export async function loadModel(model: ModelFile): Promise<Group> {
 /**
  * Loads material from file blobs provided by backend API
  *
- * @remark For the moment, this loader only PNG and JPEG files as material components. See {@link material.store} and backend API to have details on material ressources format.
+ * @remark For the moment, this loader only PNG and JPEG files as material components. See {@link Stores.materialStore} and backend API to have details on material ressources format.
  *
  * @param model Material file blob to load.
  *

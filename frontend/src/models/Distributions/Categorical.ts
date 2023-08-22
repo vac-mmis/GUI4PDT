@@ -1,23 +1,21 @@
 /**
  * Implementation of categorical distribution.
  *
- * @module dist.categorical
+ * @module Distribution.Categorical
  */
 
-import { type Distribution } from "@/models/Distributions";
-
+import type { CatJSON } from "@/interfaces/distribution";
 /**
  * Implementation of categorical distribution.
  *
  * @see {@link https://en.wikipedia.org/wiki/Categorical_distribution Categorical distribution on Wikipedia}
  */
-export class Categorical implements Distribution {
+export class Categorical implements CatJSON {
     /** Distribution class name */
     static distName = "categorical";
     type = Categorical.distName;
 
-    /** Values and their probabilities. */
-    private mass: Record<string, number>;
+    mass: Record<string, number>;
 
     /**
      *  Creates new categorical distribution from given distribution data.

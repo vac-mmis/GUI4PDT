@@ -1,4 +1,10 @@
-export { Class, type ClassJSON } from "./Class";
-export { Location, type LocationJSON } from "./Location";
-export { Rotation, type RotationJSON } from "./Rotation";
-export { Material, type MaterialJSON } from "./Material";
+/**
+ * Implementations of PDT object properties.
+ *
+ * @module Object
+ */
+
+export { Class } from "./Class";
+export { Location } from "./Location";
+export { Rotation } from "./Rotation";
+export { Material } from "./Material";

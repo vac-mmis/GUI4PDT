@@ -8,9 +8,10 @@
  * 4. Add it to {@link distClassList} array.
  * 5. Export it at the bottom of this index, as existing distributions.
  *
- * @module dist
+ * @module Distribution
  */
 
+import type { DistJSON } from "@/interfaces/distribution";
 import { Categorical } from "./Categorical";
 import { MultivariateNormal } from "./MultiNormal";
 import { MultivariateVonMises } from "./MultiVonMises";
@@ -19,7 +20,7 @@ import { UniformContinuous } from "./UniContinuous";
 /**
  * List of available distribution classes. New ones must be added here.
  */
-const distClassList = [
+export const distClassList = [
     UniformContinuous,
     MultivariateNormal,
     MultivariateVonMises,
@@ -45,7 +46,7 @@ const distributions = distClassList.reduce(
  * @remark Each new distribution implementation must implement this interface.
  * @remark Each new one must have a `static distName` equal to `type`, it is used to distinct classes in `distributions` variable.
  */
-export abstract class Distribution {
+export abstract class Distribution implements DistJSON {
     /**
      * Name of the implemented distribution share by all distributions data.
      *

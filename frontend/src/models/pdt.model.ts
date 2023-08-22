@@ -1,24 +1,17 @@
 /**
  * Implementation of Probabilistic Digital-Twins (PDT)
  *
- * @module PDT.model
+ * @module PDT
  */
 
 import { Group, Object3D, type Intersection, MeshStandardMaterial } from "three";
-import { PDTObject, type ObjectJSON } from "@/models/object.model";
+
+import type { PDTJSON, ObjectJSON } from "@/interfaces/pdt";
+import { PDTObject } from "@/models/object.model";
 import { Map } from "@/models/map.model";
 import type { WorldContent } from "@/World/interface";
 
-import materialStore from "@/store/material.store";
-
-/**
- * PDT data type, following the backend API data format.
- */
-export interface PDTJSON {
-    name: string;
-    objects: ObjectJSON[];
-    elevationMap?: [number, number, number, number][];
-}
+import { materialStore } from "@/store/material.store";
 
 /**
  * Implements PDT representation, including objects and global data.

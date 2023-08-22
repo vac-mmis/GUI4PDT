@@ -1,7 +1,7 @@
 /**
  * This is a wrapper of world camera creation.
  *
- * @module world.camera
+ * @module World.Camera
  */
 import { PerspectiveCamera } from "three";
 

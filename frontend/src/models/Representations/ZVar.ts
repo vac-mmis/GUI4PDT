@@ -1,7 +1,7 @@
 /**
  * Implementation of z variations representation. Can be use to represent {@link UniformContinuous} distribution.
  *
- * @module representation.zVariations
+ * @module Representation.ZVariations
  */
 
 import { BoxGeometry, Color, InstancedMesh, Matrix4, MeshStandardMaterial } from "three";

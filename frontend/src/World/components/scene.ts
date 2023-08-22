@@ -1,7 +1,7 @@
 /**
  * This wrapper creates scene for {@link World} module.
  *
- * @module world.scene
+ * @module World.Scene
  */
 import { Color, Scene } from "three";
 

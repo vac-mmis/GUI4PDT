@@ -1,7 +1,7 @@
 /**
- * PDT map representation, represented as {@link Surface} with variations.
+ * PDT map representation, represented as {@link Models.Representation.Surface} with variations.
  *
- * @module map.model
+ * @module PDT.Map
  */
 import { Group, Color, MeshStandardMaterial } from "three";
 
@@ -17,7 +17,7 @@ type MapVisibility = (typeof MapVisibilities)[number];
 export class Map extends Group {
     /** Map dataset with position and z-variations : `[[x0,y0,z0,dz0], [x1,y1,z1,dz1],...]`. */
     private mapData: [number, number, number, number][];
-    /** Elevation surface as {@link Surface} representation. */
+    /** Elevation surface as {@link Models.Representation.Surface} representation. */
     private mapSurface: Representation;
     /** Representation of variations as vertical bars */
     private mapVariations: Representation;

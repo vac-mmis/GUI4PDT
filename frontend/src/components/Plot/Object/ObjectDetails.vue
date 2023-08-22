@@ -51,7 +51,7 @@ import { storeToRefs } from "pinia";
 
 import ObjectPlot from "@/components/Plot/Object/ObjectPlot.vue";
 
-import PDTStore from "@/store/pdt.store";
+import { PDTStore } from "@/store/pdt.store";
 
 const { getPDT } = storeToRefs(PDTStore());
 const props = defineProps<{ time: number }>();

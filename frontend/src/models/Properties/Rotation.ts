@@ -1,22 +1,18 @@
 /**
  * Implementation of object rotation (where object could be is in space).
  *
- * @module object.rotation
+ * @module Object.Rotation
  */
 
 import { Euler, Group, Vector3 } from "three";
 
+import type { RotationJSON } from "@/interfaces/properties";
 import { type Distribution, makeDistribution } from "@/models/Distributions";
 import type { PDTObject } from "@/models/object.model";
 import { Controller } from "@/models/Controls/Controller";
 
 /** Angle units used in JSON files */
 const ANGLE_UNIT = "deg" as const;
-
-/**
- * Rotation data type, following the backend API data format.
- */
-export type RotationJSON = { dist: Distribution } | [number, number, number];
 
 const RotationVisibilities = ["move"] as const;
 type RotationVisibility = (typeof RotationVisibilities)[number];

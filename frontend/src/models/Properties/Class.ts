@@ -1,24 +1,20 @@
 /**
  * Implementation of object class (what kind of object it could be).
  *
- * @module object.class
+ * @module Object.Class
  */
 
 import { type Euler, Group } from "three";
 import type { PlotData } from "plotly.js-dist-min";
 
 import { Controller } from "@/models/Controls/Controller";
+import type { ClassJSON } from "@/interfaces/properties";
 import { Categorical } from "@/models/Distributions";
 import { Material } from "@/models/Properties";
 import type { PDTObject } from "@/models/object.model";
 import { makeRepresentation, type ObjectRepresentation } from "@/models/Representations";
 
-import modelStore from "@/store/model.store";
-
-/**
- * Class data type, following the backend API data format.
- */
-export type ClassJSON = string | { dist: Categorical };
+import { modelStore } from "@/store/model.store";
 
 const ClassVisibilities = ["visible", "alpha"] as const;
 type ClassVisibility = (typeof ClassVisibilities)[number];

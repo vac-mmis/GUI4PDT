@@ -11,8 +11,9 @@
         "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
         "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
         "format": "prettier --write src/",
-        "styleguide": "vue-docgen && concurrently \"vue-docgen --watch\" \"vitepress dev doc\"",
-        "styleguide:build": "vue-docgen && vitepress build docs"
+        "typedoc": "typedoc --tsconfig tsconfig.doc.json",
+        "doc:dev": "npm run typedoc && vue-docgen && concurrently \"typedoc --tsconfig tsconfig.doc.json --watch\" \"vue-docgen --watch\" \"vitepress dev doc\"",
+        "doc:build": "npm run typedoc && vue-docgen && vitepress build doc"
     },
     "dependencies": {
         "axios": "^1.4.0",
@@ -45,6 +46,9 @@
         "jsdom": "^22.1.0",
         "npm-run-all": "^4.1.5",
         "prettier": "^3.0.2",
+        "typedoc": "^0.24.8",
+        "typedoc-plugin-markdown": "^4.0.0-next.18",
+        "typedoc-vitepress-theme": "^1.0.0-next.0",
         "typescript": "~5.1.6",
         "vite": "^4.4.9",
         "vitepress": "^1.0.0-rc.4",

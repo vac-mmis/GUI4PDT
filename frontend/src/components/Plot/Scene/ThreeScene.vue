@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 
-import worldStore from "@/store/world.store";
+import { worldStore } from "@/store/world.store";
 
 const emits = defineEmits<(e: "update", update: number) => void>();
 

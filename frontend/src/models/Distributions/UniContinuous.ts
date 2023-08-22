@@ -1,12 +1,12 @@
 /**
  * Implementation of multivariate continuous uniform distribution.
  *
- * @module dist.uniContinuous
+ * @module Distribution.UniformContinuous
  */
 
 import { mean } from "mathjs";
 
-import type { Distribution } from "@/models/Distributions";
+import type { UniContinuousJSON } from "@/interfaces/distribution";
 
 /**
  * Implementation of multivariate continuous uniform distribution.
@@ -15,15 +15,13 @@ import type { Distribution } from "@/models/Distributions";
  *
  * @see {@link https://en.wikipedia.org/wiki/Continuous_uniform_distribution Continuous uniform distribution on Wikipedia}
  */
-export class UniformContinuous implements Distribution {
+export class UniformContinuous implements UniContinuousJSON {
     /** Distribution class name */
     static distName = "uniform-continuous";
-    type = UniformContinuous.distName;
+    type: "uniform-continuous";
 
-    /** Geometric center point of the distribution */
-    private mean: number[];
-    /** Distributions interval for each dimension : `[[xMin, xMax], [yMin, yMax], [zMin,zMax] ...]` */
-    private params: number[][];
+    mean: number[];
+    params: number[][];
 
     /**
      *  Creates new multivariate continuous uniform distribution from given distribution data.
@@ -31,6 +29,7 @@ export class UniformContinuous implements Distribution {
      * @param dist Multivariate continuous uniform distribution data with mean and parameters.
      */
     constructor(dist: UniformContinuous) {
+        this.type = "uniform-continuous";
         this.params = dist.params;
         this.mean = dist.params.map((p) => mean(p));
     }

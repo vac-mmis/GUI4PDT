@@ -3,7 +3,7 @@
  *
  * @remark For the moment, one second in world animation correspond to a new timestamp in PDT.
  *
- * @module world.timer
+ * @module World.Timer
  */
 import { Clock, type Camera, type Scene, type WebGLRenderer } from "three";
 

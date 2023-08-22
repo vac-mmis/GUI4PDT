@@ -1,7 +1,7 @@
 /**
  * This wrapper creates renderers for {@link World} module.
  *
- * @module world.renderer
+ * @module World.Renderer
  */
 import { WebGLRenderer } from "three";
 

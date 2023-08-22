@@ -1,18 +1,18 @@
 /**
  * Stores and loads Three.JS world defined in ${@link World} module
  *
- * @module world.store
+ * @module Store.World
  */
 
 import { ref, computed, toRaw } from "vue";
 import { defineStore, storeToRefs } from "pinia";
 import type { Object3D } from "three";
 
-import { World } from "@/World/world";
+import { World } from "@/World";
 import type { Timer } from "@/World/systems/Timer";
 import type { PDT } from "@/models/pdt.model";
 
-import PDTStore from "@/store/pdt.store";
+import { PDTStore } from "@/store/pdt.store";
 
 /**
  * Defines world status message format
@@ -25,7 +25,7 @@ export type Status = {
 /**
  * World store handle by Pinia.
  */
-const worldStore: any = defineStore("worldStore", () => {
+export const worldStore: any = defineStore("worldStore", () => {
     /** World internal store */
     const _World = ref<World<PDT>>();
     /** World loading status */
@@ -80,5 +80,3 @@ const worldStore: any = defineStore("worldStore", () => {
 
     return { getWorld, getStatus, getTimer, setWorld, setStatus };
 });
-
-export default worldStore;

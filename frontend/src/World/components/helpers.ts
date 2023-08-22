@@ -1,7 +1,7 @@
 /**
  * This wrapper creates some helpers for {@link World} module.
  *
- * @module world.helpers
+ * @module World.Helpers
  */
 import { AxesHelper, GridHelper } from "three";
 

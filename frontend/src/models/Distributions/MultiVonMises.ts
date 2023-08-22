@@ -1,10 +1,11 @@
 /**
  * Implementation of multivariate Von Mises distribution.
  *
- * @module dist.multiVonMises
+ * @module Distribution.MultivariateVonMises
  */
 
-import { type Distribution, MultivariateNormal } from "@/models/Distributions";
+import type { MultiVonMisesJSON } from "@/interfaces/distribution";
+import { MultivariateNormal } from "@/models/Distributions";
 
 /**
  * Implementation of multivariate Von Mises distribution.
@@ -13,14 +14,13 @@ import { type Distribution, MultivariateNormal } from "@/models/Distributions";
  *
  * @see {@link https://en.wikipedia.org/wiki/Von_Mises_distribution Von Mises distribution on Wikipedia}
  */
-export class MultivariateVonMises implements Distribution {
+export class MultivariateVonMises implements MultiVonMisesJSON {
     /** Distribution class name */
     static distName = "von-mises";
-    type = MultivariateVonMises.distName;
+    type: "von-mises";
 
-    private mean: number[];
-    /** Concentration */
-    private kappa: number[];
+    mean: number[];
+    kappa: number[];
 
     /**
      * Creates new multivariate Von Mises distribution from given distribution data.
@@ -29,6 +29,7 @@ export class MultivariateVonMises implements Distribution {
      * @param units Set `dist` angle units to enable conversion to radians (default :`"rad"`).
      */
     constructor(dist: MultivariateVonMises, units: "rad" | "deg" = "rad") {
+        this.type = "von-mises";
         // Converts degrees to radians if needed.
         switch (units) {
             case "deg":

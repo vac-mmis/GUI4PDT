@@ -1,5 +1,7 @@
 /**
  * This wrapper creates lights for {@link World} module.
+ *
+ * @module World.Lights
  */
 import { DirectionalLight, AmbientLight } from "three";
 

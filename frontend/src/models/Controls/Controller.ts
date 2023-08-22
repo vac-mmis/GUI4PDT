@@ -1,10 +1,11 @@
 /**
  * This file implements a generic controller to build controller Vue components
  *
- * @module controller
+ * @module Controller
  */
 
-const NameIcon = {
+/** Dictionary which links command name and their icons. */
+export const NameIcon = {
     loc: "fas fa-crosshairs",
     rot: "fas fa-arrows-rotate",
     class: "fas fa-object-group",
@@ -12,20 +13,25 @@ const NameIcon = {
     "z-var": "fas fa-chart-simple",
 };
 
-const ValueIcon = {
+/** Dictionary which links command values and their icons. */
+export const ValueIcon = {
     visible: "fas fa-eye",
     alpha: "fas fa-clone",
     plot: "fas fa-chart-simple",
     move: "fas fa-arrows-turn-to-dots",
 };
 
-const ValueTip = {
+/** Dictionary which links command values and their tips. */
+export const ValueTip = {
     visible: "Show",
     alpha: "Distribution as transparency",
     plot: "Distribution as points",
     move: "Distribution as random mouvement",
 };
 
+/**
+ * Controller value type.
+ */
 export type ControllerValues = keyof typeof ValueIcon;
 
 /**
