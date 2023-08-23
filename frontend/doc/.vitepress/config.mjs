@@ -28,7 +28,7 @@ const getSideBar = (root, dir, ignorePath = []) => {
 
 export default defineConfig({
     outDir: path.resolve(__dirname, "../dist"),
-    name: "MMIS GUI PDT Visualizer Documentation",
+    title: "MMIS GUI for PDT",
     base: "/",
     themeConfig: {
         sidebar: [

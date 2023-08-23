@@ -8,6 +8,21 @@
 
 ## Get started
 
+### Environment variables
+
+To run this project, you will need to add the following environment variables to your `.env` file :
+
+-   `PORT` : Express.JS server port
+-   `DATA` : Main data folder
+-   `MODELS` : Models folder
+-   `MATERIALS` : Material folder
+
+Defaults could be setup with :
+
+```sh
+cp .env.vault .env # Get right environment variables
+```
+
 ### Installation
 
 ```sh
@@ -32,22 +47,61 @@ NODE_ENV=production npm run build
 docker run -t mmis-gui-backend .
 ```
 
-## Routes
+## API Reference
 
 ### PDT
 
--   `GET /api/pdts/list` : Get available PDT name list
--   `GET /api/pdt/:name` : Find PDT by name
+#### Get available PDT names list
+
+```http
+  GET /api/pdts/list
+```
+
+#### Get a specific PDT by its name
+
+```http
+  GET /api/pdt/${name}
+```
+
+| Parameter | Type     | Description                        |
+| :-------- | :------- | :--------------------------------- |
+| `name`    | `string` | **Required**. Name of PDT to fetch |
 
 ### Models
 
--   `GET /api/models` : Get available models
--   `GET /api/model/:name` : Find model by name
+#### Get available models
+
+```http
+  GET /api/models
+```
+
+#### Get a specific model by its name
+
+```http
+  GET /api/model/${name}
+```
+
+| Parameter | Type     | Description                          |
+| :-------- | :------- | :----------------------------------- |
+| `name`    | `string` | **Required**. Name of model to fetch |
 
 ### Materials
 
--   `GET /api/materials` : Get available materials
--   `GET /api/material/:name` : Find material by name
+#### Get available materials
+
+```http
+  GET /api/materials
+```
+
+#### Get a specific material by its name
+
+```http
+  GET /api/material/${name}
+```
+
+| Parameter | Type     | Description                             |
+| :-------- | :------- | :-------------------------------------- |
+| `name`    | `string` | **Required**. Name of material to fetch |
 
 ## Developer documentation
 

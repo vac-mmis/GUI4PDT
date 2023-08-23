@@ -1,17 +1,19 @@
-# Welcome to MMIS-GUI-frontend developer docs 👋
+# Developper docs 👋
 
 ![Version](https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000)
 [![License: ISC](https://img.shields.io/badge/License-ISC-yellow.svg)](#)
 
-> MMIS GUI project aims at providing Probabilistic Digital-Twins (PDT) Web 3D visualization. This is the Vue + Three.JS frontend which gives the GUI interface for PDTs.
+## Development environment setup
 
-# Vue + Vite default README
+### Requirements
 
-## Recommended IDE Setup
+-   Node.JS version `18.0` or higher.
+
+### Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-## Type Support for `.vue` Imports in TS
+### Type Support for `.vue` Imports in TS
 
 TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
 
@@ -22,14 +24,45 @@ If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has a
     2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
 2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
 
-## Customize configuration
+### Start development environment
+
+```sh
+npm run dev
+```
+
+### Customize configuration
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## Author
+### Start dev environment
 
-👤 **[Mathieu Dupoux](mailto:mdupoux@bordeaux-inp.fr)**
+```sh
+npm run dev
+```
 
----
+## Documentation
 
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+Frontend documentation is automatically generated in Markdown format from [TSDoc](https://tsdoc.org/) doc comments standard with [TypeDoc](https://typedoc.org/). Documentation for Vue components is also generated from code by [vue-docgen-cli](https://vue-styleguidist.github.io/docs/docgen-cli.html).
+
+Markdown documentation is available in [/doc](/frontend/doc) folder, but you can alse generate documentation webpages with [Vitepress](https://vitepress.dev).
+
+### Generate the documentation
+
+```sh
+npm run typedoc
+```
+
+### Launch doc pages in development mode
+
+```sh
+npm run doc:dev
+```
+
+### Build Vitepress doc pages
+
+```sh
+npm run doc:build
+npm run doc:preview # To view result without HTTP server.
+```
+
+Documentation webpages are generated in [doc/dist](/frontend/doc/dist/) folder.
