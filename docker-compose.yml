@@ -3,6 +3,9 @@ version: "3"
 services:
     frontend:
         image: mmis-gui-frontend
+        environment:
+            # Don't change the API url as it can't be dynamically changed in the frontend container without rebuilding
+            - VITE_API_BASE_URL=http://localhost:3000/api
         build:
             context: ./frontend
             dockerfile: Dockerfile
@@ -30,6 +33,7 @@ services:
             - ./backend/data:/usr/src/app/data
             - ./backend/assets:/usr/src/app/assets
         ports:
+            # Don't change 3000 host port as it can't be dynamically changed in the frontend container
             - 3000:3000
         networks:
             - backend
