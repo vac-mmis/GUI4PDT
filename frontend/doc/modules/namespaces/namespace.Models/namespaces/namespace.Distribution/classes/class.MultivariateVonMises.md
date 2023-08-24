@@ -41,7 +41,7 @@ models/Distributions/MultiVonMises.ts:31
 
 ### distName
 
-> `static` **distName**: `string` = `"von-mises"`
+> `static` **distName**: `"von-mises"`
 
 Distribution class name
 
@@ -53,11 +53,11 @@ models/Distributions/MultiVonMises.ts:19
 
 ### type
 
-> **type**: `"von-mises"`
+> `readonly` **type**: `"von-mises"` = `MultivariateVonMises.distName`
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:20
+models/Distributions/MultiVonMises.ts:21
 
 #### Implementation of
 
@@ -67,7 +67,7 @@ models/Distributions/MultiVonMises.ts:20
 
 ### mean
 
-> **mean**: `number`[]
+> `readonly` **mean**: `number`[]
 
 #### Defined In
 
@@ -81,7 +81,7 @@ models/Distributions/MultiVonMises.ts:22
 
 ### kappa
 
-> **kappa**: `number`[]
+> `readonly` **kappa**: `number`[]
 
 Concentration
 
@@ -95,23 +95,9 @@ models/Distributions/MultiVonMises.ts:23
 
 ## Methods
 
-### getType
+### getMode
 
-> **getType**(): `"von-mises"`
-
-#### Returns
-
-`"von-mises"`
-
-#### Defined In
-
-models/Distributions/MultiVonMises.ts:45
-
----
-
-### getMean
-
-> **getMean**(): `number`[]
+> **getMode**(): `number`[]
 
 #### Returns
 
@@ -119,27 +105,7 @@ models/Distributions/MultiVonMises.ts:45
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:47
-
----
-
-### setMean
-
-> **setMean**(`newMean`): `void`
-
-#### Parameters
-
-| Parameter | Type       |
-| :-------- | :--------- |
-| `newMean` | `number`[] |
-
-#### Returns
-
-`void`
-
-#### Defined In
-
-models/Distributions/MultiVonMises.ts:49
+models/Distributions/MultiVonMises.ts:44
 
 ---
 
@@ -170,7 +136,7 @@ Implementation comes from [NumPy Von Mises random generator](https://numpy.org/d
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:62
+models/Distributions/MultiVonMises.ts:55
 
 ---
 
@@ -190,7 +156,7 @@ models/Distributions/MultiVonMises.ts:62
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:110
+models/Distributions/MultiVonMises.ts:103
 
 ---
 
@@ -215,7 +181,7 @@ Array of N flatten vectors drawn from distribution
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:124
+models/Distributions/MultiVonMises.ts:117
 
 ---
 
@@ -241,7 +207,7 @@ Von Mises representation as 1000 flatten vectors.
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:137
+models/Distributions/MultiVonMises.ts:130
 
 ---
 

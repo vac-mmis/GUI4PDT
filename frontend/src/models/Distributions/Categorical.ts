@@ -12,41 +12,30 @@ import type { CatJSON } from "@/interfaces/distribution";
  */
 export class Categorical implements CatJSON {
     /** Distribution class name */
-    static distName = "categorical";
-    type = Categorical.distName;
+    static distName = "categorical" as const;
 
-    mass: Record<string, number>;
-
+    readonly type = Categorical.distName;
+    readonly mass: Record<string, number>;
+    private mode: [string, number];
     /**
      *  Creates new categorical distribution from given distribution data.
      *
      * @param categorical Categorical distribution data or string of absolute category.
      */
-    constructor(dist?: Categorical | string) {
+    constructor(dist?: CatJSON | string) {
         if (typeof dist === "string") {
             this.mass = { [dist]: 1 };
         } else {
             this.mass = dist?.mass ?? {};
         }
+        this.mode = Object.entries<number>(this.mass).sort((a, b) => b[1] - a[1])[0];
     }
-
-    public getType = () => this.type;
 
     public random(): [string, number] {
         return Object.entries<number>(this.mass)[0];
     }
 
-    public getMass = (): Record<string, number> => this.mass;
-
-    public getMean = (): [string, number] => Object.entries<number>(this.mass)[0];
-
-    public setMean(): void {
-        return;
-    }
-
-    public setMass(newMass: Record<string, number>): void {
-        this.mass = newMass;
-    }
+    public getMode = (): [string, number] => this.mode;
 
     /**
      * @returns Categorical representation as [string, number,...] array.
@@ -62,31 +51,30 @@ export class Categorical implements CatJSON {
      *
      * @returns Uniformed categorical distribution array.
      */
-    public static uniformCatagories(categories: (string | { dist: Categorical })[]): Categorical[] {
-        const types = new Set<string>();
-        const uniformed = [] as Categorical[];
+    public static uniformCatagories(categories: (string | { dist: CatJSON })[]): Categorical[] {
+        const classes = new Set<string>();
+        const uniformedMass = [] as Record<string, number>[];
         // Create categorical array from data and save all possible types.
         categories.forEach((item) => {
             if (typeof item === "string") {
-                uniformed.push(new Categorical(item));
-                types.add(item);
+                classes.add(item);
+                uniformedMass.push({ [item]: 1 });
             } else {
-                const res = new Categorical(item.dist);
-                const keys = Object.keys(res.getMass());
-                keys.forEach((key) => types.add(key));
-                uniformed.push(res);
+                Object.keys(item.dist.mass).forEach((key) => classes.add(key));
+                uniformedMass.push(item.dist.mass);
             }
         });
 
         // Assign probability to all possible materials saved in `types` (0 is not exist).
-        return uniformed.map((dist) => {
-            const res = Array.from(types).reduce(
-                (o, key) =>
-                    Object.assign(o, { [key]: dist.getMass()[key] ? dist.getMass()[key] : 0 }),
-                {}
-            );
-            dist.setMass(res);
-            return dist;
-        });
+        return uniformedMass.map(
+            (mass) =>
+                new Categorical({
+                    type: "categorical",
+                    mass: Array.from(classes).reduce(
+                        (o, key) => Object.assign(o, { [key]: mass[key] ? mass[key] : 0 }),
+                        {}
+                    ),
+                })
+        );
     }
 }

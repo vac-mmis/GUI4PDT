@@ -16,11 +16,11 @@ import { MultivariateNormal } from "@/models/Distributions";
  */
 export class MultivariateVonMises implements MultiVonMisesJSON {
     /** Distribution class name */
-    static distName = "von-mises";
-    type: "von-mises";
+    static distName = "von-mises" as const;
 
-    mean: number[];
-    kappa: number[];
+    readonly type = MultivariateVonMises.distName;
+    readonly mean: number[];
+    readonly kappa: number[];
 
     /**
      * Creates new multivariate Von Mises distribution from given distribution data.
@@ -29,7 +29,6 @@ export class MultivariateVonMises implements MultiVonMisesJSON {
      * @param units Set `dist` angle units to enable conversion to radians (default :`"rad"`).
      */
     constructor(dist: MultivariateVonMises, units: "rad" | "deg" = "rad") {
-        this.type = "von-mises";
         // Converts degrees to radians if needed.
         switch (units) {
             case "deg":
@@ -42,13 +41,7 @@ export class MultivariateVonMises implements MultiVonMisesJSON {
         this.kappa = dist.kappa;
     }
 
-    public getType = () => this.type;
-
-    public getMean = () => this.mean;
-
-    public setMean(newMean: number[]): void {
-        this.mean = newMean;
-    }
+    public getMode = () => this.mean;
 
     /**
      * Draw random number from Von Mises distribution.

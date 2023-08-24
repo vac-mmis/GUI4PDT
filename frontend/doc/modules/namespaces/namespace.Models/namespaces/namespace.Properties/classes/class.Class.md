@@ -207,7 +207,7 @@ Update class representation at desired time.
 
 #### Defined In
 
-models/Properties/Class.ts:138
+models/Properties/Class.ts:137
 
 ---
 
@@ -229,7 +229,7 @@ Change rotation of object representation.
 
 #### Defined In
 
-models/Properties/Class.ts:151
+models/Properties/Class.ts:150
 
 ---
 
@@ -253,7 +253,7 @@ Class distribution representation as Plotly.JS pie chart.
 
 #### Defined In
 
-models/Properties/Class.ts:164
+models/Properties/Class.ts:163
 
 ---
 

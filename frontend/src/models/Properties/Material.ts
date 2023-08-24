@@ -35,7 +35,7 @@ export class Material extends MeshStandardMaterial {
 
         // Create object material
         const materials = materialStore();
-        const material = materials.find(Object.keys(this.dist[0].getMass())[0]);
+        const material = materials.find(Object.keys(this.dist[0].mass)[0]);
         if (material) {
             Object.assign(this, material);
         } else {

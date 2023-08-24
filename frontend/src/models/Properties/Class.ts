@@ -58,7 +58,7 @@ export class Class extends Group {
         this.scaleFactor = scale;
 
         // Create object representation
-        const object = Object.entries(this.dist[0].getMass()).map((type: [string, number]) =>
+        const object = Object.entries(this.dist[0].mass).map((type: [string, number]) =>
             makeRepresentation(
                 "object",
                 modelStore().find(type[0]),
@@ -118,10 +118,9 @@ export class Class extends Group {
         const dist = this.dist[index];
         function getOpacity(type: ObjectRepresentation) {
             if (visibility.includes("alpha")) {
-                return dist.getMass()[type.name];
+                return dist.mass[type.name];
             } else {
-                const absolute = Object.entries(dist.getMass()).sort((a, b) => b[1] - a[1])[0][0];
-                return type.name === absolute ? 1 : 0;
+                return type.name === dist.getMode()[0] ? 1 : 0;
             }
         }
 

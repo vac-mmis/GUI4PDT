@@ -28,13 +28,13 @@ Each new one must have a `static distName` equal to `type`, it is used to distin
 
 ### type
 
-> **type**: `string`
+> `readonly` **type**: `string`
 
 Name of the implemented distribution share by all distributions data.
 
 #### Remark
 
-Must be equal to `distName`. Please define this attribute with `type = <DistClassName>.distName`.
+Must be equal to `type`. Please define this attribute with `type = <DistClassName>.type`.
 
 #### Defined In
 
@@ -46,61 +46,21 @@ models/Distributions/index.ts:55
 
 ## Methods
 
-### getType
+### getMode
 
-> `abstract` **getType**(): `string`
+> `abstract` **getMode**(): `any`
 
-Gives distribution type name.
-
-#### Returns
-
-`string`
-
-Distribution type name.
-
-#### Defined In
-
-models/Distributions/index.ts:62
-
----
-
-### getMean
-
-> `abstract` **getMean**(): `any`
-
-If exists, gives distribution mean.
+If exists, gives distribution mode.
 
 #### Returns
 
 `any`
 
-Distribution mean.
+Distribution mode.
 
 #### Defined In
 
-models/Distributions/index.ts:69
-
----
-
-### setMean
-
-> `abstract` **setMean**(`newMean`): `void`
-
-If relevant, changes distribution mean with `newMean`.
-
-#### Parameters
-
-| Parameter | Type       | Description      |
-| :-------- | :--------- | :--------------- |
-| `newMean` | `number`[] | New mean to set. |
-
-#### Returns
-
-`void`
-
-#### Defined In
-
-models/Distributions/index.ts:76
+models/Distributions/index.ts:62
 
 ---
 
@@ -124,7 +84,7 @@ Distribution random draw.
 
 #### Defined In
 
-models/Distributions/index.ts:85
+models/Distributions/index.ts:71
 
 ---
 
@@ -148,7 +108,7 @@ Distribution data for representation.
 
 #### Defined In
 
-models/Distributions/index.ts:94
+models/Distributions/index.ts:80
 
 ---
 

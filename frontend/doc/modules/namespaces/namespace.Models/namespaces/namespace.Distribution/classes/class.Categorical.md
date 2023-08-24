@@ -20,9 +20,9 @@ Creates new categorical distribution from given distribution data.
 
 #### Parameters
 
-| Parameter | Type                                              |
-| :-------- | :------------------------------------------------ |
-| `dist`?   | `string` \| [`Categorical`](class.Categorical.md) |
+| Parameter | Type                                                                                                                        |
+| :-------- | :-------------------------------------------------------------------------------------------------------------------------- |
+| `dist`?   | `string` \| [`CatJSON`](../../../../namespace.Interfaces/namespaces/namespace.Distribution/interfaces/interface.CatJSON.md) |
 
 #### Returns
 
@@ -36,7 +36,7 @@ models/Distributions/Categorical.ts:25
 
 ### distName
 
-> `static` **distName**: `string` = `"categorical"`
+> `static` **distName**: `"categorical"`
 
 Distribution class name
 
@@ -48,11 +48,11 @@ models/Distributions/Categorical.ts:15
 
 ### type
 
-> **type**: `string` = `Categorical.distName`
+> `readonly` **type**: `"categorical"` = `Categorical.distName`
 
 #### Defined In
 
-models/Distributions/Categorical.ts:16
+models/Distributions/Categorical.ts:17
 
 #### Implementation of
 
@@ -62,7 +62,7 @@ models/Distributions/Categorical.ts:16
 
 ### mass
 
-> **mass**: `Record`\< `string`, `number` \>
+> `readonly` **mass**: `Record`\< `string`, `number` \>
 
 Values and their probabilities.
 
@@ -74,21 +74,17 @@ models/Distributions/Categorical.ts:18
 
 [`CatJSON`](../../../../namespace.Interfaces/namespaces/namespace.Distribution/interfaces/interface.CatJSON.md).[`mass`](../../../../namespace.Interfaces/namespaces/namespace.Distribution/interfaces/interface.CatJSON.md#mass)
 
-## Methods
+---
 
-### getType
+### mode
 
-> **getType**(): `string`
-
-#### Returns
-
-`string`
+> `private` **mode**: [`string`, `number`]
 
 #### Defined In
 
-models/Distributions/Categorical.ts:33
+models/Distributions/Categorical.ts:19
 
----
+## Methods
 
 ### random
 
@@ -100,27 +96,13 @@ models/Distributions/Categorical.ts:33
 
 #### Defined In
 
-models/Distributions/Categorical.ts:35
+models/Distributions/Categorical.ts:34
 
 ---
 
-### getMass
+### getMode
 
-> **getMass**(): `Record`\< `string`, `number` \>
-
-#### Returns
-
-`Record`\< `string`, `number` \>
-
-#### Defined In
-
-models/Distributions/Categorical.ts:39
-
----
-
-### getMean
-
-> **getMean**(): [`string`, `number`]
+> **getMode**(): [`string`, `number`]
 
 #### Returns
 
@@ -128,41 +110,7 @@ models/Distributions/Categorical.ts:39
 
 #### Defined In
 
-models/Distributions/Categorical.ts:41
-
----
-
-### setMean
-
-> **setMean**(): `void`
-
-#### Returns
-
-`void`
-
-#### Defined In
-
-models/Distributions/Categorical.ts:43
-
----
-
-### setMass
-
-> **setMass**(`newMass`): `void`
-
-#### Parameters
-
-| Parameter | Type                             |
-| :-------- | :------------------------------- |
-| `newMass` | `Record`\< `string`, `number` \> |
-
-#### Returns
-
-`void`
-
-#### Defined In
-
-models/Distributions/Categorical.ts:47
+models/Distributions/Categorical.ts:38
 
 ---
 
@@ -178,7 +126,7 @@ Categorical representation as [string, number,...] array.
 
 #### Defined In
 
-models/Distributions/Categorical.ts:54
+models/Distributions/Categorical.ts:43
 
 ---
 
@@ -190,9 +138,9 @@ Uniforms categorical array or string to have all available keys in each categori
 
 #### Parameters
 
-| Parameter    | Type                                                              | Description                                     |
-| :----------- | :---------------------------------------------------------------- | :---------------------------------------------- |
-| `categories` | (`string` \| \{`dist`: [`Categorical`](class.Categorical.md);})[] | Array of string or categorical data to uniform. |
+| Parameter    | Type                                                                                                                                        | Description                                     |
+| :----------- | :------------------------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------- |
+| `categories` | (`string` \| \{`dist`: [`CatJSON`](../../../../namespace.Interfaces/namespaces/namespace.Distribution/interfaces/interface.CatJSON.md);})[] | Array of string or categorical data to uniform. |
 
 #### Returns
 
@@ -202,7 +150,7 @@ Uniformed categorical distribution array.
 
 #### Defined In
 
-models/Distributions/Categorical.ts:65
+models/Distributions/Categorical.ts:54
 
 ---
 

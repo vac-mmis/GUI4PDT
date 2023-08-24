@@ -118,7 +118,7 @@ export class Rotation extends Group {
         const dist = this.dist[index];
         if ("type" in dist) {
             return new Vector3(
-                ...(this.visibility.includes("move") ? dist.random(relative) : dist.getMean())
+                ...(this.visibility.includes("move") ? dist.random(relative) : dist.getMode())
             );
         } else {
             return new Vector3(...dist);

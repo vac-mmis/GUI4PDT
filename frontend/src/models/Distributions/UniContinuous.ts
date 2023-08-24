@@ -17,11 +17,11 @@ import type { UniContinuousJSON } from "@/interfaces/distribution";
  */
 export class UniformContinuous implements UniContinuousJSON {
     /** Distribution class name */
-    static distName = "uniform-continuous";
-    type: "uniform-continuous";
+    static distName = "uniform-continuous" as const;
+    readonly type = UniformContinuous.distName;
 
-    mean: number[];
-    params: number[][];
+    readonly mean: number[];
+    readonly params: number[][];
 
     /**
      *  Creates new multivariate continuous uniform distribution from given distribution data.
@@ -29,20 +29,11 @@ export class UniformContinuous implements UniContinuousJSON {
      * @param dist Multivariate continuous uniform distribution data with mean and parameters.
      */
     constructor(dist: UniformContinuous) {
-        this.type = "uniform-continuous";
         this.params = dist.params;
         this.mean = dist.params.map((p) => mean(p));
     }
 
-    public getType = () => this.type;
-
-    public getMean = () => this.mean;
-
-    public setMean(newMean: number[]): void {
-        const diff = newMean.map((x, i) => x - this.mean[i]);
-        this.mean = newMean;
-        this.params = this.params.map((p, i) => [p[0] + diff[i], p[1] + diff[i]]);
-    }
+    public getMode = () => this.mean;
 
     public random(): number[] {
         return this.params.map((p) => p[0] + (p[1] - p[0]) * Math.random());

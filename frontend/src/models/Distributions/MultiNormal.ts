@@ -17,11 +17,12 @@ import type { MultiNormalJSON } from "@/interfaces/distribution";
  */
 export class MultivariateNormal implements MultiNormalJSON {
     /** Distribution class name */
-    static distName = "multivariate-normal";
-    type: "multivariate-normal";
+    static distName = "multivariate-normal" as const;
 
-    mean: number[];
-    cov: number[][];
+    readonly type = MultivariateNormal.distName;
+    readonly mean: number[];
+    readonly cov: number[][];
+
     /** Inverted covariance matrix. Stored for computation efficiency. */
     private invCov: number[][];
 
@@ -31,13 +32,10 @@ export class MultivariateNormal implements MultiNormalJSON {
      * @param dist Multivariate normal distribution data with mean and covariance matrix.
      */
     constructor(dist: MultivariateNormal) {
-        this.type = "multivariate-normal";
         this.mean = dist.mean;
         this.cov = dist.cov;
         this.invCov = sqrtm(this.cov);
     }
-
-    public getType = () => this.type;
 
     /**
      * Draw random number from standard normal distribution using Box-Muller method.
@@ -52,25 +50,14 @@ export class MultivariateNormal implements MultiNormalJSON {
         return Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
     }
 
-    public getMean = () => this.mean;
-
-    public setMean(newMean: number[]): void {
-        this.mean = newMean;
-    }
-
-    /**
-     * Give distribution covariance matrix.
-     *
-     * @returns Covariance matrix.
-     */
-    public getCov = () => this.cov;
+    public getMode = () => this.mean;
 
     public random(relative: boolean = false) {
         const X: number[] = Array.from({ length: this.mean.length }, () =>
             MultivariateNormal.randomGauss()
         );
         const XInvCov = multiply(this.invCov, X);
-        return (relative ? XInvCov : add(XInvCov, this.mean)) as number[];
+        return relative ? XInvCov : add(XInvCov, this.mean);
     }
 
     /**

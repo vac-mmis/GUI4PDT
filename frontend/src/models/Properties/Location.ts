@@ -73,7 +73,7 @@ export class Location extends Group {
                 const dist = makeDistribution(timestamp.dist);
                 this.dist.push(dist);
                 if (i === 0) {
-                    this.parent?.position.set(...(dist.getMean() as [number, number, number]));
+                    this.parent?.position.set(...(dist.getMode() as [number, number, number]));
                     this.add(makeRepresentation(distToRep[dist.type], dist.representation(true)));
                 }
             }
@@ -133,7 +133,7 @@ export class Location extends Group {
         const dist = this.dist[index];
         if ("type" in dist) {
             return new Vector3(
-                ...(this.visibility.includes("move") ? dist.random(relative) : dist.getMean())
+                ...(this.visibility.includes("move") ? dist.random(relative) : dist.getMode())
             );
         } else {
             return new Vector3(...dist);

@@ -40,7 +40,7 @@ models/Distributions/UniContinuous.ts:31
 
 ### distName
 
-> `static` **distName**: `string` = `"uniform-continuous"`
+> `static` **distName**: `"uniform-continuous"`
 
 Distribution class name
 
@@ -52,7 +52,7 @@ models/Distributions/UniContinuous.ts:20
 
 ### type
 
-> **type**: `"uniform-continuous"`
+> `readonly` **type**: `"uniform-continuous"` = `UniformContinuous.distName`
 
 #### Defined In
 
@@ -66,7 +66,7 @@ models/Distributions/UniContinuous.ts:21
 
 ### mean
 
-> **mean**: `number`[]
+> `readonly` **mean**: `number`[]
 
 Geometric center point of the distribution
 
@@ -82,7 +82,7 @@ models/Distributions/UniContinuous.ts:23
 
 ### params
 
-> **params**: `number`[][]
+> `readonly` **params**: `number`[][]
 
 Distributions interval for each dimension : `[[xMin, xMax], [yMin, yMax], [zMin,zMax] ...]`
 
@@ -96,23 +96,9 @@ models/Distributions/UniContinuous.ts:24
 
 ## Methods
 
-### getType
+### getMode
 
-> **getType**(): `"uniform-continuous"`
-
-#### Returns
-
-`"uniform-continuous"`
-
-#### Defined In
-
-models/Distributions/UniContinuous.ts:37
-
----
-
-### getMean
-
-> **getMean**(): `number`[]
+> **getMode**(): `number`[]
 
 #### Returns
 
@@ -120,27 +106,7 @@ models/Distributions/UniContinuous.ts:37
 
 #### Defined In
 
-models/Distributions/UniContinuous.ts:39
-
----
-
-### setMean
-
-> **setMean**(`newMean`): `void`
-
-#### Parameters
-
-| Parameter | Type       |
-| :-------- | :--------- |
-| `newMean` | `number`[] |
-
-#### Returns
-
-`void`
-
-#### Defined In
-
-models/Distributions/UniContinuous.ts:41
+models/Distributions/UniContinuous.ts:36
 
 ---
 
@@ -154,7 +120,7 @@ models/Distributions/UniContinuous.ts:41
 
 #### Defined In
 
-models/Distributions/UniContinuous.ts:47
+models/Distributions/UniContinuous.ts:38
 
 ---
 
@@ -174,7 +140,7 @@ multivariate continuous uniform representation with array of distance between ea
 
 #### Defined In
 
-models/Distributions/UniContinuous.ts:58
+models/Distributions/UniContinuous.ts:49
 
 ---
 

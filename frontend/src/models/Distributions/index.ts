@@ -50,30 +50,16 @@ export abstract class Distribution implements DistJSON {
     /**
      * Name of the implemented distribution share by all distributions data.
      *
-     * @remark Must be equal to `distName`. Please define this attribute with `type = <DistClassName>.distName`.
+     * @remark Must be equal to `type`. Please define this attribute with `type = <DistClassName>.type`.
      */
-    type!: string;
+    readonly type!: string;
 
     /**
-     * Gives distribution type name.
+     * If exists, gives distribution mode.
      *
-     * @returns Distribution type name.
+     * @returns Distribution mode.
      */
-    public abstract getType(): string;
-
-    /**
-     * If exists, gives distribution mean.
-     *
-     * @returns Distribution mean.
-     */
-    public abstract getMean(): any;
-
-    /**
-     * If relevant, changes distribution mean with `newMean`.
-     *
-     * @param newMean New mean to set.
-     */
-    public abstract setMean(newMean: number[]): void;
+    public abstract getMode(): any;
 
     /**
      * Gives random draw of the distribution.

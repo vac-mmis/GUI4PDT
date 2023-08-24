@@ -34,13 +34,13 @@ Creates new multivariate normal distribution from given distribution data.
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:33
+models/Distributions/MultiNormal.ts:34
 
 ## Properties
 
 ### distName
 
-> `static` **distName**: `string` = `"multivariate-normal"`
+> `static` **distName**: `"multivariate-normal"`
 
 Distribution class name
 
@@ -52,11 +52,11 @@ models/Distributions/MultiNormal.ts:20
 
 ### type
 
-> **type**: `"multivariate-normal"`
+> `readonly` **type**: `"multivariate-normal"` = `MultivariateNormal.distName`
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:21
+models/Distributions/MultiNormal.ts:22
 
 #### Implementation of
 
@@ -66,7 +66,7 @@ models/Distributions/MultiNormal.ts:21
 
 ### mean
 
-> **mean**: `number`[]
+> `readonly` **mean**: `number`[]
 
 #### Defined In
 
@@ -80,7 +80,7 @@ models/Distributions/MultiNormal.ts:23
 
 ### cov
 
-> **cov**: `number`[][]
+> `readonly` **cov**: `number`[][]
 
 Covariance matrix.
 
@@ -102,23 +102,9 @@ Inverted covariance matrix. Stored for computation efficiency.
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:26
+models/Distributions/MultiNormal.ts:27
 
 ## Methods
-
-### getType
-
-> **getType**(): `"multivariate-normal"`
-
-#### Returns
-
-`"multivariate-normal"`
-
-#### Defined In
-
-models/Distributions/MultiNormal.ts:40
-
----
 
 ### randomGauss
 
@@ -138,13 +124,13 @@ Drawn normal distributed number.
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:49
+models/Distributions/MultiNormal.ts:47
 
 ---
 
-### getMean
+### getMode
 
-> **getMean**(): `number`[]
+> **getMode**(): `number`[]
 
 #### Returns
 
@@ -152,45 +138,7 @@ models/Distributions/MultiNormal.ts:49
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:55
-
----
-
-### setMean
-
-> **setMean**(`newMean`): `void`
-
-#### Parameters
-
-| Parameter | Type       |
-| :-------- | :--------- |
-| `newMean` | `number`[] |
-
-#### Returns
-
-`void`
-
-#### Defined In
-
-models/Distributions/MultiNormal.ts:57
-
----
-
-### getCov
-
-> **getCov**(): `number`[][]
-
-Give distribution covariance matrix.
-
-#### Returns
-
-`number`[][]
-
-Covariance matrix.
-
-#### Defined In
-
-models/Distributions/MultiNormal.ts:66
+models/Distributions/MultiNormal.ts:53
 
 ---
 
@@ -210,7 +158,7 @@ models/Distributions/MultiNormal.ts:66
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:68
+models/Distributions/MultiNormal.ts:55
 
 ---
 
@@ -239,7 +187,7 @@ Array of N flatten vectors (with distance if `withDistance`)
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:85
+models/Distributions/MultiNormal.ts:72
 
 ---
 
@@ -265,7 +213,7 @@ multivariate normal representation as 1000 flatten cloud points with relative di
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:127
+models/Distributions/MultiNormal.ts:114
 
 ---
 
