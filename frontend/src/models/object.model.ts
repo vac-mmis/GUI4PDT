@@ -7,8 +7,8 @@ import { Group } from "three";
 
 import { Location, Class, Rotation, Material } from "@/models/Properties";
 import type { ObjectJSON } from "@/interfaces/pdt";
-import type { PDT } from "./pdt.model";
-import type { Controller } from "./Controls/Controller";
+import type { PDT } from "@/models/pdt.model";
+import type { Controller } from "@/models/Controls/Controller";
 
 /**
  * Implements representation of objects in PDT, including class, material, location, rotation etc.
@@ -76,13 +76,13 @@ export class PDTObject extends Group {
      */
     public tick(time?: number): void {
         // update class representation
-        this.class.update(time ?? this.time);
+        this.class.update(time);
 
         // update object position
-        (this.children[1] as Location).update(time);
+        this._location.update(time);
 
         // update object rotation
-        (this.children[2] as Rotation).update(time);
+        this._rotation.update(time);
 
         if (time) {
             this.time = time;

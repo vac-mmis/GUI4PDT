@@ -129,7 +129,7 @@ export class Location extends Group {
      * @returns Possible object position at given time.
      * */
     private getPosition(t: number, relative: boolean = false): Vector3 {
-        const index = t < this.dist.length ? Math.trunc(t) : this.dist.length - 1;
+        const index = t < this.dist.length - 1 ? Math.trunc(t) : this.dist.length - 1;
         const dist = this.dist[index];
         if ("type" in dist) {
             return new Vector3(
@@ -147,7 +147,7 @@ export class Location extends Group {
      */
     private updateDirection(time: number): void {
         this.beginPosition = this.endPosition;
-        this.endPosition = this.getPosition((time + 1) % this.dist.length);
+        this.endPosition = this.getPosition(time + 1);
         this.direction = this.endPosition.clone().sub(this.beginPosition);
     }
 
@@ -193,7 +193,6 @@ export class Location extends Group {
                 this.updateDirection(time);
             }
         }
-
         this.tick();
     }
 }

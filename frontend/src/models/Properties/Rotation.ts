@@ -114,7 +114,7 @@ export class Rotation extends Group {
      * @returns Possible object rotation at given time.
      */
     private getRotation(t: number, relative: boolean = false): Vector3 {
-        const index = t < this.dist.length ? Math.trunc(t) : this.dist.length - 1;
+        const index = t < this.dist.length - 1 ? Math.trunc(t) : this.dist.length - 1;
         const dist = this.dist[index];
         if ("type" in dist) {
             return new Vector3(
@@ -132,7 +132,7 @@ export class Rotation extends Group {
      */
     private updateDirection(time: number) {
         this.beginRotation = this.endRotation;
-        this.endRotation = this.getRotation((time + 1) % this.dist.length);
+        this.endRotation = this.getRotation(time + 1);
 
         const beginRotArray: [number, number, number] = this.beginRotation.toArray();
         const endRotArray: [number, number, number] = this.endRotation.toArray();
