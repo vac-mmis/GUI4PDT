@@ -57,7 +57,7 @@ Group.parent
 
 ### dist
 
-> `private` **dist**: ([`Distribution`](../../namespace.Distribution/classes/class.Distribution.md) \| [`number`, `number`, `number`])[] = `[]`
+> `readonly` **dist**: ([`Distribution`](../../namespace.Distribution/classes/class.Distribution.md) \| [`number`, `number`, `number`])[] = `[]`
 
 Location distribution through time.
 
@@ -129,7 +129,7 @@ models/Properties/Location.ts:48
 
 ### controller
 
-> `private` **controller**: [`Controller`](../../namespace.Controller/classes/class.Controller.md)\< `"plot"` \| `"move"` \>
+> `private` **controller**: [`Controller`](../../namespace.Controls/classes/class.Controller.md)\< `"plot"` \| `"move"` \>
 
 Location controller module
 
@@ -181,13 +181,13 @@ models/Properties/Location.ts:111
 
 ### getController
 
-> **getController**(): [`Controller`](../../namespace.Controller/classes/class.Controller.md)\< `"plot"` \| `"move"` \>
+> **getController**(): [`Controller`](../../namespace.Controls/classes/class.Controller.md)\< `"plot"` \| `"move"` \>
 
 Give location controller to toggle its visibility
 
 #### Returns
 
-[`Controller`](../../namespace.Controller/classes/class.Controller.md)\< `"plot"` \| `"move"` \>
+[`Controller`](../../namespace.Controls/classes/class.Controller.md)\< `"plot"` \| `"move"` \>
 
 Location controller
 

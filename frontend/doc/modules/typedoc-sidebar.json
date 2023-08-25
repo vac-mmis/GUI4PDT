@@ -359,8 +359,8 @@
                 "collapsed": true,
                 "items": [
                     {
-                        "text": "Controller",
-                        "link": "/modules/namespaces/namespace.Models/namespaces/namespace.Controller/index.md",
+                        "text": "Controls",
+                        "link": "/modules/namespaces/namespace.Models/namespaces/namespace.Controls/index.md",
                         "collapsed": true,
                         "items": [
                             {
@@ -370,7 +370,7 @@
                                 "items": [
                                     {
                                         "text": "Controller",
-                                        "link": "/modules/namespaces/namespace.Models/namespaces/namespace.Controller/classes/class.Controller.md",
+                                        "link": "/modules/namespaces/namespace.Models/namespaces/namespace.Controls/classes/class.Controller.md",
                                         "collapsed": true,
                                         "items": [
                                             {
@@ -396,13 +396,33 @@
                                 ]
                             },
                             {
+                                "text": "Interfaces",
+                                "link": null,
+                                "collapsed": true,
+                                "items": [
+                                    {
+                                        "text": "ObjectDetails",
+                                        "link": "/modules/namespaces/namespace.Models/namespaces/namespace.Controls/interfaces/interface.ObjectDetails.md",
+                                        "collapsed": true,
+                                        "items": [
+                                            {
+                                                "text": "Properties",
+                                                "link": null,
+                                                "collapsed": true,
+                                                "items": []
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
                                 "text": "Type Aliases",
                                 "link": null,
                                 "collapsed": true,
                                 "items": [
                                     {
                                         "text": "ControllerValues",
-                                        "link": "/modules/namespaces/namespace.Models/namespaces/namespace.Controller/type-aliases/type-alias.ControllerValues.md",
+                                        "link": "/modules/namespaces/namespace.Models/namespaces/namespace.Controls/type-aliases/type-alias.ControllerValues.md",
                                         "collapsed": true,
                                         "items": []
                                     }
@@ -415,19 +435,19 @@
                                 "items": [
                                     {
                                         "text": "NameIcon",
-                                        "link": "/modules/namespaces/namespace.Models/namespaces/namespace.Controller/variables/variable.NameIcon.md",
+                                        "link": "/modules/namespaces/namespace.Models/namespaces/namespace.Controls/variables/variable.NameIcon.md",
                                         "collapsed": true,
                                         "items": []
                                     },
                                     {
                                         "text": "ValueIcon",
-                                        "link": "/modules/namespaces/namespace.Models/namespaces/namespace.Controller/variables/variable.ValueIcon.md",
+                                        "link": "/modules/namespaces/namespace.Models/namespaces/namespace.Controls/variables/variable.ValueIcon.md",
                                         "collapsed": true,
                                         "items": []
                                     },
                                     {
                                         "text": "ValueTip",
-                                        "link": "/modules/namespaces/namespace.Models/namespaces/namespace.Controller/variables/variable.ValueTip.md",
+                                        "link": "/modules/namespaces/namespace.Models/namespaces/namespace.Controls/variables/variable.ValueTip.md",
                                         "collapsed": true,
                                         "items": []
                                     }
@@ -1025,6 +1045,32 @@
                     {
                         "text": "worldStore",
                         "link": "/modules/namespaces/namespace.Stores/variables/variable.worldStore.md",
+                        "collapsed": true,
+                        "items": []
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "text": "Utils",
+        "link": "/modules/namespaces/namespace.Utils/index.md",
+        "collapsed": true,
+        "items": [
+            {
+                "text": "Functions",
+                "link": null,
+                "collapsed": true,
+                "items": [
+                    {
+                        "text": "vectorToKaTeX",
+                        "link": "/modules/namespaces/namespace.Utils/functions/function.vectorToKaTeX.md",
+                        "collapsed": true,
+                        "items": []
+                    },
+                    {
+                        "text": "matrixToKaTeX",
+                        "link": "/modules/namespaces/namespace.Utils/functions/function.matrixToKaTeX.md",
                         "collapsed": true,
                         "items": []
                     }

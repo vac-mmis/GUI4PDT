@@ -1,12 +1,14 @@
-# Namespace: Controller
-
-This file implements a generic controller to build controller Vue components
+# Namespace: Controls
 
 ## Index
 
 ### Classes
 
 -   [Controller](classes/class.Controller.md)
+
+### Interfaces
+
+-   [ObjectDetails](interfaces/interface.ObjectDetails.md)
 
 ### Type Aliases
 

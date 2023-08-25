@@ -116,6 +116,9 @@ export class World<T extends WorldContent> {
 
         // update pointer
         this.pointer.updateSet(this.content, selectionCallback, hoverCallback);
+
+        // reset timer to zero
+        this.timer.setTime(0);
     }
 
     /**

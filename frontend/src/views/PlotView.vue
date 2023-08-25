@@ -16,7 +16,7 @@
             <SceneMenu @update="updateDetails" class="position-relative overflow-visible z-1" />
 
             <div class="position-relative pa-6 z-1">
-                <ObjectDetails :key="detailsKey" :time="selectedTime" />
+                <ObjectDetails :key="detailsKey" :time="timeLength > 1 ? selectedTime : 0" />
             </div>
         </div>
         <div v-if="timeLength > 1" class="position-relative w-75 ma-6 z-1">

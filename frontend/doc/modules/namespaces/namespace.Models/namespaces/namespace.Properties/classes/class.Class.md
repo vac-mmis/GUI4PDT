@@ -63,7 +63,7 @@ Group.parent
 
 ### dist
 
-> `private` **dist**: [`Categorical`](../../namespace.Distribution/classes/class.Categorical.md)[]
+> `readonly` **dist**: [`Categorical`](../../namespace.Distribution/classes/class.Categorical.md)[]
 
 Class distribution through time.
 
@@ -99,7 +99,7 @@ models/Properties/Class.ts:36
 
 ### controller
 
-> `private` **controller**: [`Controller`](../../namespace.Controller/classes/class.Controller.md)\< `"visible"` \| `"alpha"` \>
+> `private` **controller**: [`Controller`](../../namespace.Controls/classes/class.Controller.md)\< `"visible"` \| `"alpha"` \>
 
 Location controller module
 
@@ -151,13 +151,13 @@ models/Properties/Class.ts:94
 
 ### getController
 
-> **getController**(): [`Controller`](../../namespace.Controller/classes/class.Controller.md)\< `"visible"` \| `"alpha"` \>
+> **getController**(): [`Controller`](../../namespace.Controls/classes/class.Controller.md)\< `"visible"` \| `"alpha"` \>
 
 Give class controller to toggle object visibility
 
 #### Returns
 
-[`Controller`](../../namespace.Controller/classes/class.Controller.md)\< `"visible"` \| `"alpha"` \>
+[`Controller`](../../namespace.Controls/classes/class.Controller.md)\< `"visible"` \| `"alpha"` \>
 
 Class controller
 

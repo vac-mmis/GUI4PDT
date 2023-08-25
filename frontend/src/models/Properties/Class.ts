@@ -28,7 +28,7 @@ export class Class extends Group {
     /** Object which has this class. */
     declare parent: PDTObject;
     /** Class distribution through time. */
-    private dist: Categorical[];
+    readonly dist: Categorical[];
     /** Object scale through time. */
     private scaleFactor: (number | undefined)[];
 

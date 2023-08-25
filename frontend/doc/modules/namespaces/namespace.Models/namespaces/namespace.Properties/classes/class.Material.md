@@ -52,7 +52,7 @@ models/Properties/Material.ts:22
 
 ### dist
 
-> `private` **dist**: [`Categorical`](../../namespace.Distribution/classes/class.Categorical.md)[]
+> `readonly` **dist**: [`Categorical`](../../namespace.Distribution/classes/class.Categorical.md)[]
 
 Material distribution through time.
 

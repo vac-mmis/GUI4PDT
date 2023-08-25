@@ -28,7 +28,7 @@ export class Rotation extends Group {
     declare parent: PDTObject;
 
     /** Rotation distribution through time. */
-    private dist: (Distribution | [number, number, number])[] = [];
+    readonly dist: (Distribution | [number, number, number])[] = [];
 
     /** Begin rotation of current direction */
     private beginRotation: Vector3 = new Vector3();

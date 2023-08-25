@@ -4,7 +4,7 @@
  * @module PDT
  */
 
-export * as Controller from "@/models/Controls/Controller";
+export * as Controls from "@/models/Controls";
 export * as Distribution from "@/models/Distributions";
 export * as Representation from "@/models/Representations";
 export * as Properties from "@/models/Properties";

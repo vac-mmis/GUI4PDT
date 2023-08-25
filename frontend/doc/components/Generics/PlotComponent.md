@@ -1,4 +1,4 @@
-# ObjectPlot
+# PlotComponent
 
 ## Props
 
@@ -6,14 +6,8 @@
 | --------- | ----------- | ------------------------- | ------ | ------- |
 | data      |             | Partial&lt;PlotData&gt;[] | -      |         |
 
-## Slots
-
-| Name    | Description | Bindings |
-| ------- | ----------- | -------- |
-| default |             |          |
-
 ---
 
 ```vue live
-<ObjectPlot :data="Default Example Usage">Default Example Usage</ObjectPlot>
+<PlotComponent :data="Default Example Usage" />
 ```

@@ -64,7 +64,7 @@ export abstract class Distribution implements DistJSON {
     /**
      * Gives random draw of the distribution.
      *
-     * @param relative If `true`, draw with centered mean.
+     * @param relative If `true`, draw with centered mode.
      *
      * @returns Distribution random draw.
      */
@@ -73,11 +73,18 @@ export abstract class Distribution implements DistJSON {
     /**
      * Gives data representation of the distribution.
      *
-     * @param relative If `true`, draw with centered mean.
+     * @param relative If `true`, draw with centered mode.
      *
      * @returns Distribution data for representation.
      */
     public abstract representation(relative?: boolean): any;
+
+    /**
+     * Gives a description of the distribution.
+     *
+     * @returns Distribution description.
+     */
+    public abstract toString(): string;
 }
 
 /**

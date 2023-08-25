@@ -28,13 +28,13 @@ const config = { responsive: true };
 /**
  * Use to init plot
  */
-function init() {
+const init = () => {
     const trace: Partial<Plotly.Data>[] = props.data ? props.data : [];
     if (plotContainer.value === null) {
         throw new Error("Error: Invalid container");
     }
     newPlot(plotContainer.value, trace, layout, config);
-}
+};
 
 const update = () => {
     if (plotContainer.value === null) {
@@ -45,7 +45,5 @@ const update = () => {
 
 watch(() => props.data, update);
 
-onMounted(() => {
-    init();
-});
+onMounted(init);
 </script>

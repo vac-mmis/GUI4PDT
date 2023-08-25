@@ -5,6 +5,7 @@
  */
 
 import { sqrtm, add, multiply, sum } from "mathjs";
+import { matrixToKaTeX, vectorToKaTeX } from "@/utils/katex";
 
 import type { MultiNormalJSON } from "@/interfaces/distribution";
 
@@ -113,5 +114,11 @@ export class MultivariateNormal implements MultiNormalJSON {
      */
     public representation(relative: boolean = false) {
         return this.randomN(1000, relative, true);
+    }
+
+    public toString(): string {
+        const covString = matrixToKaTeX(this.cov);
+        const meanString = vectorToKaTeX(this.mean);
+        return `Distribution : $\\mathcal{N}(\\mu,\\Sigma)$ with :\n * $\\mu = ${meanString}$\n * $\\Sigma = ${covString}$`;
     }
 }

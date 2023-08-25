@@ -4,6 +4,10 @@
  * @module index
  */
 import { createApp } from "vue";
+
+// Sanitize module for HTML save injection
+import VueDOMPurifyHTML from "vue-dompurify-html";
+
 import App from "./App.vue";
 
 // Pinia
@@ -65,10 +69,11 @@ axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL ?? "";
 // Pinia initialization
 const pinia = createPinia();
 
-createApp(App).use(vuetify).use(pinia).use(router).mount("#app");
+createApp(App).use(VueDOMPurifyHTML).use(vuetify).use(pinia).use(router).mount("#app");
 
 export * as Interfaces from "@/interfaces";
 export * as Models from "@/models";
 export * as Router from "@/router";
 export * as Stores from "@/store";
 export * as World from "@/World";
+export * as Utils from "@/utils";

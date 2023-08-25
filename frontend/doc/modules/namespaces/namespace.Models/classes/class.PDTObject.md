@@ -31,7 +31,7 @@ Group.constructor
 
 #### Defined In
 
-models/object.model.ts:38
+models/object.model.ts:39
 
 ## Properties
 
@@ -43,7 +43,7 @@ Object which has this location.
 
 #### Defined In
 
-models/object.model.ts:18
+models/object.model.ts:19
 
 #### Overrides
 
@@ -59,7 +59,7 @@ Object ID
 
 #### Defined In
 
-models/object.model.ts:20
+models/object.model.ts:21
 
 ---
 
@@ -71,7 +71,7 @@ Current time index to show.
 
 #### Defined In
 
-models/object.model.ts:22
+models/object.model.ts:23
 
 ---
 
@@ -87,7 +87,7 @@ Object class.
 
 #### Defined In
 
-models/object.model.ts:25
+models/object.model.ts:26
 
 ---
 
@@ -99,7 +99,7 @@ Object material. Used to create class representation.
 
 #### Defined In
 
-models/object.model.ts:27
+models/object.model.ts:28
 
 ---
 
@@ -115,7 +115,7 @@ Object location.
 
 #### Defined In
 
-models/object.model.ts:29
+models/object.model.ts:30
 
 ---
 
@@ -131,7 +131,7 @@ Object rotation.
 
 #### Defined In
 
-models/object.model.ts:31
+models/object.model.ts:32
 
 ## Methods
 
@@ -149,21 +149,45 @@ Object time index.
 
 #### Defined In
 
-models/object.model.ts:65
+models/object.model.ts:66
 
 ---
 
 ### getControllers
 
-> **getControllers**(): [`Controller`](../namespaces/namespace.Controller/classes/class.Controller.md)\< `any` \>[]
+> **getControllers**(): [`Controller`](../namespaces/namespace.Controls/classes/class.Controller.md)\< `any` \>[]
 
 #### Returns
 
-[`Controller`](../namespaces/namespace.Controller/classes/class.Controller.md)\< `any` \>[]
+[`Controller`](../namespaces/namespace.Controls/classes/class.Controller.md)\< `any` \>[]
 
 #### Defined In
 
-models/object.model.ts:67
+models/object.model.ts:68
+
+---
+
+### getDetails
+
+> **getDetails**(`t`): `Record`\< `string`, [`ObjectDetails`](../namespaces/namespace.Controls/interfaces/interface.ObjectDetails.md) \>
+
+Returns object properties details (description, 2D graph...).
+
+#### Parameters
+
+| Parameter | Type     | Description                  |
+| :-------- | :------- | :--------------------------- |
+| `t`       | `number` | Desired time to gat details. |
+
+#### Returns
+
+`Record`\< `string`, [`ObjectDetails`](../namespaces/namespace.Controls/interfaces/interface.ObjectDetails.md) \>
+
+Object properties details.
+
+#### Defined In
+
+models/object.model.ts:80
 
 ---
 
@@ -185,7 +209,7 @@ Update object to the given time.
 
 #### Defined In
 
-models/object.model.ts:77
+models/object.model.ts:107
 
 ---
 

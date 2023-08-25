@@ -130,6 +130,22 @@ models/Distributions/Categorical.ts:43
 
 ---
 
+### toString
+
+> **toString**(): `string`
+
+Catagorical distribution description
+
+#### Returns
+
+`string`
+
+#### Defined In
+
+models/Distributions/Categorical.ts:50
+
+---
+
 ### uniformCatagories
 
 > `static` **uniformCatagories**(`categories`): [`Categorical`](class.Categorical.md)[]
@@ -150,7 +166,7 @@ Uniformed categorical distribution array.
 
 #### Defined In
 
-models/Distributions/Categorical.ts:54
+models/Distributions/Categorical.ts:61
 
 ---
 

@@ -35,7 +35,7 @@ Creates new multivariate Von Mises distribution from given distribution data.
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:31
+models/Distributions/MultiVonMises.ts:32
 
 ## Properties
 
@@ -47,7 +47,7 @@ Distribution class name
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:19
+models/Distributions/MultiVonMises.ts:20
 
 ---
 
@@ -57,7 +57,7 @@ models/Distributions/MultiVonMises.ts:19
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:21
+models/Distributions/MultiVonMises.ts:22
 
 #### Implementation of
 
@@ -71,7 +71,7 @@ models/Distributions/MultiVonMises.ts:21
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:22
+models/Distributions/MultiVonMises.ts:23
 
 #### Implementation of
 
@@ -87,7 +87,7 @@ Concentration
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:23
+models/Distributions/MultiVonMises.ts:24
 
 #### Implementation of
 
@@ -105,7 +105,7 @@ models/Distributions/MultiVonMises.ts:23
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:44
+models/Distributions/MultiVonMises.ts:45
 
 ---
 
@@ -136,7 +136,7 @@ Implementation comes from [NumPy Von Mises random generator](https://numpy.org/d
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:55
+models/Distributions/MultiVonMises.ts:56
 
 ---
 
@@ -156,7 +156,7 @@ models/Distributions/MultiVonMises.ts:55
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:103
+models/Distributions/MultiVonMises.ts:104
 
 ---
 
@@ -181,7 +181,7 @@ Array of N flatten vectors drawn from distribution
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:117
+models/Distributions/MultiVonMises.ts:118
 
 ---
 
@@ -207,7 +207,21 @@ Von Mises representation as 1000 flatten vectors.
 
 #### Defined In
 
-models/Distributions/MultiVonMises.ts:130
+models/Distributions/MultiVonMises.ts:131
+
+---
+
+### toString
+
+> **toString**(): `string`
+
+#### Returns
+
+`string`
+
+#### Defined In
+
+models/Distributions/MultiVonMises.ts:135
 
 ---
 

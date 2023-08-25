@@ -7,6 +7,7 @@
 import { mean } from "mathjs";
 
 import type { UniContinuousJSON } from "@/interfaces/distribution";
+import { matrixToKaTeX, vectorToKaTeX } from "@/utils/katex";
 
 /**
  * Implementation of multivariate continuous uniform distribution.
@@ -48,5 +49,11 @@ export class UniformContinuous implements UniContinuousJSON {
      */
     public representation(): number[] {
         return this.params.map((p) => p[1] - p[0]);
+    }
+
+    public toString(): string {
+        const meanString = vectorToKaTeX(this.mean);
+        const paramsString = matrixToKaTeX(this.params);
+        return `Distribution : $\\mathcal{U}_{a,b}$ with : \n - mean : $${meanString}$ \n - params : $${paramsString}$`;
     }
 }

@@ -34,7 +34,7 @@ Creates new multivariate normal distribution from given distribution data.
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:34
+models/Distributions/MultiNormal.ts:35
 
 ## Properties
 
@@ -46,7 +46,7 @@ Distribution class name
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:20
+models/Distributions/MultiNormal.ts:21
 
 ---
 
@@ -56,7 +56,7 @@ models/Distributions/MultiNormal.ts:20
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:22
+models/Distributions/MultiNormal.ts:23
 
 #### Implementation of
 
@@ -70,7 +70,7 @@ models/Distributions/MultiNormal.ts:22
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:23
+models/Distributions/MultiNormal.ts:24
 
 #### Implementation of
 
@@ -86,7 +86,7 @@ Covariance matrix.
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:24
+models/Distributions/MultiNormal.ts:25
 
 #### Implementation of
 
@@ -102,7 +102,7 @@ Inverted covariance matrix. Stored for computation efficiency.
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:27
+models/Distributions/MultiNormal.ts:28
 
 ## Methods
 
@@ -124,7 +124,7 @@ Drawn normal distributed number.
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:47
+models/Distributions/MultiNormal.ts:48
 
 ---
 
@@ -138,7 +138,7 @@ models/Distributions/MultiNormal.ts:47
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:53
+models/Distributions/MultiNormal.ts:54
 
 ---
 
@@ -158,7 +158,7 @@ models/Distributions/MultiNormal.ts:53
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:55
+models/Distributions/MultiNormal.ts:56
 
 ---
 
@@ -187,7 +187,7 @@ Array of N flatten vectors (with distance if `withDistance`)
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:72
+models/Distributions/MultiNormal.ts:73
 
 ---
 
@@ -213,7 +213,21 @@ multivariate normal representation as 1000 flatten cloud points with relative di
 
 #### Defined In
 
-models/Distributions/MultiNormal.ts:114
+models/Distributions/MultiNormal.ts:115
+
+---
+
+### toString
+
+> **toString**(): `string`
+
+#### Returns
+
+`string`
+
+#### Defined In
+
+models/Distributions/MultiNormal.ts:119
 
 ---
 

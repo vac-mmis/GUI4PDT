@@ -33,7 +33,7 @@ export class Location extends Group {
     declare parent: PDTObject;
 
     /** Location distribution through time. */
-    private dist: (Distribution | [number, number, number])[] = [];
+    readonly dist: (Distribution | [number, number, number])[] = [];
 
     /** Current direction of object*/
     private direction: Vector3 = new Vector3();

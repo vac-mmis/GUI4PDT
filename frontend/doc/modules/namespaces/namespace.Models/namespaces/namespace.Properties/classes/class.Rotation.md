@@ -61,7 +61,7 @@ Group.parent
 
 ### dist
 
-> `private` **dist**: ([`Distribution`](../../namespace.Distribution/classes/class.Distribution.md) \| [`number`, `number`, `number`])[] = `[]`
+> `readonly` **dist**: ([`Distribution`](../../namespace.Distribution/classes/class.Distribution.md) \| [`number`, `number`, `number`])[] = `[]`
 
 Rotation distribution through time.
 
@@ -133,7 +133,7 @@ models/Properties/Rotation.ts:43
 
 ### controller
 
-> `private` **controller**: [`Controller`](../../namespace.Controller/classes/class.Controller.md)\< `"move"` \>
+> `private` **controller**: [`Controller`](../../namespace.Controls/classes/class.Controller.md)\< `"move"` \>
 
 Location controller module
 
@@ -185,13 +185,13 @@ models/Properties/Rotation.ts:97
 
 ### getController
 
-> **getController**(): [`Controller`](../../namespace.Controller/classes/class.Controller.md)\< `"move"` \>
+> **getController**(): [`Controller`](../../namespace.Controls/classes/class.Controller.md)\< `"move"` \>
 
 Give location controller to toggle its visibility
 
 #### Returns
 
-[`Controller`](../../namespace.Controller/classes/class.Controller.md)\< `"move"` \>
+[`Controller`](../../namespace.Controls/classes/class.Controller.md)\< `"move"` \>
 
 Location controller
 

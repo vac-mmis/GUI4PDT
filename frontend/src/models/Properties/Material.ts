@@ -21,7 +21,7 @@ export class Material extends MeshStandardMaterial {
     /** Object which has this material. */
     declare parent: PDTObject;
     /** Material distribution through time. */
-    private dist: Categorical[];
+    readonly dist: Categorical[];
 
     /**
      * Creates object material representation.

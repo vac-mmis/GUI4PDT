@@ -45,6 +45,13 @@ export class Categorical implements CatJSON {
     }
 
     /**
+     * Catagorical distribution description
+     */
+    public toString(): string {
+        return `mode : ${this.mode}`;
+    }
+
+    /**
      * Uniforms categorical array or string to have all available keys in each categorical item.
      *
      * @param categories Array of string or categorical data to uniform.

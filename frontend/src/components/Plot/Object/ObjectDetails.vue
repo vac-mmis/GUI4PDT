@@ -19,16 +19,14 @@
         <v-divider></v-divider>
         <v-card-item v-if="maximized">
             <v-tabs v-model="tab" color="secondary" align-tabs="center">
-                <v-tab :value="0">Class</v-tab>
-                <!-- TODO : Implement location details -->
-                <!-- <v-tab :value="1">Location</v-tab> -->
-                <v-tab :value="2">Material</v-tab>
+                <template v-for="key in Object.keys(details)" :key="key">
+                    <v-tab :value="key">{{ key }}</v-tab>
+                </template>
             </v-tabs>
-            <template v-if="tab === 0">
-                <ObjectPlot :data="[getPDT.selectedObject.class.representation(props.time)]" />
-            </template>
-            <template v-if="tab === 2">
-                <ObjectPlot :data="[getPDT.selectedObject.material.representation(props.time)]" />
+            <template v-for="key in Object.keys(details)" :key="key">
+                <template v-if="tab === key">
+                    <PropertyDetails :details="details[key]" />
+                </template>
             </template>
         </v-card-item>
     </v-card>
@@ -40,27 +38,28 @@
         :draggable="true"
         :origin="false"
         :edge="true"
+        :hide-default-lines="true"
         @drag="onDrag"
     />
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import Moveable, { type OnDrag } from "vue3-moveable";
 import { storeToRefs } from "pinia";
 
-import ObjectPlot from "@/components/Plot/Object/ObjectPlot.vue";
+import PropertyDetails from "@/components/Plot/Object/PropertyDetails.vue";
 
 import { PDTStore } from "@/store/pdt.store";
 
 const { getPDT } = storeToRefs(PDTStore());
 const props = defineProps<{ time: number }>();
-
+const details = computed(() => getPDT.value.selectedObject.getDetails(props.time));
 const card = ref();
 const opened = ref(true);
 const maximized = ref(true);
 
-const tab = ref<number>(0);
+const tab = ref<string>("");
 
 const onClose = () => {
     opened.value = false;

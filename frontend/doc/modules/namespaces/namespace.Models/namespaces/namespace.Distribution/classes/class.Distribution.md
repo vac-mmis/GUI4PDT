@@ -74,7 +74,7 @@ Gives random draw of the distribution.
 
 | Parameter   | Type      | Description                         |
 | :---------- | :-------- | :---------------------------------- |
-| `relative`? | `boolean` | If `true`, draw with centered mean. |
+| `relative`? | `boolean` | If `true`, draw with centered mode. |
 
 #### Returns
 
@@ -98,7 +98,7 @@ Gives data representation of the distribution.
 
 | Parameter   | Type      | Description                         |
 | :---------- | :-------- | :---------------------------------- |
-| `relative`? | `boolean` | If `true`, draw with centered mean. |
+| `relative`? | `boolean` | If `true`, draw with centered mode. |
 
 #### Returns
 
@@ -109,6 +109,24 @@ Distribution data for representation.
 #### Defined In
 
 models/Distributions/index.ts:80
+
+---
+
+### toString
+
+> `abstract` **toString**(): `string`
+
+Gives a description of the distribution.
+
+#### Returns
+
+`string`
+
+Distribution description.
+
+#### Defined In
+
+models/Distributions/index.ts:87
 
 ---
 

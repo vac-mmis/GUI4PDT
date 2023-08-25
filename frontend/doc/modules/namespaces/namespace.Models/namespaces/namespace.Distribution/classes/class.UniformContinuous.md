@@ -34,7 +34,7 @@ Creates new multivariate continuous uniform distribution from given distribution
 
 #### Defined In
 
-models/Distributions/UniContinuous.ts:31
+models/Distributions/UniContinuous.ts:32
 
 ## Properties
 
@@ -46,7 +46,7 @@ Distribution class name
 
 #### Defined In
 
-models/Distributions/UniContinuous.ts:20
+models/Distributions/UniContinuous.ts:21
 
 ---
 
@@ -56,7 +56,7 @@ models/Distributions/UniContinuous.ts:20
 
 #### Defined In
 
-models/Distributions/UniContinuous.ts:21
+models/Distributions/UniContinuous.ts:22
 
 #### Implementation of
 
@@ -72,7 +72,7 @@ Geometric center point of the distribution
 
 #### Defined In
 
-models/Distributions/UniContinuous.ts:23
+models/Distributions/UniContinuous.ts:24
 
 #### Implementation of
 
@@ -88,7 +88,7 @@ Distributions interval for each dimension : `[[xMin, xMax], [yMin, yMax], [zMin,
 
 #### Defined In
 
-models/Distributions/UniContinuous.ts:24
+models/Distributions/UniContinuous.ts:25
 
 #### Implementation of
 
@@ -106,7 +106,7 @@ models/Distributions/UniContinuous.ts:24
 
 #### Defined In
 
-models/Distributions/UniContinuous.ts:36
+models/Distributions/UniContinuous.ts:37
 
 ---
 
@@ -120,7 +120,7 @@ models/Distributions/UniContinuous.ts:36
 
 #### Defined In
 
-models/Distributions/UniContinuous.ts:38
+models/Distributions/UniContinuous.ts:39
 
 ---
 
@@ -140,7 +140,21 @@ multivariate continuous uniform representation with array of distance between ea
 
 #### Defined In
 
-models/Distributions/UniContinuous.ts:49
+models/Distributions/UniContinuous.ts:50
+
+---
+
+### toString
+
+> **toString**(): `string`
+
+#### Returns
+
+`string`
+
+#### Defined In
+
+models/Distributions/UniContinuous.ts:54
 
 ---
 

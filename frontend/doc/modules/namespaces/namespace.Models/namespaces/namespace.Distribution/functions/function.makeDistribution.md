@@ -19,7 +19,7 @@ Concrete distribution instance.
 
 ## Defined In
 
-models/Distributions/index.ts:89
+models/Distributions/index.ts:96
 
 ---
 

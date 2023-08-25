@@ -85,7 +85,7 @@ models/map.model.ts:26
 
 ### controller
 
-> `private` **controller**: [`Controller`](../namespaces/namespace.Controller/classes/class.Controller.md)\< `"visible"` \| `"plot"` \>
+> `private` **controller**: [`Controller`](../namespaces/namespace.Controls/classes/class.Controller.md)\< `"visible"` \| `"plot"` \>
 
 Map controller module
 
@@ -137,13 +137,13 @@ models/map.model.ts:76
 
 ### getController
 
-> **getController**(): [`Controller`](../namespaces/namespace.Controller/classes/class.Controller.md)\< `"visible"` \| `"plot"` \>
+> **getController**(): [`Controller`](../namespaces/namespace.Controls/classes/class.Controller.md)\< `"visible"` \| `"plot"` \>
 
 Give map controller to toggle surface visibility
 
 #### Returns
 
-[`Controller`](../namespaces/namespace.Controller/classes/class.Controller.md)\< `"visible"` \| `"plot"` \>
+[`Controller`](../namespaces/namespace.Controls/classes/class.Controller.md)\< `"visible"` \| `"plot"` \>
 
 Map surface controller
 

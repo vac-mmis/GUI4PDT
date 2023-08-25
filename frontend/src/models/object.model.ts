@@ -9,6 +9,7 @@ import { Location, Class, Rotation, Material } from "@/models/Properties";
 import type { ObjectJSON } from "@/interfaces/pdt";
 import type { PDT } from "@/models/pdt.model";
 import type { Controller } from "@/models/Controls/Controller";
+import type { ObjectDetails } from "./Controls/ObjectDetails";
 
 /**
  * Implements representation of objects in PDT, including class, material, location, rotation etc.
@@ -69,6 +70,35 @@ export class PDTObject extends Group {
         this._location.getController(),
         this._rotation.getController(),
     ];
+
+    /**
+     * Returns object properties details (description, 2D graph...).
+     * @param t Desired time to gat details.
+     *
+     * @returns Object properties details.
+     */
+    public getDetails(t: number): Record<string, ObjectDetails> {
+        t = Math.trunc(t) % this._location.dist.length;
+        return {
+            location: {
+                description: this._location.dist[t].toString(),
+                representation: undefined,
+            },
+            rotation: {
+                description: this._rotation.dist[t].toString(),
+                representation: undefined,
+            },
+            class: {
+                description: this.class.dist[t].toString(),
+                representation: this.class.representation(t),
+            },
+            material: {
+                description: this.material.dist[t].toString(),
+                representation: this.material.representation(t),
+            },
+        };
+    }
+
     /**
      * Update object to the given time.
      *
