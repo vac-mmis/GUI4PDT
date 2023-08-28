@@ -1,5 +1,6 @@
 <template>
     <div :class="`${openMenu ? `w-auto` : ``}`">
+        <!-- Toolbar -->
         <v-toolbar class="w-100" :collapse="!openMenu" title="PDT Menu">
             <v-btn v-if="openMenu" @click="changePDT" icon="">
                 <v-icon icon="far fa-folder-open" />
@@ -20,6 +21,7 @@
                     </v-expansion-panel-text>
                 </v-expansion-panel>
 
+                <!-- Objects list -->
                 <v-expansion-panel>
                     <v-expansion-panel-title>
                         <h1 class="text-subtitle-1">Objects</h1>
@@ -38,7 +40,9 @@
                         >
                             <h2 class="text-subtitle-2">Global</h2>
                         </ControlButtons>
+
                         <v-divider></v-divider>
+
                         <!-- Individual object controls -->
                         <v-virtual-scroll :items="objects" max-height="400" class="pa-2">
                             <template v-slot:default="{ item }">
@@ -78,18 +82,19 @@ import { worldStore } from "@/store/world.store";
 const { getPDT } = storeToRefs(PDTStore());
 const { setStatus } = worldStore();
 
+const openMenu = ref(false);
 const changePDT = () => setStatus({ status: `waiting`, message: `Wait for user PDT selection` });
 
+// Objects to control
 const elevationMap: ComputedRef<Map | undefined> = computed(() => getPDT.value.getElevationMap());
 const objects: ComputedRef<PDTObject[]> = computed(() => getPDT.value.getObjects());
 
-const openMenu = ref(false);
-
+// Updaters
 const updateObjects = ref(0);
 const updateGlobal = ref(0);
 
+// Controllers
 const objectControllers = (object: PDTObject): Controller<any>[] => object.getControllers();
-
 const elevationMapController = elevationMap.value?.getController();
 
 const globalObjectsControllers = Controller.buildGlobalBooleanController(

@@ -2,9 +2,9 @@
 
 ## Props
 
-| Prop name | Description | Type   | Values | Default |
-| --------- | ----------- | ------ | ------ | ------- |
-| time      |             | number | -      |         |
+| Prop name | Description                                                                  | Type   | Values | Default |
+| --------- | ---------------------------------------------------------------------------- | ------ | ------ | ------- |
+| time      | Selected time when show details. Generally come from `TimeSlider` component. | number | -      |         |
 
 ---
 

@@ -27,6 +27,9 @@ const toggleDrawer = () => {
     drawer.value = !drawer.value;
 };
 
+/**
+ * Add a item in the menu drawer here
+ */
 const menuItems = [
     { title: "Plot", icon: "fas fa-cube", route: "/" },
     { title: "About", icon: "$info", route: "/about" },

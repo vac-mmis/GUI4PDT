@@ -30,7 +30,7 @@ Creates new categorical distribution from given distribution data.
 
 #### Defined In
 
-models/Distributions/Categorical.ts:25
+models/Distributions/Categorical.ts:26
 
 ## Properties
 
@@ -96,7 +96,7 @@ models/Distributions/Categorical.ts:19
 
 #### Defined In
 
-models/Distributions/Categorical.ts:34
+models/Distributions/Categorical.ts:35
 
 ---
 
@@ -110,7 +110,7 @@ models/Distributions/Categorical.ts:34
 
 #### Defined In
 
-models/Distributions/Categorical.ts:38
+models/Distributions/Categorical.ts:39
 
 ---
 
@@ -126,7 +126,7 @@ Categorical representation as [string, number,...] array.
 
 #### Defined In
 
-models/Distributions/Categorical.ts:43
+models/Distributions/Categorical.ts:44
 
 ---
 
@@ -142,31 +142,7 @@ Catagorical distribution description
 
 #### Defined In
 
-models/Distributions/Categorical.ts:50
-
----
-
-### uniformCatagories
-
-> `static` **uniformCatagories**(`categories`): [`Categorical`](class.Categorical.md)[]
-
-Uniforms categorical array or string to have all available keys in each categorical item.
-
-#### Parameters
-
-| Parameter    | Type                                                                                                                                        | Description                                     |
-| :----------- | :------------------------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------- |
-| `categories` | (`string` \| \{`dist`: [`CatJSON`](../../../../namespace.Interfaces/namespaces/namespace.Distribution/interfaces/interface.CatJSON.md);})[] | Array of string or categorical data to uniform. |
-
-#### Returns
-
-[`Categorical`](class.Categorical.md)[]
-
-Uniformed categorical distribution array.
-
-#### Defined In
-
-models/Distributions/Categorical.ts:61
+models/Distributions/Categorical.ts:51
 
 ---
 

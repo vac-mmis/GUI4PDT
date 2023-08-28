@@ -8,7 +8,8 @@ import { MeshStandardMaterial } from "three";
 import type { PlotData } from "plotly.js-dist-min";
 
 import type { MaterialJSON } from "@/interfaces/properties";
-import { Categorical } from "@/models/Distributions";
+import { Distribution, makeDistribution } from "@/models/Distributions";
+import { type Categorical, uniformCatagories } from "@/models/Distributions/Categorical";
 import type { PDTObject } from "@/models/object.model";
 import { materialStore } from "@/store/material.store";
 
@@ -21,7 +22,7 @@ export class Material extends MeshStandardMaterial {
     /** Object which has this material. */
     declare parent: PDTObject;
     /** Material distribution through time. */
-    readonly dist: Categorical[];
+    readonly dist: Distribution[];
 
     /**
      * Creates object material representation.
@@ -30,12 +31,12 @@ export class Material extends MeshStandardMaterial {
      */
     constructor(materialJSON: MaterialJSON[]) {
         super();
-        this.dist = Categorical.uniformCatagories(materialJSON);
+        this.dist = uniformCatagories(materialJSON).map((type) => makeDistribution(type));
         this.userData.type = "Material";
 
         // Create object material
         const materials = materialStore();
-        const material = materials.find(Object.keys(this.dist[0].mass)[0]);
+        const material = materials.find(Object.keys((this.dist[0] as Categorical).mass)[0]);
         if (material) {
             Object.assign(this, material);
         } else {
@@ -82,8 +83,8 @@ export class Material extends MeshStandardMaterial {
         const data = this.dist[t].representation();
         return {
             type: "pie",
-            values: data.filter((_, i) => i % 2 == 1),
-            labels: data.filter((_, i) => i % 2 == 0),
+            values: data.filter((_: any, i: number) => i % 2 == 1),
+            labels: data.filter((_: any, i: number) => i % 2 == 0),
         };
     }
 }

@@ -6,8 +6,18 @@ import { ref, watch } from "vue";
 import { marked } from "marked";
 import markedKatex from "marked-katex-extension";
 
-const props = defineProps<{ content: string }>();
+const props = defineProps<{
+    /**
+     * Content to display in Markdown
+     */
+    content: string;
+}>();
 
+/**
+ * Load KaTeX plugin for marked
+ * 
+ @see {@link https://katex.org/docs/options.html | Option from KaTeX}
+ */
 marked.use(
     markedKatex({
         throwOnError: false,

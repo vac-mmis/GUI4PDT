@@ -1,5 +1,5 @@
 /**
- * PDT and PDt Object API interface.
+ * PDT and PDT Object API interface.
  *
  * @module Interfaces.PDT
  */

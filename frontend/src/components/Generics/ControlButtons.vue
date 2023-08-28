@@ -1,8 +1,8 @@
 <template>
     <v-sheet class="d-flex ma-2 flex-column">
         <span class="pr-2">
-            <!-- Controller header -->
-            <slot />
+            <!-- @slot Use this slot header -->
+            <slot name="header" />
         </span>
         <div
             class="d-flex flex-row justify-space-between align-center"
@@ -45,11 +45,29 @@ import { ref } from "vue";
 
 import { Controller, type ControllerValues } from "@/models/Controls/Controller";
 
-const props = defineProps<{ controllers: Controller<any>[] }>();
-const emits = defineEmits<(e: "update", update: number) => void>();
+const props = defineProps<{
+    /**
+     * Controllers to handle
+     */
+    controllers: Controller<any>[];
+}>();
+
+const emits = defineEmits<
+    /**
+     * Emits a number as signal to update some other components in `SelectionComponent`.
+     */
+    (event: "update", update: number) => void
+>();
 
 const toggle = ref<ControllerValues[][]>(props.controllers.map((controller) => controller.state));
 
+/**
+ *
+ * @param controller Controller to update values.
+ * @param value Desired value.
+ *
+ * @emits update A simple number sand to update other components avec the value changing.
+ */
 const updateValue = (controller: Controller<any>, value: ControllerValues[]) => {
     controller.set(value);
     emits("update", 1);

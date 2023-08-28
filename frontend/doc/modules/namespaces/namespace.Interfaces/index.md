@@ -1,5 +1,11 @@
 # Namespace: Interfaces
 
+This module gather together all required interfaces to use the backend API.
+
+## Remark
+
+Any change in these interfaces will break the communication with the backend API
+
 ## Index
 
 ### Namespaces

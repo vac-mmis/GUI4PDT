@@ -34,7 +34,7 @@ MeshStandardMaterial.constructor
 
 #### Defined In
 
-models/Properties/Material.ts:31
+models/Properties/Material.ts:32
 
 ## Properties
 
@@ -46,19 +46,19 @@ Object which has this material.
 
 #### Defined In
 
-models/Properties/Material.ts:22
+models/Properties/Material.ts:23
 
 ---
 
 ### dist
 
-> `readonly` **dist**: [`Categorical`](../../namespace.Distribution/classes/class.Categorical.md)[]
+> `readonly` **dist**: [`Distribution`](../../namespace.Distribution/classes/class.Distribution.md)[]
 
 Material distribution through time.
 
 #### Defined In
 
-models/Properties/Material.ts:24
+models/Properties/Material.ts:25
 
 ## Methods
 
@@ -75,7 +75,7 @@ Update material representation at desired time.
 
 #### Defined In
 
-models/Properties/Material.ts:52
+models/Properties/Material.ts:53
 
 ---
 
@@ -99,7 +99,7 @@ Object `MeshStandardMaterial` Three.JS material.
 
 #### Defined In
 
-models/Properties/Material.ts:63
+models/Properties/Material.ts:64
 
 ---
 
@@ -123,7 +123,7 @@ Material distribution representation as Plotly.JS pie chart.
 
 #### Defined In
 
-models/Properties/Material.ts:80
+models/Properties/Material.ts:81
 
 ---
 

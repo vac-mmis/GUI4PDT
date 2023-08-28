@@ -21,7 +21,6 @@ module.exports = defineConfig({
         return Promise.resolve(
             exportNames.map((exportName) => {
                 const meta = checker.getComponentMeta(componentPath);
-
                 const nonGlobalProps = meta.props.filter((prop) => !prop.global);
 
                 // massage the output of meta to match the docgen format

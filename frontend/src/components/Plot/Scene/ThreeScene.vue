@@ -7,11 +7,19 @@ import { ref, onMounted } from "vue";
 
 import { worldStore } from "@/store/world.store";
 
-const emits = defineEmits<(e: "update", update: number) => void>();
+const emits = defineEmits<
+    /**
+     * Emits a number as signal to update some other components in `PlotView`.
+     */
+    (e: "update", update: number) => void
+>();
 
 const container = ref<HTMLDivElement | null>(null);
 const { setWorld, setStatus } = worldStore();
 
+/**
+ * Function called by the world `Pointer` to trigger other components for a selected object update.
+ */
 const selectedCallback = () => {
     emits("update", 1);
 };

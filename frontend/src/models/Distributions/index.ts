@@ -91,9 +91,10 @@ export abstract class Distribution implements DistJSON {
  * Factory method to create a concrete distribution from distribution data.
  *
  * @param distData Distribution data.
+ *
  * @returns Concrete distribution instance.
  */
-export function makeDistribution(dist: Distribution, ...params: any): Distribution {
+export function makeDistribution(dist: DistJSON, ...params: any): Distribution {
     if (Object.keys(distributions).includes(dist.type)) {
         return new distributions[dist.type](dist as any, ...params);
     } else {

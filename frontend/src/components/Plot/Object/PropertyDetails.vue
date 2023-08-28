@@ -31,6 +31,12 @@ import type { ObjectDetails } from "@/models/Controls";
 const tabs = ref<string>("description");
 
 // Details
-const props = defineProps<{ details: ObjectDetails }>();
+const props = defineProps<{
+    /**
+     * Details to show, generally as Plotly 2D plot.
+     */
+    details: ObjectDetails;
+}>();
+
 const details = computed(() => props.details);
 </script>

@@ -41,7 +41,7 @@ Group.constructor
 
 #### Defined In
 
-models/Properties/Class.ts:48
+models/Properties/Class.ts:51
 
 ## Properties
 
@@ -53,7 +53,7 @@ Object which has this class.
 
 #### Defined In
 
-models/Properties/Class.ts:29
+models/Properties/Class.ts:32
 
 #### Overrides
 
@@ -63,13 +63,13 @@ Group.parent
 
 ### dist
 
-> `readonly` **dist**: [`Categorical`](../../namespace.Distribution/classes/class.Categorical.md)[]
+> `readonly` **dist**: [`Distribution`](../../namespace.Distribution/classes/class.Distribution.md)[]
 
 Class distribution through time.
 
 #### Defined In
 
-models/Properties/Class.ts:31
+models/Properties/Class.ts:34
 
 ---
 
@@ -81,7 +81,7 @@ Object scale through time.
 
 #### Defined In
 
-models/Properties/Class.ts:33
+models/Properties/Class.ts:36
 
 ---
 
@@ -93,7 +93,7 @@ models/Properties/Class.ts:33
 
 #### Defined In
 
-models/Properties/Class.ts:36
+models/Properties/Class.ts:39
 
 ---
 
@@ -105,7 +105,7 @@ Location controller module
 
 #### Defined In
 
-models/Properties/Class.ts:38
+models/Properties/Class.ts:41
 
 ## Methods
 
@@ -123,7 +123,7 @@ Class visibility
 
 #### Defined In
 
-models/Properties/Class.ts:87
+models/Properties/Class.ts:93
 
 ---
 
@@ -145,7 +145,7 @@ Set class visibility
 
 #### Defined In
 
-models/Properties/Class.ts:94
+models/Properties/Class.ts:100
 
 ---
 
@@ -163,7 +163,7 @@ Class controller
 
 #### Defined In
 
-models/Properties/Class.ts:109
+models/Properties/Class.ts:115
 
 ---
 
@@ -185,7 +185,7 @@ Update object class at given index.
 
 #### Defined In
 
-models/Properties/Class.ts:116
+models/Properties/Class.ts:122
 
 ---
 
@@ -207,7 +207,7 @@ Update class representation at desired time.
 
 #### Defined In
 
-models/Properties/Class.ts:137
+models/Properties/Class.ts:143
 
 ---
 
@@ -229,7 +229,7 @@ Change rotation of object representation.
 
 #### Defined In
 
-models/Properties/Class.ts:150
+models/Properties/Class.ts:156
 
 ---
 
@@ -253,7 +253,7 @@ Class distribution representation as Plotly.JS pie chart.
 
 #### Defined In
 
-models/Properties/Class.ts:163
+models/Properties/Class.ts:169
 
 ---
 

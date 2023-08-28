@@ -1,5 +1,7 @@
 # Namespace: Controls
 
+This module implements some utils used by Vue components, like [Controller](classes/class.Controller.md).
+
 ## Index
 
 ### Classes

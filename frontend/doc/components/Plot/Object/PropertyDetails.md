@@ -2,9 +2,9 @@
 
 ## Props
 
-| Prop name | Description | Type          | Values | Default |
-| --------- | ----------- | ------------- | ------ | ------- |
-| details   |             | ObjectDetails | -      |         |
+| Prop name | Description                                   | Type          | Values | Default |
+| --------- | --------------------------------------------- | ------------- | ------ | ------- |
+| details   | Details to show, generally as Plotly 2D plot. | ObjectDetails | -      |         |
 
 ---
 

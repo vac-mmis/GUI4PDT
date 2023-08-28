@@ -3,7 +3,7 @@
         <v-btn
             color="primary"
             size="large"
-            @click="toggleAnimation()"
+            @click="runTimer()"
             :icon="play ? 'fas fa-pause' : 'fas fa-play'"
         >
         </v-btn>
@@ -80,7 +80,11 @@ const ticks = Array.from(
 ).reduce((o, key) => Object.assign(o, { [key]: `${key}` }), {});
 
 const play = ref(false);
-const toggleAnimation = () => {
+
+/**
+ * Play or not play time.
+ */
+const runTimer = () => {
     play.value = !play.value;
     if (play.value) {
         timer.value?.start();

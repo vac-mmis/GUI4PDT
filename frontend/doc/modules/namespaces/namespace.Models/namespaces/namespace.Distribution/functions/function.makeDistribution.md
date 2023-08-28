@@ -6,10 +6,10 @@ Factory method to create a concrete distribution from distribution data.
 
 ## Parameters
 
-| Parameter   | Type                                               |
-| :---------- | :------------------------------------------------- |
-| `dist`      | [`Distribution`](../classes/class.Distribution.md) |
-| ...`params` | `any`                                              |
+| Parameter   | Type                                                                                                              |
+| :---------- | :---------------------------------------------------------------------------------------------------------------- |
+| `dist`      | [`DistJSON`](../../../../namespace.Interfaces/namespaces/namespace.Distribution/interfaces/interface.DistJSON.md) |
+| ...`params` | `any`                                                                                                             |
 
 ## Returns
 
@@ -19,7 +19,7 @@ Concrete distribution instance.
 
 ## Defined In
 
-models/Distributions/index.ts:96
+models/Distributions/index.ts:97
 
 ---
 

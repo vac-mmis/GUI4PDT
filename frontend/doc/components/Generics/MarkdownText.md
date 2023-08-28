@@ -2,9 +2,9 @@
 
 ## Props
 
-| Prop name | Description | Type   | Values | Default |
-| --------- | ----------- | ------ | ------ | ------- |
-| content   |             | string | -      |         |
+| Prop name | Description                    | Type   | Values | Default |
+| --------- | ------------------------------ | ------ | ------ | ------- |
+| content   | Content to display in Markdown | string | -      |         |
 
 ---
 

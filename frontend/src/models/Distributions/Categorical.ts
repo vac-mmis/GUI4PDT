@@ -17,6 +17,7 @@ export class Categorical implements CatJSON {
     readonly type = Categorical.distName;
     readonly mass: Record<string, number>;
     private mode: [string, number];
+
     /**
      *  Creates new categorical distribution from given distribution data.
      *
@@ -50,38 +51,35 @@ export class Categorical implements CatJSON {
     public toString(): string {
         return `mode : ${this.mode}`;
     }
+}
 
-    /**
-     * Uniforms categorical array or string to have all available keys in each categorical item.
-     *
-     * @param categories Array of string or categorical data to uniform.
-     *
-     * @returns Uniformed categorical distribution array.
-     */
-    public static uniformCatagories(categories: (string | { dist: CatJSON })[]): Categorical[] {
-        const classes = new Set<string>();
-        const uniformedMass = [] as Record<string, number>[];
-        // Create categorical array from data and save all possible types.
-        categories.forEach((item) => {
-            if (typeof item === "string") {
-                classes.add(item);
-                uniformedMass.push({ [item]: 1 });
-            } else {
-                Object.keys(item.dist.mass).forEach((key) => classes.add(key));
-                uniformedMass.push(item.dist.mass);
-            }
-        });
+/**
+ * Uniforms categorical array or string to have all available keys in each categorical item.
+ *
+ * @param categories Array of string or categorical data to uniform.
+ *
+ * @returns Uniformed categorical distribution array.
+ */
+export function uniformCatagories(categories: (string | { dist: CatJSON })[]): CatJSON[] {
+    const classes = new Set<string>();
+    const uniformedMass = [] as Record<string, number>[];
+    // Create categorical array from data and save all possible types.
+    categories.forEach((item) => {
+        if (typeof item === "string") {
+            classes.add(item);
+            uniformedMass.push({ [item]: 1 });
+        } else {
+            Object.keys(item.dist.mass).forEach((key) => classes.add(key));
+            uniformedMass.push(item.dist.mass);
+        }
+    });
 
-        // Assign probability to all possible materials saved in `types` (0 is not exist).
-        return uniformedMass.map(
-            (mass) =>
-                new Categorical({
-                    type: "categorical",
-                    mass: Array.from(classes).reduce(
-                        (o, key) => Object.assign(o, { [key]: mass[key] ? mass[key] : 0 }),
-                        {}
-                    ),
-                })
-        );
-    }
+    // Assign probability to all possible materials saved in `types` (0 is not exist).
+    return uniformedMass.map((mass) => ({
+        type: "categorical",
+        mass: Array.from(classes).reduce(
+            (o, key) => Object.assign(o, { [key]: mass[key] ? mass[key] : 0 }),
+            {}
+        ),
+    }));
 }

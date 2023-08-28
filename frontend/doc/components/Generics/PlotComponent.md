@@ -2,9 +2,9 @@
 
 ## Props
 
-| Prop name | Description | Type                      | Values | Default |
-| --------- | ----------- | ------------------------- | ------ | ------- |
-| data      |             | Partial&lt;PlotData&gt;[] | -      |         |
+| Prop name | Description          | Type                      | Values | Default |
+| --------- | -------------------- | ------------------------- | ------ | ------- |
+| data      | Desired data to plot | Partial&lt;PlotData&gt;[] | -      |         |
 
 ---
 

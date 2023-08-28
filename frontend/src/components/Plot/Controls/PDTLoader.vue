@@ -47,6 +47,9 @@ const dialog = ref(false);
 const PDTList = ref<string[]>();
 const selectedPDT = ref(pdt.getPDT.name ?? "");
 
+/**
+ * Action to do after PDT selection.
+ */
 const onSelect = async () => {
     world.setStatus({ status: "loading PDT", message: "Fetching selected PDT..." });
     dialog.value = false;
@@ -63,6 +66,9 @@ const onSelect = async () => {
         });
 };
 
+/**
+ * Action to do if chose is canceled.
+ */
 const onCancel = () =>
     world.setStatus({
         status: "success",
@@ -71,6 +77,7 @@ const onCancel = () =>
 
 onBeforeMount(async () => {
     world.setStatus({ status: "waiting", message: `Wait for user PDT selection` });
+    // Load PDT name list
     pdt.list()
         .then((pdtList: string[]) => {
             PDTList.value = pdtList;
@@ -80,6 +87,8 @@ onBeforeMount(async () => {
             world.setStatus({ status: "error", message: "No PDT found or server unavailable" });
             console.error(err);
         });
+
+    // Load models and materials
     await models.fetch();
     await materials.fetch();
 });

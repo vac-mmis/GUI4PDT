@@ -53,8 +53,15 @@ import PropertyDetails from "@/components/Plot/Object/PropertyDetails.vue";
 import { PDTStore } from "@/store/pdt.store";
 
 const { getPDT } = storeToRefs(PDTStore());
-const props = defineProps<{ time: number }>();
+const props = defineProps<{
+    /**
+     * Selected time when show details. Generally come from `TimeSlider` component.
+     */
+    time: number;
+}>();
+
 const details = computed(() => getPDT.value.selectedObject.getDetails(props.time));
+
 const card = ref();
 const opened = ref(true);
 const maximized = ref(true);

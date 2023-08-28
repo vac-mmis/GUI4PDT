@@ -1,6 +1,6 @@
 # Namespace: PDT
 
-PDT and PDt Object API interface.
+PDT and PDT Object API interface.
 
 ## Index
 

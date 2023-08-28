@@ -2,9 +2,9 @@
 
 ## Props
 
-| Prop name   | Description | Type                    | Values | Default |
-| ----------- | ----------- | ----------------------- | ------ | ------- |
-| controllers |             | Controller&lt;any&gt;[] | -      |         |
+| Prop name   | Description           | Type                    | Values | Default |
+| ----------- | --------------------- | ----------------------- | ------ | ------- |
+| controllers | Controllers to handle | Controller&lt;any&gt;[] | -      |         |
 
 ## Events
 
@@ -14,9 +14,9 @@
 
 ## Slots
 
-| Name    | Description | Bindings |
-| ------- | ----------- | -------- |
-| default |             |          |
+| Name   | Description | Bindings |
+| ------ | ----------- | -------- |
+| header |             |          |
 
 ---
 

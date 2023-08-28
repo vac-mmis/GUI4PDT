@@ -8,9 +8,12 @@ import { type Euler, Group } from "three";
 import type { PlotData } from "plotly.js-dist-min";
 
 import { Controller } from "@/models/Controls/Controller";
-import type { ClassJSON } from "@/interfaces/properties";
-import { Categorical } from "@/models/Distributions";
 import { Material } from "@/models/Properties";
+import type { ClassJSON } from "@/interfaces/properties";
+
+import { type Categorical, uniformCatagories } from "@/models/Distributions/Categorical";
+import { type Distribution, makeDistribution } from "@/models/Distributions";
+
 import type { PDTObject } from "@/models/object.model";
 import { makeRepresentation, type ObjectRepresentation } from "@/models/Representations";
 
@@ -28,7 +31,7 @@ export class Class extends Group {
     /** Object which has this class. */
     declare parent: PDTObject;
     /** Class distribution through time. */
-    readonly dist: Categorical[];
+    readonly dist: Distribution[];
     /** Object scale through time. */
     private scaleFactor: (number | undefined)[];
 
@@ -54,18 +57,21 @@ export class Class extends Group {
         super();
         this.parent = parent;
         this.userData.type = "Class";
-        this.dist = Categorical.uniformCatagories(classJSON);
         this.scaleFactor = scale;
 
+        // Uniform and store class distributions
+        this.dist = uniformCatagories(classJSON).map((type) => makeDistribution(type));
+
         // Create object representation
-        const object = Object.entries(this.dist[0].mass).map((type: [string, number]) =>
-            makeRepresentation(
-                "object",
-                modelStore().find(type[0]),
-                material?.getMaterial(type[1]) ?? undefined,
-                this.scaleFactor[0],
-                type[1]
-            )
+        const object = Object.entries((this.dist[0] as Categorical).mass).map(
+            (type: [string, number]) =>
+                makeRepresentation(
+                    "object",
+                    modelStore().find(type[0]),
+                    material?.getMaterial(type[1]) ?? undefined,
+                    this.scaleFactor[0],
+                    type[1]
+                )
         );
         this.add(...object);
 
@@ -115,7 +121,7 @@ export class Class extends Group {
      */
     private updateClass(index: number): void {
         const visibility = this.visibility;
-        const dist = this.dist[index];
+        const dist = this.dist[index] as Categorical;
         function getOpacity(type: ObjectRepresentation) {
             if (visibility.includes("alpha")) {
                 return dist.mass[type.name];
@@ -165,8 +171,8 @@ export class Class extends Group {
         const data = this.dist[t].representation();
         return {
             type: "pie",
-            values: data.filter((_, i) => i % 2 == 1),
-            labels: data.filter((_, i) => i % 2 == 0),
+            values: data.filter((_: any, i: number) => i % 2 == 1),
+            labels: data.filter((_: any, i: number) => i % 2 == 0),
         };
     }
 }
