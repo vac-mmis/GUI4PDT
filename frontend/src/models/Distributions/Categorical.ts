@@ -49,7 +49,7 @@ export class Categorical implements CatJSON {
      * Catagorical distribution description
      */
     public toString(): string {
-        return `mode : ${this.mode}`;
+        return `mode : ${this.mode[0]} ( $p = ${this.mode[1]}$ )`;
     }
 }
 
