@@ -16,13 +16,13 @@
         "entryPoints": ["src/main.ts"],
         "exclude": ["**/node_modules/**", "**/*.spec.ts", "**/*.vue"],
         "sort": ["source-order"],
-        "out": "doc/modules",
+        "out": "../docs/frontend/modules/",
         "readme": "none",
         "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
         "navigation": {
             "includeCategories": true,
             "includeGroups": false
         },
-        "docsRoot": "doc"
+        "docsRoot": "../docs"
     }
 }

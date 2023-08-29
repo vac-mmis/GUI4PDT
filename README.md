@@ -61,4 +61,28 @@ Will be a Creative Common license.
 
 ## Contribute
 
-See [frontend contributing](/frontend/CONTRIBUTING.md) and [backend contributing](/frontend/CONTRIBUTING.md) files.
+### Generate documentation webpage
+
+A documentation webpage could be generated thanks to [Vitepress](https://vitepress.dev) and [TypeDoc](https://typedoc.org/) :
+
+```sh
+npm run docs:gen    # Generate documentation Markdown pages in docs folder.
+npm run docs:dev    # Show doc webpage with dynamic render.
+```
+
+Docs webpage would be available at [localhost:5174](http://localhost:5174).
+
+It is also possible to build docs website without running Vitepress :
+
+```sh
+npm run docs:gen        # Needed if documentation is not yet generated or not to update.
+npm run docs:build      # Build documentation webpage, ready to be served.
+
+npm run docs:preview    # Preview built docs webpage.
+```
+
+Preview is available at [localhost:4174](http://localhost:4174).
+
+### Contributing pages
+
+You could also see [frontend](/frontend/CONTRIBUTING.md) and [backend](/frontend/CONTRIBUTING.md) contributing pages.

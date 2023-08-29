@@ -7,11 +7,11 @@ const tsconfigPath = path.resolve(__dirname, "./tsconfig.json");
 const checker = createComponentMetaChecker(tsconfigPath);
 
 module.exports = defineConfig({
-    docsRepo: "frontend",
-    docsFolder: "doc",
+    docsRepo: "docs",
+    docsFolder: "../docs/frontend",
     componentsRoot: "src",
     components: "./**/[A-Z]*.vue",
-    outDir: "doc",
+    outDir: "../docs/frontend",
     defaultExamples: true,
     propsParser(componentPath, _, event) {
         if (event === "add") {
