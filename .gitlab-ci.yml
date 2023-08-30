@@ -24,19 +24,16 @@ stages: # List of stages for jobs, and their order of execution
   - deploy
 
 # Installation job script for front and backend
-install:
-  stage: .pre   # always first, no matter if it is listed in stages
+default:
   tags:
     - nodejs
   cache:
     - key : $CI_COMMIT_REF_SLUG
       paths:
         - frontend/.npm/
-    - key : $CI_COMMIT_REF_SLUG
-      paths:
         - backend/.npm/
 
-  script : 
+  before_script : 
     - cd frontend
     - npm ci --cache .npm -prefer-offline
     - cd ../backend
