@@ -32,11 +32,9 @@ install:
     - key : $CI_COMMIT_REF_SLUG
       paths:
         - frontend/.npm/
-      policy: pull  # prevent subsequent jobs from modifying cache
     - key : $CI_COMMIT_REF_SLUG
       paths:
         - backend/.npm/
-      policy: pull  # prevent subsequent jobs from modifying cache
 
   script : 
     - cd frontend
