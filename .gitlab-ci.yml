@@ -18,39 +18,70 @@
 image: node:lts-alpine
 
 stages: # List of stages for jobs, and their order of execution
-    - install
-    - build
-    - quality
-    - deploy
-  
+  - install
+  - build
+  - quality
+  - deploy
+
 # Define a hidden job to be used with extends
 # Better than default to avoid activating cache for all jobs
 
-
 cache:
-  paths:
-    - frontend/node_modules/
-    - backend/node_modules/
+  - key : &global_cache_node_mods
+      files : 
+        - frontend/package-lock.json
+    paths:
+      - frontend/node_modules/
+    policy: pull  # prevent subsequent jobs from modifying cache
+  - key : &global_cache_node_mods
+      files : 
+        - backend/package-lock.json
+    paths:
+      - backend/node_modules/
+    policy: pull  # prevent subsequent jobs from modifying cache
 
-frontend:install:
-  stage: install
-  script:
+# Installation job script for front and backend
+install:
+  stage: .pre   # always first, no matter if it is listed in stages
+  cache:
+    # store npm cache for all branches (stores download pkg.tar.gz's)
+    # will not be necessary for any other job
+    - key: ${CI_JOB_NAME}
+       # must be inside $CI_PROJECT_DIR for gitlab-runner caching (#3)
+      paths:
+          - frontend/.npm/
+      when: on_success
+      policy: pull-push
+    - key:
+        files:
+          - frontend/package-lock.json
+      paths:
+        - frontend/.npm/
+      when: on_success
+      policy: pull-push
+
+    - key: ${CI_JOB_NAME}
+       # must be inside $CI_PROJECT_DIR for gitlab-runner caching (#3)
+      paths:
+          - backend/.npm/
+      when: on_success
+      policy: pull-push
+    - key:
+        files:
+          - backend/package-lock.json
+      paths:
+        - backend/.npm/
+      when: on_success
+      policy: pull-push
+
+  script : 
     - cd frontend
-    - npm install
+    - npm ci --cache .npm -prefer-offline
+    - cd ../backend
+    - npm ci --cache .npm -prefer-offline
     - cd ..
-  tags:
-    - nodejs
-    
-backend:install:
-  stage: install
-  script:
-    - cd backend
-    - npm install
-    - cd ..
-  tags:
-    - nodejs
-    
-frontend:build: 
+
+frontend:build:
   stage: build
   tags:
     - nodejs
@@ -60,10 +91,8 @@ frontend:build:
     - npm run build
     - echo "Frontend build complete."
     - cd ..
-  dependencies:
-    - frontend:install
 
-backend:build: 
+backend:build:
   stage: build
   tags:
     - nodejs
@@ -73,23 +102,19 @@ backend:build:
     - npm run build
     - echo "Backend build complete."
     - cd ..
-  dependencies:
-    - backend:install
 
-frontend:lint: 
-  stage: quality 
+frontend:lint:
+  stage: quality
   tags:
-      - nodejs
+    - nodejs
   script:
     - cd frontend
     - npm run lint
     - echo "No lint issues found."
     - cd ..
-  dependencies:
-    - frontend:install
-    
-backend:lint: 
-  stage: quality 
+
+backend:lint:
+  stage: quality
   tags:
     - nodejs
   script:
@@ -97,34 +122,28 @@ backend:lint:
     - npm run lint
     - echo "No lint issues found."
     - cd ..
-  dependencies:
-    - backend:install
 
 frontend:test:unit:
-  stage : quality
+  stage: quality
   tags:
     - nodejs
-  script :
+  script:
     - echo "Start frontend test..."
     - cd frontend
     - echo "Add Vitest test execution here"
     - cd ..
     - echo "Frontend test succeeded."
-  dependencies:
-    - frontend:install
 
 backend:test:unit:
-  stage : quality
+  stage: quality
   tags:
     - nodejs
-  script :
+  script:
     - echo "Start backend test..."
     - cd backend
     - echo "Add backend test execution here"
     - cd ..
     - echo "Frontend test succeeded."
-  dependencies:
-    - backend:install
 
 deploy:
   stage: deploy
