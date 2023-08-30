@@ -38,6 +38,8 @@ variables:
     paths:
       - .npm
     policy: pull
+  tags:
+    - nodejs
 
 .dep_cache_frontend:
   cache:
@@ -47,6 +49,8 @@ variables:
     paths:
       - frontend/.npm
     policy: pull
+  tags:
+    - nodejs
 
 .dep_cache_backend:
   cache:
@@ -56,7 +60,9 @@ variables:
     paths:
       - backend/.npm
     policy: pull
-
+  tags:
+    - nodejs
+    
 frontend_setup:
   stage: setup
   script:
@@ -70,7 +76,9 @@ frontend_setup:
     expire_in: 1h
     paths:
       - frontend/node_modules
-
+  tags:
+    - nodejs
+    
 backend_setup:
   stage: setup
   script:
@@ -84,69 +92,78 @@ backend_setup:
     expire_in: 1h
     paths:
       - backend/node_modules
-
+  tags:
+    - nodejs
+    
 lint_frontend: 
-    stage: lint 
-    tags:
-        - nodejs
-    script:
-        - cd frontend
-        - npm run lint
-        - echo "No lint issues found."
-        - cd ..
-
+  stage: lint 
+  tags:
+      - nodejs
+  script:
+    - cd frontend
+    - npm run lint
+    - echo "No lint issues found."
+    - cd ..
+    
 lint_backend: 
-    stage: lint 
-    tags:
-        - nodejs
-    script:
-        - cd backend
-        - npm run lint
-        - echo "No lint issues found."
-        - cd ..
-
+  stage: lint 
+  tags:
+    - nodejs
+  script:
+    - cd backend
+    - npm run lint
+    - echo "No lint issues found."
+    - cd ..
+    
 build_frontend: 
-    stage: build
-    tags:
-        - nodejs
-    script:
-        - cd frontend
-        - echo "Building frontend..."
-        - npm run build
-        - echo "Frontend build complete."
-        - cd ..
+  stage: build
+  tags:
+    - nodejs
+  script:
+    - cd frontend
+    - echo "Building frontend..."
+    - npm run build
+    - echo "Frontend build complete."
+    - cd ..
 
 build_backend:
-    stage: build
-    tags:
-        - nodejs
-    script:
-        - cd backend
-        - echo "Building backend..."
-        - npm run build
-        - echo "Backend build complete."
-        - cd ..
+  stage: build
+  tags:
+    - nodejs
+  script:
+    - cd backend
+    - echo "Building backend..."
+    - npm run build
+    - echo "Backend build complete."
+    - cd ..
 
 test_frontend:
-    stage : test
-    script :
-        - echo "Start frontend test..."
-        - cd frontend
-        - echo "Add Vitest test execution here"
-        - cd ..
-        - echo "Frontend test succeeded."
+  stage : test
+  tags:
+    - nodejs
+  script :
+    - echo "Start frontend test..."
+    - cd frontend
+    - echo "Add Vitest test execution here"
+    - cd ..
+    - echo "Frontend test succeeded."
 
 test_backend:
     stage : test
+    tags:
+    - nodejs
     script :
-        - echo "Start backend test..."
-        - cd backend
-        - echo "Add Vitest test execution here"
-        - cd ..
-        - echo "Frontend test succeeded."
+      - echo "Start backend test..."
+      - cd backend
+      - echo "Add Vitest test execution here"
+      - cd ..
+      - echo "Frontend test succeeded."
 
 deploy:
     stage: deploy
+    tags:
+      - docker
+      - nodejs
     environment: production
     script:
         - echo "Deploying application..."
