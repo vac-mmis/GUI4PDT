@@ -41,7 +41,7 @@ frontend:install:
   stage: install
   script:
     - cd frontend
-    - npm npm ci --cache .npm --prefer-offline
+    - npm ci --cache .npm --prefer-offline
     - cd ..
   tags:
     - nodejs
@@ -50,7 +50,7 @@ backend:install:
   stage: install
   script:
     - cd backend
-    - npm npm ci --cache .npm --prefer-offline
+    - npm ci --cache .npm --prefer-offline
     - cd ..
   tags:
     - nodejs
