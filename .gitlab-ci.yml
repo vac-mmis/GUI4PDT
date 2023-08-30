@@ -22,27 +22,27 @@ stages: # List of stages for jobs, and their order of execution
     - build
     - quality
     - deploy
-
-variables:
-  frontend_npm_config_cache: "$CI_PROJECT_DIR/frontend/.npm/"
-  backend_npm_config_cache: "$CI_PROJECT_DIR/backend/.npm/"
-
+  
 # Define a hidden job to be used with extends
 # Better than default to avoid activating cache for all jobs
-    
+
+
+cache:
+  - key: front-npm
+    policy: pull-push
+    paths:
+      - frontend/.npm/
+  - key: back-npm
+    policy: pull-push
+    paths:
+      - backend/.npm/
+
 frontend:install:
   stage: install
   script:
     - cd frontend
-    - npm install
+    - npm npm ci --cache .npm --prefer-offline
     - cd ..
-  artifacts:
-    name: "front_artifacts"
-    untracked: true
-    expire_in: 1h
-    paths:
-      - frontend/node_modules/
-      - frontend/.npm/
   tags:
     - nodejs
     
@@ -50,15 +50,8 @@ backend:install:
   stage: install
   script:
     - cd backend
-    - npm install
+    - npm npm ci --cache .npm --prefer-offline
     - cd ..
-  artifacts:
-    name: "back_artifacts"
-    untracked: true
-    expire_in: 1h
-    paths:
-      - backend/node_modules/
-      - backend/.npm/
   tags:
     - nodejs
     
@@ -72,10 +65,6 @@ frontend:build:
     - npm run build
     - echo "Frontend build complete."
     - cd ..
-  artifacts:
-    paths:
-      - frontend/dist
-    expire_in: 30 mins
   dependencies:
     - frontend:install
 
@@ -89,10 +78,6 @@ backend:build:
     - npm run build
     - echo "Backend build complete."
     - cd ..
-  artifacts:
-    paths:
-      - backend/dist
-    expire_in: 30 mins
   dependencies:
     - backend:install
 
