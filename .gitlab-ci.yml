@@ -18,10 +18,9 @@
 image: node:lts-alpine
 
 stages: # List of stages for jobs, and their order of execution
-    - setup
-    - lint
+    - install
     - build
-    - test
+    - quality
     - deploy
 
 variables:
@@ -30,90 +29,38 @@ variables:
 
 # Define a hidden job to be used with extends
 # Better than default to avoid activating cache for all jobs
-.main_dependancies_cache:
-  cache:
-    key:
-      files:
-        - package-lock.json
+    
+install_frontend:
+  stage: install
+  script:
+    - cd frontend
+    - npm ci
+    - cd ..
+  artifacts:
+    name: "artifacts"
+    untracked: true
+    expire_in: 1h
     paths:
-      - .npm
-    policy: pull
-  tags:
-    - nodejs
-
-.dep_cache_frontend:
-  cache:
-    key:
-      files:
-        - frontend/package-lock.json
-    paths:
+      - frontend/node_modules/
       - frontend/.npm
-    policy: pull
   tags:
     - nodejs
-
-.dep_cache_backend:
-  cache:
-    key:
-      files:
-        - backend/package-lock.json
+    
+install_backend:
+  stage: install
+  script:
+    - cd backend
+    - npm ci
+    - cd ..
+  artifacts:
+    name: "artifacts"
+    untracked: true
+    expire_in: 1h
     paths:
+      - backend/node_modules/
       - backend/.npm
-    policy: pull
   tags:
     - nodejs
-    
-frontend_setup:
-  stage: setup
-  script:
-    - cd frontend
-    - npm ci
-    - cd ..
-  extends: .dep_cache_frontend
-  cache:
-    policy: pull-push
-  artifacts:
-    expire_in: 1h
-    paths:
-      - frontend/node_modules
-  tags:
-    - nodejs
-    
-backend_setup:
-  stage: setup
-  script:
-    - cd backend
-    - npm ci
-    - cd ..
-  extends: .dep_cache_backend
-  cache:
-    policy: pull-push
-  artifacts:
-    expire_in: 1h
-    paths:
-      - backend/node_modules
-  tags:
-    - nodejs
-    
-lint_frontend: 
-  stage: lint 
-  tags:
-      - nodejs
-  script:
-    - cd frontend
-    - npm run lint
-    - echo "No lint issues found."
-    - cd ..
-    
-lint_backend: 
-  stage: lint 
-  tags:
-    - nodejs
-  script:
-    - cd backend
-    - npm run lint
-    - echo "No lint issues found."
-    - cd ..
     
 build_frontend: 
   stage: build
@@ -125,8 +72,14 @@ build_frontend:
     - npm run build
     - echo "Frontend build complete."
     - cd ..
+  artifacts:
+    paths:
+      - frontend/dist
+    expire_in: 30 mins
+  dependencies:
+    - install_frontend
 
-build_backend:
+build_backend: 
   stage: build
   tags:
     - nodejs
@@ -136,9 +89,39 @@ build_backend:
     - npm run build
     - echo "Backend build complete."
     - cd ..
+  artifacts:
+    paths:
+      - backend/dist
+    expire_in: 30 mins
+  dependencies:
+    - install_backend
 
-test_frontend:
-  stage : test
+lint_frontend: 
+  stage: quality 
+  tags:
+      - nodejs
+  script:
+    - cd frontend
+    - npm run lint
+    - echo "No lint issues found."
+    - cd ..
+  dependencies:
+    - install_frontend
+    
+lint_backend: 
+  stage: quality 
+  tags:
+    - nodejs
+  script:
+    - cd backend
+    - npm run lint
+    - echo "No lint issues found."
+    - cd ..
+  dependencies:
+    - install_backend
+
+test_frontend:unit:
+  stage : quality
   tags:
     - nodejs
   script :
@@ -147,25 +130,30 @@ test_frontend:
     - echo "Add Vitest test execution here"
     - cd ..
     - echo "Frontend test succeeded."
+  dependencies:
+    - install_frontend
 
-test_backend:
-    stage : test
-    tags:
+test_backend:unit:
+  stage : quality
+  tags:
     - nodejs
-    script :
-      - echo "Start backend test..."
-      - cd backend
-      - echo "Add Vitest test execution here"
-      - cd ..
-      - echo "Frontend test succeeded."
+  script :
+    - echo "Start backend test..."
+    - cd backend
+    - echo "Add backend test execution here"
+    - cd ..
+    - echo "Frontend test succeeded."
+  dependencies:
+    - install_backend
 
 deploy:
-    stage: deploy
-    tags:
-      - docker
-      - nodejs
-    environment: production
-    script:
-        - echo "Deploying application..."
-        - echo "Add deployment here"
-        - echo "Application successfully deployed."
+  stage: deploy
+  tags:
+    - docker
+    - nodejs
+  environment: production
+  script:
+    - echo "Deploying application..."
+    - echo "Add deployment here"
+    - echo "Application successfully deployed."
+  when: manual
