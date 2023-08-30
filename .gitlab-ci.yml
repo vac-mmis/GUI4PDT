@@ -43,6 +43,8 @@ cache:
 # Installation job script for front and backend
 install:
   stage: .pre   # always first, no matter if it is listed in stages
+  tags:
+    - nodejs
   cache:
     # store npm cache for all branches (stores download pkg.tar.gz's)
     # will not be necessary for any other job
