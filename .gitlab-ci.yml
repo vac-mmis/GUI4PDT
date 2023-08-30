@@ -1,117 +1,100 @@
-# This file is a template, and might need editing before it works on your project.
-# This is a sample GitLab CI/CD configuration file that should run without any modifications.
-# It demonstrates a basic 3 stage CI/CD pipeline. Instead of real tests or scripts,
-# it uses echo commands to simulate the pipeline execution.
-#
-# A pipeline is composed of independent jobs that run scripts, grouped into stages.
-# Stages run in sequential order, but jobs within stages run in parallel.
-#
-# For more information, see: https://docs.gitlab.com/ee/ci/yaml/index.html#stages
-#
-# You can copy and paste this template into a new `.gitlab-ci.yml` file.
-# You should not add this template to an existing `.gitlab-ci.yml` file by using the `include:` keyword.
-#
-# To contribute improvements to CI/CD templates, please follow the Development guide at:
-# https://docs.gitlab.com/ee/development/cicd/templates.html
-# This specific template is located at:
-# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 image: node:lts-alpine
 
 stages: # List of stages for jobs, and their order of execution
-  - install
-  - build
-  - quality
-  - deploy
+    - install
+    - build
+    - quality
+    - deploy
 
 # Installation job script for front and backend
 default:
-  tags:
-    - nodejs
-  cache:
-    - key : $CI_COMMIT_REF_SLUG
-      paths:
-        - frontend/.npm/
-        - backend/.npm/
+    tags:
+        - nodejs
+    cache:
+        - key:
+          paths:
+              - frontend/.npm/
+              - backend/.npm/
 
-  before_script : 
-    - cd frontend
-    - npm ci --cache .npm -prefer-offline
-    - cd ../backend
-    - npm ci --cache .npm -prefer-offline
-    - cd ..
+    before_script:
+        - cd frontend
+        - npm ci --cache .npm -prefer-offline
+        - cd ../backend
+        - npm ci --cache .npm -prefer-offline
+        - cd ..
 
 frontend:build:
-  stage: build
-  tags:
-    - nodejs
-  script:
-    - cd frontend
-    - echo "Building frontend..."
-    - npm run build
-    - echo "Frontend build complete."
-    - cd ..
+    stage: build
+    tags:
+        - nodejs
+    script:
+        - cd frontend
+        - echo "Building frontend..."
+        - npm run build
+        - echo "Frontend build complete."
+        - cd ..
 
 backend:build:
-  stage: build
-  tags:
-    - nodejs
-  script:
-    - cd backend
-    - echo "Building backend..."
-    - npm run build
-    - echo "Backend build complete."
-    - cd ..
+    stage: build
+    tags:
+        - nodejs
+    script:
+        - cd backend
+        - echo "Building backend..."
+        - npm run build
+        - echo "Backend build complete."
+        - cd ..
 
 frontend:lint:
-  stage: quality
-  tags:
-    - nodejs
-  script:
-    - cd frontend
-    - npm run lint
-    - echo "No lint issues found."
-    - cd ..
+    stage: quality
+    tags:
+        - nodejs
+    script:
+        - cd frontend
+        - npm run lint
+        - echo "No lint issues found."
+        - cd ..
 
 backend:lint:
-  stage: quality
-  tags:
-    - nodejs
-  script:
-    - cd backend
-    - npm run lint
-    - echo "No lint issues found."
-    - cd ..
+    stage: quality
+    tags:
+        - nodejs
+    script:
+        - cd backend
+        - npm run lint
+        - echo "No lint issues found."
+        - cd ..
 
 frontend:test:unit:
-  stage: quality
-  tags:
-    - nodejs
-  script:
-    - echo "Start frontend test..."
-    - cd frontend
-    - echo "Add Vitest test execution here"
-    - cd ..
-    - echo "Frontend test succeeded."
+    stage: quality
+    tags:
+        - nodejs
+    script:
+        - echo "Start frontend test..."
+        - cd frontend
+        - echo "Add Vitest test execution here"
+        - cd ..
+        - echo "Frontend test succeeded."
 
 backend:test:unit:
-  stage: quality
-  tags:
-    - nodejs
-  script:
-    - echo "Start backend test..."
-    - cd backend
-    - echo "Add backend test execution here"
-    - cd ..
-    - echo "Frontend test succeeded."
+    stage: quality
+    tags:
+        - nodejs
+    script:
+        - echo "Start backend test..."
+        - cd backend
+        - echo "Add backend test execution here"
+        - cd ..
+        - echo "Frontend test succeeded."
 
 deploy:
-  stage: deploy
-  tags:
-    - docker
-    - nodejs
-  environment: production
-  script:
-    - echo "Deploying application..."
-    - echo "Add deployment here"
-    - echo "Application successfully deployed."
-  when: manual
+    stage: deploy
+    tags:
+        - docker
+        - nodejs
+    environment: production
+    script:
+        - echo "Deploying application..."
+        - echo "Add deployment here"
+        - echo "Application successfully deployed."
+    when: manual
