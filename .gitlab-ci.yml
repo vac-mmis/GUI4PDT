@@ -24,45 +24,45 @@ stages: # List of stages for jobs, and their order of execution
     - deploy
 
 variables:
-  frontend_npm_config_cache: "$CI_PROJECT_DIR/frontend/.npm"
-  backend_npm_config_cache: "$CI_PROJECT_DIR/backend/.npm"
+  frontend_npm_config_cache: "$CI_PROJECT_DIR/frontend/.npm/"
+  backend_npm_config_cache: "$CI_PROJECT_DIR/backend/.npm/"
 
 # Define a hidden job to be used with extends
 # Better than default to avoid activating cache for all jobs
     
-install_frontend:
+frontend:install:
   stage: install
   script:
     - cd frontend
-    - npm ci
+    - npm install
     - cd ..
   artifacts:
-    name: "artifacts"
+    name: "front_artifacts"
     untracked: true
     expire_in: 1h
     paths:
       - frontend/node_modules/
-      - frontend/.npm
+      - frontend/.npm/
   tags:
     - nodejs
     
-install_backend:
+backend:install:
   stage: install
   script:
     - cd backend
-    - npm ci
+    - npm install
     - cd ..
   artifacts:
-    name: "artifacts"
+    name: "back_artifacts"
     untracked: true
     expire_in: 1h
     paths:
       - backend/node_modules/
-      - backend/.npm
+      - backend/.npm/
   tags:
     - nodejs
     
-build_frontend: 
+frontend:build: 
   stage: build
   tags:
     - nodejs
@@ -77,9 +77,9 @@ build_frontend:
       - frontend/dist
     expire_in: 30 mins
   dependencies:
-    - install_frontend
+    - frontend:install
 
-build_backend: 
+backend:build: 
   stage: build
   tags:
     - nodejs
@@ -94,9 +94,9 @@ build_backend:
       - backend/dist
     expire_in: 30 mins
   dependencies:
-    - install_backend
+    - backend:install
 
-lint_frontend: 
+frontend:lint: 
   stage: quality 
   tags:
       - nodejs
@@ -106,9 +106,9 @@ lint_frontend:
     - echo "No lint issues found."
     - cd ..
   dependencies:
-    - install_frontend
+    - frontend:install
     
-lint_backend: 
+backend:lint: 
   stage: quality 
   tags:
     - nodejs
@@ -118,9 +118,9 @@ lint_backend:
     - echo "No lint issues found."
     - cd ..
   dependencies:
-    - install_backend
+    - backend:install
 
-test_frontend:unit:
+frontend:test:unit:
   stage : quality
   tags:
     - nodejs
@@ -131,9 +131,9 @@ test_frontend:unit:
     - cd ..
     - echo "Frontend test succeeded."
   dependencies:
-    - install_frontend
+    - frontend:install
 
-test_backend:unit:
+backend:test:unit:
   stage : quality
   tags:
     - nodejs
@@ -144,7 +144,7 @@ test_backend:unit:
     - cd ..
     - echo "Frontend test succeeded."
   dependencies:
-    - install_backend
+    - backend:install
 
 deploy:
   stage: deploy
