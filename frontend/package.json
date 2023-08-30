@@ -9,7 +9,7 @@
         "test:unit": "vitest",
         "build-only": "vite build",
         "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
-        "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+        "lint": "eslint src --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
         "format": "prettier --write src/ doc/",
         "doc": "typedoc --tsconfig tsconfig.doc.json && vue-docgen && cp CONTRIBUTING.md ../docs/frontend/index.md"
     },

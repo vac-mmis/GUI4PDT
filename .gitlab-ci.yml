@@ -15,66 +15,93 @@
 # https://docs.gitlab.com/ee/development/cicd/templates.html
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
-image : node:lts-alpine
+image: node:lts-alpine
 
-stages:          # List of stages for jobs, and their order of execution
-  - build
-  - test
-  - deploy
+stages: # List of stages for jobs, and their order of execution
+    - build
+    - test
+    - deploy
 
-build-frontend:       # This job runs in the build stage, which runs first.
-  stage: build
-  script:
+cache:
+    - key:
+          files:
+              - package-lock.json
+          prefix: npm
+          paths:
+              - node_modules/
+    - key:
+          files:
+              - backend/package-lock.json
+          prefix: npm
+          paths:
+              - backend/node_modules/
+              - backend/dist/
+    - key:
+          files:
+              - frontend/package-lock.json
+          prefix: npm
+          paths:
+              - frontend/node_modules/
+              - frontend/dist/
+
+before_script:
+    - npm install
     - cd frontend
-    - npm i
-    - echo "Building frontend..."
-    - npm run build
-    - echo "Frontend build complete."
+    - npm install
+    - cd ../backend
+    - npm install
+    - cd ..
 
-build-backend:       # This job runs in the build stage, which runs first.
-  stage: build
-  script:
-    - cd backend
-    - npm i
-    - echo "Building backend..."
-    - npm run build
-    - echo "Backend build complete."
+lint-frontend: # This job also runs in the test stage.
+    stage: test # It can run at the same time as unit-test-job (in parallel).
+    tags:
+        - nodejs
+    script:
+        - cd frontend
+        - npm run lint
+        - echo "No lint issues found."
+        - cd ..
 
-lint-frontend:   # This job also runs in the test stage.
-  needs:
-    - build-frontend
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
-  script:
-    - cd frontend
-    - npm run lint
-    - echo "No lint issues found."
+lint-backend: # This job also runs in the test stage.
+    stage: test # It can run at the same time as unit-test-job (in parallel).
+    tags:
+        - nodejs
+    script:
+        - cd backend
+        - npm run lint
+        - echo "No lint issues found."
 
-lint-backend:   # This job also runs in the test stage.
-  needs:
-    - build-backend
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
-  script:
-    - cd backend
-    - npm run lint
-    - echo "No lint issues found."
+build-frontend: # This job runs in the build stage, which runs first.
+    stage: build
+    needs:
+        - lint-frontend
+    tags:
+        - nodejs
+    script:
+        - cd frontend
+        - echo "Building frontend..."
+        - npm run build
+        - echo "Frontend build complete."
 
-deploy-build:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  needs:
-    - lint-frontend
-    - lint-backend
-  environment: production
-  script:
-    - echo "Build Docker application..."
-    - docker compose build
-    - echo "Docker build complete."
+build-backend: # This job runs in the build stage, which runs first.
+    stage: build
+    needs:
+        - lint-backend
+    tags:
+        - nodejs
+    script:
+        - cd backend
+        - echo "Building backend..."
+        - npm run build
+        - echo "Backend build complete."
 
-deploy:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  needs:
-    - deploy-build
-  environment: production
-  script:
-    - echo "Deploying application..."
-    - echo "Add deployment here"
-    - echo "Application successfully deployed."
+deploy: # This job runs in the deploy stage.
+    stage: deploy # It only runs when *both* jobs in the test stage complete successfully.
+    needs:
+        - build-backend
+        - build-frontend
+    environment: production
+    script:
+        - echo "Deploying application..."
+        - echo "Add deployment here"
+        - echo "Application successfully deployed."
