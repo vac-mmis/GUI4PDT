@@ -28,20 +28,15 @@ stages: # List of stages for jobs, and their order of execution
 
 
 cache:
-  - key: front-npm
-    policy: pull-push
-    paths:
-      - frontend/.npm/
-  - key: back-npm
-    policy: pull-push
-    paths:
-      - backend/.npm/
+  paths:
+    - frontend/node_modules/
+    - backend/node_modules/
 
 frontend:install:
   stage: install
   script:
     - cd frontend
-    - npm ci --cache .npm --prefer-offline
+    - npm install
     - cd ..
   tags:
     - nodejs
@@ -50,7 +45,7 @@ backend:install:
   stage: install
   script:
     - cd backend
-    - npm ci --cache .npm --prefer-offline
+    - npm install
     - cd ..
   tags:
     - nodejs
