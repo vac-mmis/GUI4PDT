@@ -39,7 +39,7 @@ To run this project, you will need to add the following environment variables to
 Defaults could be setup with :
 
 ```sh
-cp .env.vault .env # Get right environment variables
+cp .env.example .env # Get right environment variables
 ```
 
 ### Installation

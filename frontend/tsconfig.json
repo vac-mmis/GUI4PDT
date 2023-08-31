@@ -1,12 +1,37 @@
 {
     "extends": "@vue/tsconfig/tsconfig.dom.json",
-    "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "src/**/*.ts"],
+    "include": [
+        "env.d.ts",
+        "src/**/*",
+        "src/**/*.vue",
+        "src/**/*.ts",
+        "vite.config.*",
+        "vitest.config.*",
+        "cypress.config.*",
+        "playwright.config.*"
+    ],
     "exclude": ["src/**/__tests__/*"],
     "compilerOptions": {
         "composite": true,
-        "baseUrl": ".",
+        "baseUrl": "src/",
         "paths": {
-            "@/*": ["./src/*"]
-        }
+            "@/*": ["*"]
+        },
+        "outDir": "./dist",
+        "module": "ESNext",
+        "types": ["node", "jsdom", "vite/client"]
+    },
+    "typedocOptions": {
+        "entryPoints": ["src/main.ts"],
+        "exclude": ["**/node_modules/**", "**/*.spec.ts", "**/*.vue"],
+        "sort": ["source-order"],
+        "out": "../docs/frontend/modules/",
+        "readme": "none",
+        "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
+        "navigation": {
+            "includeCategories": true,
+            "includeGroups": false
+        },
+        "docsRoot": "../docs"
     }
 }

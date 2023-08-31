@@ -11,6 +11,7 @@
         -   [Requirements](#requirements)
         -   [Build Docker image](#build-docker-image)
         -   [Manual installation](#manual-installation)
+            -   [Environment variables](#environment-variables)
             -   [Install dependencies](#install-dependencies)
             -   [Start Vite development environment with Hot Module Replacement.](#start-vite-development-environment-with-hot-module-replacement)
             -   [Type-Check, Compile and Minify for Production](#type-check-compile-and-minify-for-production)
@@ -42,6 +43,14 @@ docker build -t mmis-gui-frontend .
 ```
 
 ### Manual installation
+
+#### Environment variables
+
+Before installing frontend, you will to specify URL to backend API in setting `VITE_API_BASE_URL` variable in [`.env`](/frontend/.env) file. Default value could be setup with :
+
+```sh
+cp .env.example .env # Get right environment variables
+```
 
 #### Install dependencies
 
