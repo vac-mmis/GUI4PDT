@@ -42,7 +42,7 @@ npm run dev
 
 ## Documentation
 
-Frontend documentation is automatically generated in Markdown format from [TSDoc](https://tsdoc.org/) doc comments standard with [TypeDoc](https://typedoc.org/). Documentation for Vue components is also generated from code by [vue-docgen-cli](https://vue-styleguidist.github.io/docs/docgen-cli.html). Docs building is outsourced in [/docs/frontend](/docs/frontend) in the root folder.
+Frontend documentation is automatically generated in Markdown format from [TSDoc](https://tsdoc.org/) doc comments standard with [TypeDoc](https://typedoc.org/). Documentation for Vue components is also generated from code by [vue-docgen-cli](https://vue-styleguidist.github.io/docs/docgen-cli.html). Docs building is outsourced in [/docs/frontend](/docs/frontend/index.md) in the root folder.
 
 You can alse generate documentation webpages with [Vitepress](https://vitepress.dev) following instructions available in [main README.md Contribute](/README.md#contribute) section
 

@@ -1,7 +1,14 @@
-# Frontend developper documentation👋
+# Frontend developer documentation
 
-![Version](https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000)
-[![License: ISC](https://img.shields.io/badge/License-ISC-yellow.svg)](#)
+-   [Frontend developer documentation](#frontend-developer-documentation)
+    -   [Development environment setup](#development-environment-setup)
+        -   [Requirements](#requirements)
+        -   [Recommended IDE Setup](#recommended-ide-setup)
+        -   [Type Support for `.vue` Imports in TS](#type-support-for-vue-imports-in-ts)
+        -   [Start development environment](#start-development-environment)
+        -   [Customize configuration](#customize-configuration)
+        -   [Start dev environment](#start-dev-environment)
+    -   [Documentation](#documentation)
 
 ## Development environment setup
 
@@ -44,8 +51,4 @@ npm run dev
 
 Frontend documentation is automatically generated in Markdown format from [TSDoc](https://tsdoc.org/) doc comments standard with [TypeDoc](https://typedoc.org/). Documentation for Vue components is also generated from code by [vue-docgen-cli](https://vue-styleguidist.github.io/docs/docgen-cli.html). Docs building is outsourced in [/docs/frontend](/docs/frontend) in the root folder.
 
-You can alse generate documentation webpages with [Vitepress](https://vitepress.dev) following instructions available in [main README.md Contribute](/README.md#contribute) section
-
-## Author
-
-👤 **[Mathieu Dupoux](mailto:mdupoux@bordeaux-inp.fr)**
+You can alse generate documentation webpages with [Vitepress](https://vitepress.dev) following instructions available in [main README.md Contribute](/README.md#contribute) section.

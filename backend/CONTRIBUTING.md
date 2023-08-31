@@ -1,9 +1,16 @@
-# Backend developper documentation👋
+# Backend developer documentation
 
-![Version](https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000)
-[![License: ISC](https://img.shields.io/badge/License-ISC-yellow.svg)](#)
-
-> MMIS GUI project aims at providing Probabilistic Digital-Twins (PDT) Web 3D visualization. This is the backend Express.JS API server which gives PDT data to GUI frontend.
+-   [Backend developer documentation](#backend-developer-documentation)
+    -   [Data format](#data-format)
+        -   [PDT raw data format](#pdt-raw-data-format)
+            -   [Data folder](#data-folder)
+            -   [PDT JSON representation](#pdt-json-representation)
+            -   [Object JSON representation inside PDT timestamps](#object-json-representation-inside-pdt-timestamps)
+    -   [Assets (models and materials)](#assets-models-and-materials)
+        -   [Assets folder](#assets-folder)
+        -   [Material storage](#material-storage)
+        -   [Model storage](#model-storage)
+    -   [Documentation](#documentation)
 
 ## Data format
 
@@ -93,10 +100,6 @@ For the moment, this project supports only [glTF 2.0](https://www.khronos.org/gl
 
 ## Documentation
 
-Backend documentation is automatically generated in Markdown format from [TSDoc](https://tsdoc.org/) doc comments standard with [TypeDoc](https://typedoc.org/). Docs building is outsourced in [/docs/backend](/docs/backend) in the root folder.
+Backend documentation is automatically generated in Markdown format from [TSDoc](https://tsdoc.org/) doc comments standard with [TypeDoc](https://typedoc.org/). Docs building is outsourced in [/docs/backend](/docs/backend/API.md) in the root folder.
 
 You can alse generate documentation webpages with [Vitepress](https://vitepress.dev) following instructions available in [main README.md Contribute](/README.md#contribute) section
-
-## Author
-
-👤 **[Mathieu Dupoux](mailto:mdupoux@bordeaux-inp.fr)**

@@ -1,23 +1,30 @@
 # GUI for PDT frontend
 
-![Version](https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000)
-[![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](doc/index.md)
-[![License: ISC](https://img.shields.io/badge/License-ISC-yellow.svg)](#)
+[![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](doc/README.md)
+[![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
 
-## Description
+> MMIS GUI for PDT project aims at providing Probabilistic Digital-Twins (PDT) Web 3D visualization. This is the main user-interface frontend part of the [MMIS GUI for Probabilistic Digital-Twins](/README.md) project.
 
-This is the main user-interface frontend part of the [MMIS GUI for Probabilistic Digital-Twins](../README.md).
+-   [GUI for PDT frontend](#gui-for-pdt-frontend)
+    -   [Technologies](#technologies)
+    -   [Installation](#installation)
+        -   [Requirements](#requirements)
+        -   [Build Docker image](#build-docker-image)
+        -   [Manual installation](#manual-installation)
+            -   [Install dependencies](#install-dependencies)
+            -   [Start Vite development environment with Hot Module Replacement.](#start-vite-development-environment-with-hot-module-replacement)
+            -   [Type-Check, Compile and Minify for Production](#type-check-compile-and-minify-for-production)
+            -   [Lint with ESLint](#lint-with-eslint)
+    -   [Credits and License](#credits-and-license)
+    -   [Contribute](#contribute)
 
-## Technologies used
+## Technologies
 
 Fully written in Typescript, this user interface uses :
 
 -   [Vue 3](https://vuejs.org) framework with Composition API
-
 -   [Vite](https://vitejs.dev) frontend tooling
-
 -   [Three.JS](https://threejs.org) (3D visualization) and [Plotly.JS](https://plotly.com/javascript/) (2D charts) for data visualization
-
 -   [Vuetify](vuetifyjs.com/) UI components
 
 ## Installation
@@ -28,7 +35,7 @@ Fully written in Typescript, this user interface uses :
 
 ### Build Docker image
 
-Global application deployment is available with Docker Compose. See more [here](../README.md#installation). However, you could also build this image standalone :
+Global application deployment is available with Docker Compose. See more [in the main README.md installation section](/README.md#installation). However, you could also build this image standalone :
 
 ```sh
 docker build -t mmis-gui-frontend .
@@ -60,18 +67,12 @@ npm run build
 npm run lint
 ```
 
+## Credits and License
+
+The whole projet was initiated by 👤 **[Mathieu Dupoux](mailto:mdupoux@bordeaux-inp.fr)** in the context of an internship for the chair MMIS supervised by 👤 **[Dr. ret. nat. Sebastian Bader](mailto:sebastian.bader@uni-rostock.de)** during summer 2023.
+
+This project is licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+
 ## Contribute
 
 See [CONTRIBUTING](/frontend/CONTRIBUTING.md) page.
-
-## Credits
-
-The whole projet was initiated by 👤 **[Mathieu Dupoux](mdupoux@bordeaux-inp.fr)** in the context of an internship with the chair MMIS during the summer of 2023.
-
-## License
-
-Will be a Creative Common license.
-
-## Contribute
-
-See [frontend contributing](/frontend/CONTRIBUTING.md) and
