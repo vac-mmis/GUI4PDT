@@ -1,7 +1,6 @@
 # Welcome to MMIS GUI for Probabilistic Digital Twins 👋
 
-![Documentation](https://img.shields.io/badge/Documentation-yes-brightgreen.svg)
-[![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
+![Documentation](https://img.shields.io/badge/Documentation-yes-brightgreen.svg) [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 > MMIS GUI for PDT project aims at providing a visualization for Probabilistic Digital-Twins (PDT) in the [OTC-DaTA project (de)](https://www.mmis.informatik.uni-rostock.de/research/projects/otc-data/) supported by [the chair of Mobile Multimedia Information Systems](https://www.mmis.informatik.uni-rostock.de/) at the University of Rostock.
 
@@ -10,7 +9,7 @@
     -   [Installation](#installation)
         -   [Deployment with Docker Compose](#deployment-with-docker-compose)
         -   [Manual installation and local running](#manual-installation-and-local-running)
-    -   [Credits and License](#credits-and-license)
+    -   [License and Credits](#license-and-credits)
     -   [Contribute](#contribute)
         -   [Generate documentation webpage](#generate-documentation-webpage)
         -   [Contributing pages](#contributing-pages)
@@ -61,11 +60,15 @@ As this application is split in two parts, it requires two separate installation
 -   [Frontend README](/frontend/README.md)
 -   [Backend README](/backend/README.md)
 
-## Credits and License
+## License and Credits
 
-The whole projet was initiated by 👤 **[Mathieu Dupoux](mailto:mdupoux@bordeaux-inp.fr)** in the context of an internship for the chair MMIS supervised by 👤 **[Dr. ret. nat. Sebastian Bader](mailto:sebastian.bader@uni-rostock.de)** during summer 2023.
+The projet was initiated by 👤 **[Mathieu Dupoux](mailto:mdupoux@bordeaux-inp.fr)** in the context of an internship for the chair MMIS supervised by 👤 **[Dr. ret. nat. Sebastian Bader](mailto:sebastian.bader@uni-rostock.de)** during summer 2023.
 
-This project is licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+This work is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+![by-nc-sa](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png "Logo CC-by-nc-sa")
+
+For details view the [Licence file](LICENSE)!
 
 ## Contribute
 

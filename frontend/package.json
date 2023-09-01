@@ -1,6 +1,12 @@
 {
-    "name": "user-interface",
-    "version": "0.0.0",
+    "name": "mmis-gui-for-pdt-ui",
+    "version": "0.1.0",
+    "author": "Mathieu Dupoux <mdupoux@bordeaux-inp.fr>",
+    "license": "CC-BY-NC-SA-4.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vac-mmis/GUI4PDT"
+    },
     "private": true,
     "scripts": {
         "dev": "vite",
