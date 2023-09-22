@@ -7,7 +7,7 @@
  * @module World
  */
 
-import type { WebGLRenderer, PerspectiveCamera, Scene, Object3D } from "three";
+import { WebGLRenderer, PerspectiveCamera, Scene, Object3D } from "three";
 import type { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 import { createCamera } from "@/World/components/camera";
@@ -49,6 +49,9 @@ export class World<T extends WorldContent> {
         hoverCallback?: (obj?: Object3D | null) => void,
         timerCallback?: (t: number) => number
     ) {
+        // Sets Z-axis as a default up direction
+        Object3D.DEFAULT_UP.set(0, 0, 1);
+
         // Create camera and scene
         this.camera = createCamera();
         this.scene = createScene();
