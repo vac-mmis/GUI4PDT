@@ -7,7 +7,7 @@
  * @module World
  */
 
-import { WebGLRenderer, PerspectiveCamera, Scene, Object3D } from "three";
+import type { WebGLRenderer, PerspectiveCamera, Scene, Object3D } from "three";
 import type { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 import { createCamera } from "@/World/components/camera";
