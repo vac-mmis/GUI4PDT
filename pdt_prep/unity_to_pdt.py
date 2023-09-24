@@ -30,7 +30,7 @@ def dol_to_dict(data, name="dol_single"):
                 "id":i,
                 "class":obj_translation[row[0]],
                 "location":[row[1], row[2], row[3]],
-                "rotation":[0, 0, row[4]],
+                "rotation":[row[4],row[5],row[6]],
                 "material":"concrete",
                 "scale":scalings[row[0]]
             }
@@ -86,8 +86,8 @@ def dol_over_time(data, name="dol"):
                     {
                         "id":i,
                         "class":obj_translation[row[0]],
-                        "location":[row[1], row[3], row[2]-12],
-                        "rotation":[row[4], row[6], row[5]],
+                        "location":[row[1], row[2], row[3]-12],
+                        "rotation":[row[4],row[5],row[6]],
                         "material":"concrete",
                         "scale":scalings[row[0]]
                     })
@@ -96,18 +96,18 @@ def dol_over_time(data, name="dol"):
                     {
                         "id":i,
                         "class":obj_translation[row[0]],
-                        "location":[row[1], row[3], row[2]-12],
+                        "location":[row[1], row[2], row[3]-12],
                         "location": {
                             "dist": {
                                 "type": "multivariate-normal",
-                                "mean": [row[1], row[3], row[2]-12],
+                                "mean": [row[1], row[2], row[3]-12],
                                 "cov": covs[0].tolist()
                             }
                         },
                         "rotation":{
                              "dist": {
                                 "type": "von-mises",
-                                "mean": [row[4], row[6], row[5]],
+                                "mean": [row[4], row[5], row[6]],
                                 "kappa": ks[0].tolist()
                             }
                         },
@@ -121,18 +121,18 @@ def dol_over_time(data, name="dol"):
                     {
                         "id":i,
                         "class":obj_translation[row[0]],
-                        "location":[row[1], row[3], row[2]-12],
+                        "location":[row[1], row[2], row[3]-12],
                         "location": {
                             "dist": {
                                 "type": "multivariate-normal",
-                                "mean": [row[1], row[3], row[2]-12],
+                                "mean": [row[1], row[2], row[3]-12],
                                 "cov": covs[k].tolist()
                             }
                         },
                         "rotation":{
                              "dist": {
                                 "type": "von-mises",
-                                "mean": [row[4], row[6], row[5]],
+                                "mean": [row[4], row[5], row[6]],
                                 "kappa": ks[k].tolist()
                             }
                         },
@@ -146,13 +146,13 @@ def dol_over_time(data, name="dol"):
     return pdts
     
 def make_single(path):
-    d = read_unity_data("unity_dol.txt")
+    d = read_unity_data("test_convert/ObjectPositions.txt")
     d_ = dol_to_dict(d)
     with open(f'{path}dol_pdt.json', 'w') as f:
         json.dump(d_, f, indent=4)
 
 def make_series(path):
-    d = read_unity_data("unity_dol.txt")
+    d = read_unity_data("test_convert/ObjectPositions.txt")
     pdts = dol_over_time(d)
     for i in range(len(pdts)):
         fp = f'{path}dol_pdt_{i}.json'

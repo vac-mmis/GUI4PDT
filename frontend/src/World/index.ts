@@ -49,8 +49,6 @@ export class World<T extends WorldContent> {
         hoverCallback?: (obj?: Object3D | null) => void,
         timerCallback?: (t: number) => number
     ) {
-        // Sets Z-axis as a default up direction
-        Object3D.DEFAULT_UP.set(0, 0, 1);
 
         // Create camera and scene
         this.camera = createCamera();

@@ -17,7 +17,7 @@ export function createHelpers() {
     const axesHelper = new AxesHelper(30);
 
     // XY world grid
-    const gridHelper = new GridHelper(100, 100);
+    const gridHelper = new GridHelper(250, 250);
     gridHelper.rotation.x = Math.PI / 2;
 
     return { axesHelper, gridHelper };
