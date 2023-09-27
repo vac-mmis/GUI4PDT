@@ -13146,6 +13146,14 @@
             },
             "material": "concrete",
             "scale": 0.7
+        },
+        {
+            "id": 269,
+            "class": "platform",
+            "location": [0, 0, -6],
+            "material": "",
+            "rotation": [0, 0, 0],
+            "scale": 0.3
         }
     ]
 }
