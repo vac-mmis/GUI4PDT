@@ -64,7 +64,7 @@ const menu = [
             )
             ,
             new CustomMenu(
-                "TestiCI", "", "", 
+                "TestiC I", "", "", 
                 [
                     new CustomMenu("recent example")
                 ]
