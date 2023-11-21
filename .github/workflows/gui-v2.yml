@@ -15,10 +15,10 @@ jobs:
       - name: Install Dependencies
         run: |
           cd frontend
-          npm cache clean --force
           npm ci --cache .npm -prefer-offline
+          npm install vue-tsc
+          npx vue-tsc --version
           cd ../backend
-          npm cache clean --force
           npm ci --cache .npm -prefer-offline
           cd ..
 
