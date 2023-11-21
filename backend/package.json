@@ -21,11 +21,14 @@
         "compression": "^1.7.4",
         "cors": "^2.8.5",
         "csv": "^6.3.3",
+        "decompress": "^4.2.1",
         "dotenv": "^16.3.1",
         "express": "^4.18.2",
         "mime": "^3.0.0",
         "multer": "^1.4.5-lts.1",
         "reflect-metadata": "^0.1.13",
+        "socket.io": "^4.7.2",
+        "unzipper": "^0.10.14",
         "winston": "^3.10.0"
     },
     "devDependencies": {
@@ -36,6 +39,7 @@
         "@types/mime": "^3.0.1",
         "@types/multer": "^1.4.7",
         "@types/node": "^20.5.7",
+        "@types/unzipper": "^0.10.8",
         "@typescript-eslint/eslint-plugin": "^6.5.0",
         "@typescript-eslint/parser": "^6.5.0",
         "concurrently": "^8.2.1",

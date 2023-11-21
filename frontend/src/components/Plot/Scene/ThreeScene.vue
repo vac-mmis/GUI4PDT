@@ -4,8 +4,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-
+import { storeToRefs } from "pinia";
 import { worldStore } from "@/store/world.store";
+import { PDTStore } from "@/store/pdt.store";
+
 
 const emits = defineEmits<
     /**
@@ -24,12 +26,16 @@ const selectedCallback = () => {
     emits("update", 1);
 };
 
+
 onMounted(async () => {
     container.value?.focus();
     if (container.value === null) {
         throw new Error("Error: Invalid container");
     }
+
     setWorld(container.value, selectedCallback);
+
     setStatus({ status: "success", message: "Scene loaded successfully" });
 });
+
 </script>

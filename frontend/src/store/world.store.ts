@@ -34,6 +34,7 @@ export const worldStore: any = defineStore("worldStore", () => {
     /** Returns stored world */
     const getWorld = computed((): World<PDT> => toRaw(_World.value as World<PDT>));
 
+     
     /** Returns world loading status */
     const getStatus = computed((): Status => toRaw(_status.value));
 

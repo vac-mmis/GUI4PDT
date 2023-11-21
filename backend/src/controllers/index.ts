@@ -13,3 +13,4 @@
 export * as Material from "@/controllers/material.controller";
 export * as Model from "@/controllers/model.controller";
 export * as PDT from "@/controllers/pdt.controller";
+export * as Upload from "@/controllers/upload.controller";

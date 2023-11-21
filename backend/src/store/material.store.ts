@@ -8,9 +8,10 @@ import { readFile, readdir } from "fs/promises";
 import path from "path";
 
 import type { MaterialFile } from "@/types/file.types";
+import { logger } from "@/utils/logger";
 
 const materialsPath = path.resolve(process.env.MATERIALS ?? "").normalize();
-const materials: MaterialFile[] = [];
+let materials: MaterialFile[] = [];
 
 /**
  * Transforms a material folder with its files to MaterialFile format for API providing
@@ -38,6 +39,7 @@ async function serializeMaterial(materialPath: string): Promise<MaterialFile> {
  * Loads all available materials for API providing
  */
 export async function load(): Promise<void> {
+    materials = [];
     await readdir(materialsPath)
         .then((materialFolders) =>
             Promise.all(
@@ -45,12 +47,13 @@ export async function load(): Promise<void> {
                     materials.push(
                         await serializeMaterial(path.join(materialsPath, materialFolder))
                     )
-                )
+                )   
             )
         )
         .catch((err) => {
             throw new Error(`Materials loading failed : ${err}`);
         });
+    logger.info(`Loaded ${materials.length} materials`);
 }
 
 /**

@@ -9,14 +9,16 @@ import path from "path";
 import "dotenv/config";
 
 import type { ModelFile } from "@/types/file.types";
+import { logger } from "@/utils/logger";
 
 const modelPath = path.resolve(process.env.MODELS ?? "").normalize();
-const models: ModelFile[] = [];
+let models: ModelFile[] = [];
 
 /**
  * Loads all available models for API providing
  */
 export async function load(): Promise<void> {
+    models = [];
     await readdir(modelPath)
         .then((modelFiles) =>
             Promise.all(
@@ -29,6 +31,7 @@ export async function load(): Promise<void> {
                             name: path.basename(file, path.extname(file)).toLowerCase(),
                             content: fileData.toString("base64"),
                         });
+
                     }
                 })
             )
@@ -36,6 +39,9 @@ export async function load(): Promise<void> {
         .catch((err) => {
             throw new Error(`Models loading failed : ${err}`);
         });
+
+    logger.info(`Loaded ${models.length} models`);
+
 }
 
 /**
@@ -46,6 +52,7 @@ export async function load(): Promise<void> {
 export function get(): ModelFile[] {
     return models;
 }
+
 
 /**
  * Find loaded model by its name

@@ -1,0 +1,39 @@
+{
+  "name": "default",
+  "timestep": 0,
+  "timestamp": null,
+  "objects": [
+    {
+      "id": 0,
+      "class": "vac",
+      "location": [
+        5,
+        0,
+        0
+      ],
+      "rotation": [
+        4.7,
+        0,
+        0
+      ],
+      "scale": 0.4,
+      "material": "concrete"
+    },
+    {
+      "id": 1,
+      "class": "boat",
+      "location": [
+        0,
+        10,
+        0
+      ],
+      "rotation": [
+        9.4,
+        0,
+        0
+      ],
+      "scale": 0.03,
+      "material": "boat"
+    }
+  ]
+}

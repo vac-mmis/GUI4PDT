@@ -40,6 +40,11 @@ export const modelStore: any = defineStore("models", () => {
         return defaultModel;
     }
 
+    function getModels(): Group[] {
+        return toRaw(_models.value);
+    }
+
+
     /**
      * Fetch, load and store models from backend API.
      */
@@ -50,7 +55,11 @@ export const modelStore: any = defineStore("models", () => {
                 async (res) =>
                     await Promise.all(res.data.map(async (model: ModelFile) => loadModel(model)))
             )
-            .then((models) => _models.value.push(...models));
+            .then((models) => {
+                _models.value = [];
+                _models.value.push(...models);
+            });
+
     };
 
     /**
@@ -64,5 +73,5 @@ export const modelStore: any = defineStore("models", () => {
         return toRaw(_models.value).find((model) => model.name === name) ?? getDefault(name);
     }
 
-    return { length, fetch, find };
+    return { length, fetch, find, getModels };
 });

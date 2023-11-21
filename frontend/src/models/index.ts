@@ -12,3 +12,4 @@ export * as Properties from "@/models/Properties";
 export { Map } from "@/models/map.model";
 export { PDTObject } from "@/models/object.model";
 export { PDT } from "@/models/pdt.model";
+export { CustomMenu } from "@/models/CustomMenu";

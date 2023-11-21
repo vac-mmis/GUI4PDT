@@ -4,7 +4,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 const ThreeView = () => import("@/views/PlotView.vue");
 const AboutView = () => import("@/views/AboutView.vue");
-const FileView = () => import("@/views/FileHandlerView.vue");
+const ImportView = () => import("@/views/FileHandlerView.vue");
+const OpenView = () => import("@/views/OpenView.vue")
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,13 +28,22 @@ const router = createRouter({
             },
         },
         {
-            path: "/file",
-            name: "File Handler",
-            component: FileView,
+            path: "/import",
+            name: "Import Project",
+            component: ImportView,
             meta: {
                 icon: "fa fa-info",
             },
         },
+        {
+            path: "/open",
+            name: "Open Project",
+            component: OpenView,
+            meta: {
+                icon: "fa fa-info",
+            },
+        },
+       
         
     ],
 });

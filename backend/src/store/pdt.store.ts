@@ -9,14 +9,16 @@ import path from "path";
 import "dotenv/config";
 
 import { PDT } from "@/models";
+import { logger } from "@/utils/logger";
 
 const dataPath = path.resolve(process.env.DATA ?? "").normalize();
-const PDTs: PDT[] = [];
+let PDTs: PDT[] = [];
 
 /**
  * Loads all available PDT for API providing
  */
 export async function load(): Promise<void> {
+    PDTs = [];
     const pdtDirs = await readdir(dataPath);
     await Promise.all(
         pdtDirs.map(async (PDTDir) => {
@@ -25,11 +27,13 @@ export async function load(): Promise<void> {
                 const pdt = new PDT(`${dataPath}/${PDTDir}`);
                 await pdt.init();
                 PDTs.push(pdt);
-            }
+            }  
         })
     ).catch((err) => {
         throw new Error(`PDTs loading failed : ${err}`);
     });
+
+    logger.info(`Loaded ${PDTs.length} PDTs`);
 }
 
 /**

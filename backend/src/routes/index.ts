@@ -15,8 +15,9 @@ import express from "express";
 import { PDTRoute } from "@/routes/pdt.route";
 import { modelRoute } from "@/routes/model.route";
 import { materialRoute } from "@/routes/material.route";
+import { uploadRoute } from "@/routes/upload.route";
 
 /**
  * Main route which assemble all others. Any new submodule route should be imported and added here
  */
-export const router = express.Router().use("/", PDTRoute, modelRoute, materialRoute);
+export const router = express.Router().use("/", PDTRoute, modelRoute, materialRoute,uploadRoute);

@@ -84,6 +84,8 @@ watch(
 );
 
 const onDrag = (e: OnDrag) => {
+    
+    
     e.target.style.transform = e.transform;
 };
 </script>

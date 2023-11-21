@@ -7,6 +7,7 @@ import { ref, computed, toRaw } from "vue";
 import axios from "axios";
 import { defineStore } from "pinia";
 
+
 import type { PDTJSON } from "@/interfaces/pdt";
 import { PDT } from "@/models/pdt.model";
 
@@ -34,15 +35,17 @@ export const PDTStore: any = defineStore("PDTs", () => {
      */
     const getPDTList = computed((): string[] => toRaw(_list.value));
 
+   
     /**
      * Fetch and returns List of available PDT.
      *
      * @returns PDT list
      */
+    //TODO removed check so that the lsit always updates
     async function list(): Promise<string[]> {
-        if (_list.value.length === 0) {
+        
             _list.value = await axios.get(`pdts/list`).then((res) => res.data);
-        }
+        
         return _list.value;
     }
 
@@ -57,24 +60,22 @@ export const PDTStore: any = defineStore("PDTs", () => {
         return toRaw(_PDTs.value as PDT[]).find((pdt: PDT) => pdt.name === pdtName);
     }
 
+
     /**
      * Fetch, load and store desired PDT (by name) from backend API.
      *
      * @param name Name of PDT to fetch.
      */
     const fetch = async (pdtName: string) => {
-        let pdt = find(pdtName);
+
+        const pdt = await axios.get(`pdt/${pdtName}`).then((res) => new PDT(res.data as PDTJSON));
         if (!pdt) {
-            pdt = await axios.get(`pdt/${pdtName}`).then((res) => new PDT(res.data as PDTJSON));
-            if (!pdt) {
-                throw new Error("PDT not found");
-            } else {
-                _PDTs.value.push(pdt);
-                _selectedPDT.value = pdt;
-            }
+            throw new Error("PDT not found");
         } else {
+            _PDTs.value.push(pdt);
             _selectedPDT.value = pdt;
         }
+
     };
 
     return { timeLength, getPDT, getPDTList, list, fetch, find };
