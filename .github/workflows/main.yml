@@ -26,10 +26,11 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-
+            
       - name: Build Frontend
         run: |
           cd frontend
+          npm ci --cache .npm -prefer-offline
           echo "Building frontend..."
           npm run build
           echo "Frontend build complete."
@@ -45,6 +46,7 @@ jobs:
       - name: Build Backend
         run: |
           cd backend
+          npm ci --cache .npm -prefer-offline
           echo "Building backend..."
           npm run build
           echo "Backend build complete."
@@ -60,6 +62,7 @@ jobs:
       - name: Lint Frontend
         run: |
           cd frontend
+          npm ci --cache .npm -prefer-offline
           npm run lint
           echo "No lint issues found."
           cd ..
@@ -67,6 +70,7 @@ jobs:
       - name: Lint Backend
         run: |
           cd backend
+          npm ci --cache .npm -prefer-offline
           npm run lint
           echo "No lint issues found."
           cd ..
