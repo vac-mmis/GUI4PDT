@@ -15,8 +15,10 @@ jobs:
       - name: Install Dependencies
         run: |
           cd frontend
+          npm cache clean --force
           npm ci --cache .npm -prefer-offline
           cd ../backend
+          npm cache clean --force
           npm ci --cache .npm -prefer-offline
           cd ..
 
