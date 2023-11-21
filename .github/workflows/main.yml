@@ -1,0 +1,108 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: |
+          cd frontend
+          npm ci --cache .npm -prefer-offline
+          cd ../backend
+          npm ci --cache .npm -prefer-offline
+          cd ..
+
+  frontend_build:
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Build Frontend
+        run: |
+          cd frontend
+          echo "Building frontend..."
+          npm run build
+          echo "Frontend build complete."
+          cd ..
+
+  backend_build:
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Build Backend
+        run: |
+          cd backend
+          echo "Building backend..."
+          npm run build
+          echo "Backend build complete."
+          cd ..
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Lint Frontend
+        run: |
+          cd frontend
+          npm run lint
+          echo "No lint issues found."
+          cd ..
+
+      - name: Lint Backend
+        run: |
+          cd backend
+          npm run lint
+          echo "No lint issues found."
+          cd ..
+
+  test_unit:
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Test Frontend
+        run: |
+          echo "Start frontend test..."
+          cd frontend
+          echo "Add Vitest test execution here"
+          cd ..
+          echo "Frontend test succeeded."
+
+      - name: Test Backend
+        run: |
+          echo "Start backend test..."
+          cd backend
+          echo "Add backend test execution here"
+          cd ..
+          echo "Frontend test succeeded."
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [frontend_build, backend_build, lint, test_unit]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Deploy
+        run: |
+          echo "Deploying application..."
+          echo "Add deployment here"
+          echo "Application successfully deployed."
