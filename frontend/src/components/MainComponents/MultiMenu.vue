@@ -62,6 +62,13 @@ const menu = [
                     new CustomMenu("recent example")
                 ]
             )
+            ,
+            new CustomMenu(
+                "Testing CI", "", "", 
+                [
+                    new CustomMenu("recent example")
+                ]
+            )
         ]
     ),
     new CustomMenu(
