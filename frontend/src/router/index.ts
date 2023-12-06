@@ -6,6 +6,8 @@ const ThreeView = () => import("@/views/PlotView.vue");
 const AboutView = () => import("@/views/AboutView.vue");
 const ImportView = () => import("@/views/FileHandlerView.vue");
 const OpenView = () => import("@/views/OpenView.vue")
+const CSVView = () => import("@/views/CSVView.vue")
+const NewFromEmptyView = () => import("@/views/NewFromEmptyView.vue")
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,10 +15,10 @@ const router = createRouter({
 
         {
             path: "/",
-            name: "Plot Test",
-            component: ThreeView,
+            name: "Open Project",
+            component: OpenView,
             meta: {
-                icon: "fa fa-chart-scatter",
+                icon: "fa fa-info",
             },
         },
         {
@@ -36,9 +38,25 @@ const router = createRouter({
             },
         },
         {
-            path: "/open",
-            name: "Open Project",
-            component: OpenView,
+            path: "/plot",
+            name: "See Plot",
+            component: ThreeView,
+            meta: {
+                icon: "fa fa-info",
+            },
+        },
+        {
+            path: "/csv",
+            name: "Add CSV",
+            component: CSVView,
+            meta: {
+                icon: "fa fa-info",
+            },
+        },
+        {
+            path: "/empty",
+            name: "New from Empty",
+            component: NewFromEmptyView,
             meta: {
                 icon: "fa fa-info",
             },

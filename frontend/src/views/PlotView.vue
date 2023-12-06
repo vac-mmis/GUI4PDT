@@ -1,6 +1,6 @@
 <template>
     <!-- Three Scene -->
-    <div v-if="getStatus.status === `loading world` || getStatus.status === `success`" 
+    <div v-if="getStatus.status === `loading world` || getStatus.status === `success`"
         class="position-absolute h-100 w-100 d-flex justify-center align-center z-0">
 
         <ThreeScene @click="clickedTest" :key="sceneKey" @update="updateDetails" />
@@ -14,6 +14,10 @@
             <div class="position-relative pa-6 z-1">
                 <ObjectDetails :key="detailsKey" :time="timeLength > 1 ? selectedTime : 0" />
             </div>
+
+            
+
+        
         </div>
         <div v-if="timeLength > 1" class="position-relative w-75 ma-6 z-1">
             <TimeSlider @time="(t: number) => (selectedTime = t)" />
@@ -46,6 +50,9 @@ import { storeToRefs } from "pinia";
 
 
 import ObjectDetails from "@/components/Plot/Object/ObjectDetails.vue";
+
+import DetailsEdit from "@/components/Plot/Object/DetailsEdit.vue";
+
 import SceneMenu from "@/components/Plot/Scene/SceneMenu.vue";
 import TimeSlider from "@/components/Plot/Scene/TimeSlider.vue";
 import ThreeScene from "@/components/Plot/Scene/ThreeScene.vue";
@@ -57,10 +64,7 @@ import { materialStore } from "@/store/material.store";
 import { onBeforeMount } from "vue";
 import { onMounted } from "vue";
 import { Manager } from "socket.io-client";
-import type { PDT } from "@/models";
-import { Vector3 } from "three/src/math/Vector3.js";
-import { Renderer } from "marked";
-import { Euler } from "three/src/math/Euler.js";
+
 
 
 const manager = new Manager("http://localhost:3000", { transports: ['websocket'] });
@@ -88,24 +92,17 @@ const sceneKey = ref(0);
 const updateScene = () => {
     sceneKey.value += 1;
     sceneKey.value %= 2;
+
 }
 
-const clickedTest = () =>{
-   
-    //console.log(getPDT.value.selectedObject.position.x );
+const clickedTest = () => {
 
-    let pdt = getPDT.value;
+    console.log(getPDT.value.selectedObject._location.dist[0]);
+    
 
-    const position = new Vector3(0,0,0)
-    const rotation = new Euler(23, Math.PI / 10, 0)
-    pdt.selectedObject.rotation.copy(rotation)
-    pdt.selectedObject.position.copy(position)
-    console.log(pdt.selectedObject.position);
-    
-    
-    
+
     //TODO change the posittion and locatio and so on
-    
+
 }
 
 onBeforeMount(async () => {
@@ -169,10 +166,15 @@ onBeforeMount(async () => {
 
 });
 
+onMounted(() => {
+    
+   
+});
+
 
 
 onBeforeUnmount(() => {
-    socket.disconnect();
+      socket.disconnect();
 });
 
 

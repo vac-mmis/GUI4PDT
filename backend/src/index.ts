@@ -32,9 +32,18 @@ const pdtsPath = path.resolve(process.env.DATA ?? "").normalize();
 const modelsPath = path.resolve(process.env.MODELS ?? "").normalize();
 const materialsPath = path.resolve(process.env.MATERIALS ?? "").normalize();
 
-const watcherModels = chokidar.watch(modelsPath);
-const watcherPDT = chokidar.watch(pdtsPath);
-const watcherMaterials = chokidar.watch(materialsPath);
+const watcherModels = chokidar.watch(modelsPath, {
+  ignored: /(^|[/\\])\../,
+  persistent: true,
+});
+const watcherPDT = chokidar.watch(pdtsPath, {
+  ignored: /(^|[/\\])\../, 
+  persistent: true,
+});
+const watcherMaterials = chokidar.watch(materialsPath, {
+  ignored: /(^|[/\\])\../, 
+  persistent: true,
+});
 
 //TODO websockets
 io.on('connection', (socket) => {

@@ -180,4 +180,11 @@ export class Class extends Group {
             labels: data.filter((_: any, i: number) => i % 2 == 0),
         };
     }
+
+    /**
+     * Get actual class visibility
+     *
+     * @returns Class scaleFactor
+     */
+    public getScaleFactor = (): (number | undefined)[] => this.scaleFactor;
 }

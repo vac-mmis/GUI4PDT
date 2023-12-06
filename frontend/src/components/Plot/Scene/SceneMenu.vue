@@ -2,10 +2,10 @@
     <div :class="`${openMenu ? `w-auto` : ``}`">
         <!-- Toolbar -->
         <v-toolbar class="w-100" :collapse="!openMenu" title="PDT Menu">
-            <v-btn v-if="openMenu" @click="changePDT" icon="">
+            <!-- <v-btn v-if="openMenu" @click="changePDT" icon="">
                 <v-icon icon="far fa-folder-open" />
                 <v-tooltip activator="parent" location="bottom" text="Change PDT" />
-            </v-btn>
+            </v-btn> -->
             <v-app-bar-nav-icon @click="() => (openMenu = !openMenu)"></v-app-bar-nav-icon>
         </v-toolbar>
 

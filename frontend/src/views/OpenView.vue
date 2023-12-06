@@ -5,12 +5,31 @@
         <h1 slot="default">Open</h1>
       </v-label>
       <v-card max-width="300">
-        <v-list density="compact" :key="update">
-          <v-list-item v-for="(item, index) in PDTList" :key="index" :value="item" @click="onOpen(item)" to="/"
-            color="primary">{{ item }}</v-list-item>
-        </v-list>
+        <v-list dense :key="update">
 
+          <v-list-item v-for="(item, index) in PDTList" :key="index" :value="item" @click="onOpen(item)" color="primary">
+            <v-row>
+              <v-col cols="10">
+                {{ item }}
+              </v-col>
+              
+            </v-row>
+
+          </v-list-item>
+        </v-list>
+        <v-row class="justify-space-between pa-3">
+          <v-col cols="4">
+            <v-btn block color="primary">Open</v-btn>
+          </v-col>
+          <v-col cols="4">
+            <v-btn block color="warning">Rename</v-btn>
+          </v-col>
+          <v-col cols="4">
+            <v-btn block color="error">Delete</v-btn>
+          </v-col>
+        </v-row>
       </v-card>
+
 
     </v-container>
   </div>
@@ -20,15 +39,17 @@
 
 
 
-import axios from "axios";
-import { ref, computed } from "vue";
-import { storeToRefs } from "pinia";
+
+import { ref, computed, watch } from "vue";
+import { useRouter } from "vue-router";
 import { PDTStore } from "@/store/pdt.store";
 import { modelStore } from "@/store/model.store";
 import { materialStore } from "@/store/material.store";
 import { worldStore } from "@/store/world.store";
 import { onBeforeMount } from "vue";
-import { onBeforeUnmount } from "vue";
+
+
+
 
 
 
@@ -38,6 +59,7 @@ const materials = materialStore();
 
 const world = worldStore();
 
+const router = useRouter();
 
 const PDTList = ref<string[]>();
 
@@ -49,7 +71,15 @@ const onOpen = (selected: string) => {
       console.error(err);
     });
 
+
+  router.push("/plot");
+
 }
+
+const onDelete = (item: string) => {
+  console.log("TEST")
+}
+
 
 
 onBeforeMount(async () => {
@@ -61,5 +91,6 @@ onBeforeMount(async () => {
       console.error(err);
     });
 });
+
 
 </script>

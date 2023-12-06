@@ -46,35 +46,42 @@ const menu = [
             new CustomMenu(
                 "New", "fas fa-plus", "",
                 [
-                    new CustomMenu("From Wizard","fas fa-wand-magic-sparkles","/wizard"),
-                    new CustomMenu("From Import","fas fa-file-import","/import")
+                    //new CustomMenu("From Wizard", "fas fa-wand-magic-sparkles", "/wizard"),
+                    new CustomMenu("From Import", "fas fa-file-import", "/import"),
+                    new CustomMenu("From Empty", "fas fa-file-import", "/empty")
                 ]
             ),
             new CustomMenu(
-                "Open", "fas fa-file-import", "/open",
+                "Open", "fas fa-file-import", "/",
                 [
-                   
+
                 ]
             ),
             new CustomMenu(
-                "Open Recent", "", "", 
+                "Open Recent", "", "",
                 [
                     new CustomMenu("recent example")
                 ]
             )
             ,
-            new CustomMenu(
-                "TestiCI", "", "", 
-                [
-                    new CustomMenu("recent example")
-                ]
-            )
+            
         ]
     ),
     new CustomMenu(
-        "Plot", "fas fa-mountain-sun", "/"
+        "Plot", "fas fa-mountain-sun", "/plot"
     ),
-   
+    new CustomMenu(
+        "Edit", "fas fa-pen-to-square", "",
+        [
+            new CustomMenu(
+                "Add CSV", "fas fa-file-import", "/csv",
+                [
+
+                ]
+            ),
+        ]
+    ),
+
 
 ];
 

@@ -30,6 +30,7 @@ export class PDTObject extends Group {
     private _location: Location;
     /** Object rotation. @remark `this._rotation = this.children[2]`. */
     private _rotation: Rotation;
+    dist: any;
 
     /**
      * Creates a PDT object from JSON data.
@@ -73,6 +74,9 @@ export class PDTObject extends Group {
 
     /**
      * Returns object properties details (description, 2D graph...).
+     * 
+     * Add new property details by adding new entries to the returned object.
+     * 
      * @param t Desired time to gat details.
      *
      * @returns Object properties details.
@@ -96,6 +100,11 @@ export class PDTObject extends Group {
                 description: this.material.dist[t].toString(),
                 representation: this.material.representation(t),
             },
+            scale: {
+                description: this.class.getScaleFactor().toString(),
+                representation: undefined,
+            },
+
         };
     }
 

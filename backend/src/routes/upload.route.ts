@@ -6,6 +6,7 @@
 import express from "express";
 
 import * as uploadController from "@/controllers/upload.controller";
+import * as uploadCSVController from "@/controllers/uploadcsv.controller";
 
 
 
@@ -14,5 +15,8 @@ import * as uploadController from "@/controllers/upload.controller";
  */
 export const uploadRoute = express
     .Router()
-    .post("/upload", uploadController.uploadFiles);
+    .post("/upload", uploadController.uploadFiles)
+    .post("/uploadcsv", uploadCSVController.uploadCSV)
+    .post("/newfromempty", uploadController.newfromempty)
+    .post("/updateClassname", uploadController.updateClassname);
 
