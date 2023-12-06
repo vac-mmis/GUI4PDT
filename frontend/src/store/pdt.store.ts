@@ -76,10 +76,6 @@ export const PDTStore: any = defineStore("PDTs", () => {
             const response = await fetch('saveData.json');
             const data = await response.json();
             const pdtData = data["pdts"].find((pdt: PDTJSON) => pdt.name === pdtName);
-
-            console.log(pdtData);
-           
-
             pdt = new PDT(pdtData as PDTJSON);
             if (!pdt) {
                 throw new Error("PDT not found");
