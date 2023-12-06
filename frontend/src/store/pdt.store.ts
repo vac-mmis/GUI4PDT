@@ -4,11 +4,11 @@
  * @module Store.PDT
  */
 import { ref, computed, toRaw } from "vue";
-import axios from "axios";
 import { defineStore } from "pinia";
 
 import type { PDTJSON } from "@/interfaces/pdt";
 import { PDT } from "@/models/pdt.model";
+
 
 /**
  * PDT store handle by Pinia.
@@ -41,7 +41,15 @@ export const PDTStore: any = defineStore("PDTs", () => {
      */
     async function list(): Promise<string[]> {
         if (_list.value.length === 0) {
-            _list.value = await axios.get(`pdts/list`).then((res) => res.data);
+            
+
+            const response = await fetch('saveData.json');
+            const data = await response.json();
+            const pdtData = data["pdts"];
+            
+          
+
+            _list.value = pdtData.map((pdt: PDTJSON) => pdt.name);
         }
         return _list.value;
     }
@@ -62,10 +70,17 @@ export const PDTStore: any = defineStore("PDTs", () => {
      *
      * @param name Name of PDT to fetch.
      */
-    const fetch = async (pdtName: string) => {
+    const fetchLocal = async (pdtName: string) => {
         let pdt = find(pdtName);
         if (!pdt) {
-            pdt = await axios.get(`pdt/${pdtName}`).then((res) => new PDT(res.data as PDTJSON));
+            const response = await fetch('saveData.json');
+            const data = await response.json();
+            const pdtData = data["pdts"].find((pdt: PDTJSON) => pdt.name === pdtName);
+
+            console.log(pdtData);
+           
+
+            pdt = new PDT(pdtData as PDTJSON);
             if (!pdt) {
                 throw new Error("PDT not found");
             } else {
@@ -77,5 +92,5 @@ export const PDTStore: any = defineStore("PDTs", () => {
         }
     };
 
-    return { timeLength, getPDT, getPDTList, list, fetch, find };
+    return { timeLength, getPDT, getPDTList, list, fetchLocal, find };
 });

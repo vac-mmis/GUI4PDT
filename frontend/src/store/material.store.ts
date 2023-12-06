@@ -7,8 +7,8 @@ import type { MeshStandardMaterial } from "three";
 import { loadMaterial } from "@/World/systems/loader";
 
 import { ref, computed, toRaw } from "vue";
-import axios from "axios";
 import { defineStore } from "pinia";
+
 
 import type { MaterialFile } from "@/interfaces/assets";
 
@@ -24,16 +24,17 @@ export const materialStore: any = defineStore("materials", () => {
     /**
      * Fetch, load and store materials from backend API.
      */
-    const fetch = async () => {
-        return axios
-            .get("materials")
-            .then(
-                async (res) =>
-                    await Promise.all(
-                        res.data.map(async (material: MaterialFile) => loadMaterial(material))
-                    )
-            )
-            .then((materials) => _materials.value.push(...materials));
+    const fetchLocal = async () => {
+        try {
+            const response = await fetch('saveData.json');
+            const data = await response.json();
+            const materialData = data["materials"];
+            
+            const materials = await Promise.all(materialData.map(async (material: MaterialFile) => loadMaterial(material)));
+            _materials.value.push(...materials)
+        } catch (err) {
+            console.error("Error loading local material data:", err);
+        }
     };
 
     /**
@@ -47,5 +48,5 @@ export const materialStore: any = defineStore("materials", () => {
         return toRaw(_materials.value).find((material) => material.name === name);
     }
 
-    return { length, fetch, find };
+    return { length, fetchLocal, find };
 });

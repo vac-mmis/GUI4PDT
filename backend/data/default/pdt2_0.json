@@ -1,0 +1,169 @@
+{
+    "name": "sample2_pdt",
+    "timestep": 0,
+    "timestamp": null,
+    "objects": [
+        {
+            "id": 0,
+            "class": {
+                "dist": {
+                    "type": "categorical",
+                    "mass": {
+                        "tetrapod": 0.7,
+                        "reefcone": 0.3
+                    }
+                }
+            },
+            "location": {
+                "dist": {
+                    "type": "multivariate-normal",
+                    "mean": [0, 0, -11],
+                    "cov": [
+                        [0.1, 0.05, 0],
+                        [0, 0.5, 0.01],
+                        [0, 0, 0.001]
+                    ]
+                }
+            },
+            "rotation": [0, 0, 0],
+            "scale": 1,
+            "material": "concrete"
+        },
+        {
+            "id": 1,
+            "class": {
+                "dist": {
+                    "type": "categorical",
+                    "mass": {
+                        "tetrapod": 0.3,
+                        "reefcone": 0.5,
+                        "reefring": 0.1,
+                        "stone": 0.1
+                    }
+                }
+            },
+            "location": {
+                "dist": {
+                    "type": "multivariate-normal",
+                    "mean": [3, 0, -11],
+                    "cov": [
+                        [0.2, 0.05, 0],
+                        [0, 0.5, 0.04],
+                        [0, 0, 1]
+                    ]
+                }
+            },
+            "rotation": [0, 0, 10],
+            "scale": 1,
+            "material": "concrete"
+        },
+        {
+            "id": 2,
+            "class": {
+                "dist": {
+                    "type": "categorical",
+                    "mass": {
+                        "tetrapod": 0.99,
+                        "reefcone": 0.01
+                    }
+                }
+            },
+            "location": {
+                "dist": {
+                    "type": "uniform-continuous",
+                    "params": [
+                        [5, 7],
+                        [-5, -3],
+                        [-11, -10]
+                    ]
+                }
+            },
+            "rotation": [0, 0, 0],
+            "scale": 1,
+            "material": "concrete"
+        },
+        {
+            "id": 3,
+            "class": {
+                "dist": {
+                    "type": "categorical",
+                    "mass": {
+                        "tetrapod": 0.01,
+                        "reefcone": 0.99
+                    }
+                }
+            },
+            "location": {
+                "dist": {
+                    "type": "uniform-continuous",
+                    "params": [
+                        [3, 5],
+                        [3, 5],
+                        [-11, -11]
+                    ]
+                }
+            },
+            "rotation": [0, 0, 0],
+            "scale": 1,
+            "material": "concrete"
+        },
+        {
+            "id": 4,
+            "class": {
+                "dist": {
+                    "type": "categorical",
+                    "mass": {
+                        "stone": 0.5,
+                        "reefring": 0.5
+                    }
+                }
+            },
+            "location": {
+                "dist": {
+                    "type": "multivariate-normal",
+                    "mean": [-10, -10, -11],
+                    "cov": [
+                        [0.1, 0.05, 0],
+                        [0, 0.5, 0.01],
+                        [0, 0, 0.001]
+                    ]
+                }
+            },
+            "rotation": [0, 0, 0],
+            "scale": 1,
+            "material": {
+                "dist": {
+                    "type": "categorical",
+                    "mass": {
+                        "concrete": 0.5,
+                        "mineral": 0.5
+                    }
+                }
+            }
+        },
+        {
+            "id": 5,
+            "class": "tetrapod",
+            "location": {
+                "dist": {
+                    "type": "multivariate-normal",
+                    "mean": [10, 15, -11],
+                    "cov": [
+                        [0.1, 0.05, 0],
+                        [0, 0.5, 0.01],
+                        [0, 0, 0.001]
+                    ]
+                }
+            },
+            "rotation": {
+                "dist": {
+                    "type": "von-mises",
+                    "mean": [0, 70, 180],
+                    "kappa": [100000000000.0, 100000000000.0, 1000.0]
+                }
+            },
+            "scale": 1,
+            "material": "concrete"
+        }
+    ]
+}

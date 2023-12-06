@@ -13,6 +13,7 @@ import { router } from "@/routes";
 import { PDTStore, ModelStore, MaterialStore } from "@/store";
 
 import { logger } from "@/utils/logger";
+import fs from "fs";
 
 const port = process.env.PORT ?? 3000;
 const app = express();
@@ -28,12 +29,32 @@ const setup = async () => {
     await ModelStore.load()
         .then(() => MaterialStore.load())
         .then(() => PDTStore.load())
-        .then(() =>
-            app.listen(port, () => {
-                logger.info(`Backend started successfully! Server listen on port ${port}`);
-            })
-        )
-        .catch((err) => logger.error(err));
+        .then(() => {
+
+            interface SaveData {
+                models: Record<string, any>; 
+                materials: Record<string, any>; 
+                pdts: Record<string, any>; 
+              }
+            
+
+            const models = ModelStore.get(); // get all models
+            const materials = MaterialStore.get(); // get all materials
+            const pdts = PDTStore.get(); // get all pdts
+
+            const saveData:SaveData = {
+                "models": models,
+                "materials": materials,
+                "pdts": pdts
+            }
+            
+
+            fs.writeFile('../frontend/saveData.json', JSON.stringify(saveData), (err) => {
+                if (err) throw err;
+                logger.info('All data has been saved into a file: frontend/saveData.json');
+            });
+
+        }).catch((err) => logger.error(err));
 };
 
 setup();

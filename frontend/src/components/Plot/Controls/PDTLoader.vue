@@ -53,7 +53,7 @@ const selectedPDT = ref(pdt.getPDT.name ?? "");
 const onSelect = async () => {
     world.setStatus({ status: "loading PDT", message: "Fetching selected PDT..." });
     dialog.value = false;
-    pdt.fetch(selectedPDT.value)
+    pdt.fetchLocal(selectedPDT.value)
         .catch((err: string) => {
             world.setStatus({ status: "error", message: err });
             console.error(err);
@@ -89,7 +89,7 @@ onBeforeMount(async () => {
         });
 
     // Load models and materials
-    await models.fetch();
-    await materials.fetch();
+    await models.fetchLocal();
+    await materials.fetchLocal();
 });
 </script>
