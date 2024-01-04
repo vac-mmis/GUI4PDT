@@ -41,10 +41,10 @@ export class PDT extends Group implements WorldContent {
         super();
         this.name = pdt.name;
         this.userData.type = "PDT";
-        this.timeLength = pdt.objects[0].location.length;
+        this.timeLength = Object.values(pdt.objects)[0].location.length;
 
         // Add objects as new children group
-        this.objects = pdt.objects.map((obj: ObjectJSON) => new PDTObject(this, obj));
+        this.objects = Object.entries(pdt.objects).map(([objID, objJSON]) => new PDTObject(this, objID, objJSON));
         this.add(new Group().add(...this.objects));
 
         // Add elevation map as new children

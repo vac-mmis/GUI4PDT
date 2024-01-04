@@ -2,9 +2,9 @@
   "name": "default",
   "timestep": 0,
   "timestamp": null,
-  "objects": [
-    {
-      "id": 0,
+  "objects": {
+    "0": {
+      "name": "vac",
       "class": {
         "dist": {
           "type": "categorical",
@@ -27,5 +27,5 @@
       "scale": 0.3,
       "material": "concrete"
     }
-  ]
+  }
 }

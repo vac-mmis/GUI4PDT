@@ -1,6 +1,6 @@
 <template>
     <v-card v-if="opened && getPDT.selectedObject" class="card" ref="card"
-        :title="`Details on object ${getPDT.selectedObject.objID}`" prepend-icon="fas fa-cubes" elevation="16">
+        :title="`Details on object: ${getPDT.selectedObject.objName}`" prepend-icon="fas fa-cubes" elevation="16">
         <template v-slot:append>
             <v-btn :icon="maximized ? `$minimize` : `$maximize`" variant="text" @click="toggleWindow" />
             <v-btn icon="$close" variant="text" @click="onClose" />
@@ -17,7 +17,7 @@
                 <template v-if="tab === key">
                     <PropertyDetails :details="details[key]" />
                     <template v-if="editMode">
-                        <DetailsEdit @mouseover="isMoveable=false" @mouseleave="isMoveable=true" :property="key" :pdtObject="pdtObject" />
+                        <DetailsEdit @mouseover="isMoveable=false" @mouseleave="isMoveable=true" :property="key" :dist="getDist(key)" />
                     </template>
                 </template>
 
@@ -66,6 +66,21 @@ const onClose = () => {
     opened.value = false;
 };
 
+
+const getDist = (key:string) => {
+    
+
+    if (key === "location") {
+        return pdtObject.value.children[1].dist[0];
+    }
+    if (key === "rotation") {
+        return pdtObject.value.children[2].dist[0];
+    }
+    if (key === "scale") {
+        return pdtObject.value.class.scaleFactor;
+    }
+    return pdtObject.value[key].dist[0];
+};
 
 
 const toggleWindow = () => {

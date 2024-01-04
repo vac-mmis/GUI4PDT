@@ -24,7 +24,7 @@ import type { ObjectJSON, ObjectTimestamp } from "@/types/object.types";
  */
 export async function PDTTimestampsToPDTJSON(
     timestampsFiles: string[]
-): Promise<{ name: string; objects: ObjectJSON[] }> {
+): Promise<{ name: string; objects: Record<string,ObjectJSON> }> {
     const JSONData = await Promise.all(
         timestampsFiles.map(async (file) => {
             const json = JSON.parse(await readFile(file, { encoding: "utf8" }));
@@ -35,14 +35,16 @@ export async function PDTTimestampsToPDTJSON(
         })
     );
 
-    const res = { name: JSONData[0].name, objects: [] as Array<ObjectJSON> };
-    JSONData.forEach((pdtTimestamp: { timestep: number; objects: ObjectTimestamp[] }) => {
-        pdtTimestamp.objects.forEach((object) => {
+    const res = { name: JSONData[0].name, objects: {} as Record<string,ObjectJSON> }; 
+    
+    JSONData.forEach((pdtTimestamp: { timestep: number; objects: Record<string,ObjectTimestamp> }) => {
+        Object.entries(pdtTimestamp.objects).forEach(([objID, object]) => {
+      
             const i = pdtTimestamp.timestep;
-            const resObject = res.objects.find((obj) => obj.id === object.id);
+            const resObject = res.objects[objID];
             if (!resObject) {
-                res.objects[object.id] = {
-                    id: object.id,
+                res.objects[objID] = {
+                    name: [],
                     class: [],
                     location: [],
                     material: [],
@@ -51,12 +53,13 @@ export async function PDTTimestampsToPDTJSON(
                     physics: [],
                 } as ObjectJSON;
             }
-            res.objects[object.id].class[i] = object.class;
-            res.objects[object.id].location[i] = object.location;
-            res.objects[object.id].material[i] = object.material;
-            res.objects[object.id].rotation[i] = object.rotation;
-            res.objects[object.id].scale[i] = object.scale;
-            res.objects[object.id].physics[i] = object.physics;
+            res.objects[objID].name[i] = object.name;
+            res.objects[objID].class[i] = object.class;
+            res.objects[objID].location[i] = object.location;
+            res.objects[objID].material[i] = object.material;
+            res.objects[objID].rotation[i] = object.rotation;
+            res.objects[objID].scale[i] = object.scale;
+            res.objects[objID].physics[i] = object.physics;
         });
     });
     return res;
@@ -100,7 +103,7 @@ export class PDT {
     /** PDT directory. Only used for PDT loading*/
     private PDTDir: string;
     /** PDT objects ready for providing  */
-    objects!: ObjectJSON[];
+    objects!: Record<string,ObjectJSON>;
     /** PDT see elevation map */
     elevationMap?: number[][];
 
@@ -120,7 +123,7 @@ export class PDT {
         const timestamps = (await readdir(this.PDTDir))
             .filter((file) => file.split(".json")[0] !== file)
             .map((file) => `${this.PDTDir}/${file}`);
-        const json = await PDTTimestampsToPDTJSON(timestamps);
+        const json = await PDTTimestampsToPDTJSON(timestamps); 
 
         this.name = json.name || path.basename(this.PDTDir);
         this.objects = json.objects;
@@ -138,7 +141,7 @@ export class PDT {
      */
     public getPublicPDT(): {
         name: string;
-        objects: ObjectJSON[];
+        objects: Record<string,ObjectJSON>;
         elevationMap?: number[][];
     } {
         return { name: this.name, objects: this.objects, elevationMap: this.elevationMap };

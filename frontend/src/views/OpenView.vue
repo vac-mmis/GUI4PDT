@@ -86,6 +86,8 @@ onBeforeMount(async () => {
   await pdt.list()
     .then((pdtList: string[]) => {
       PDTList.value = pdtList;
+      console.log(pdtList);
+
     })
     .catch((err: string) => {
       console.error(err);

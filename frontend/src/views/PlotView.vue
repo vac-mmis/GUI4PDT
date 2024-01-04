@@ -97,11 +97,7 @@ const updateScene = () => {
 
 const clickedTest = () => {
 
-    console.log(getPDT.value.selectedObject._location.dist[0]);
-    
 
-
-    //TODO change the posittion and locatio and so on
 
 }
 

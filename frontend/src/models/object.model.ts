@@ -18,9 +18,12 @@ export class PDTObject extends Group {
     /** Object which has this location. */
     declare parent: PDT;
     /** Object ID */
-    readonly objID: number;
+    readonly objID: string;
     /** Current time index to show. */
     private time: number = 0;
+
+    /** Object name. */
+    private objName: string;
 
     /** Object class. @remark `this.class = this.children[0]`. */
     readonly class: Class;
@@ -30,6 +33,8 @@ export class PDTObject extends Group {
     private _location: Location;
     /** Object rotation. @remark `this._rotation = this.children[2]`. */
     private _rotation: Rotation;
+    
+    
     dist: any;
 
     /**
@@ -37,10 +42,11 @@ export class PDTObject extends Group {
      *
      * @param objJSON Object data, from backend API.
      */
-    constructor(parent: PDT, objJSON: ObjectJSON) {
+    constructor(parent: PDT, objID: string, objJSON: ObjectJSON) {
         super();
         this.parent = parent;
-        this.objID = objJSON.id;
+        this.objID = objID;
+        this.objName = objJSON.name;
         this.userData.type = "Object";
 
         // get material from JSON data
