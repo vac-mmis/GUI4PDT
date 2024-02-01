@@ -5,15 +5,7 @@
   "objects": {
     "0": {
       "name": "vac",
-      "class": {
-        "dist": {
-          "type": "categorical",
-          "mass": {
-            "vac": 0.5,
-            "reefcone": 0.5
-          }
-        }
-      },
+      "class": "vac",
       "location": [
         5,
         0,
@@ -25,7 +17,7 @@
         0
       ],
       "scale": 0.3,
-      "material": "concrete"
+      "material": "vac"
     }
   }
 }

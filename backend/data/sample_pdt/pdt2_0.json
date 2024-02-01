@@ -2,9 +2,9 @@
   "name": "sample_pdt",
   "timestep": 0,
   "timestamp": null,
-  "objects": [
-    {
-      "id": 0,
+  "objects": {
+    "0": {
+      "name": "object 1",
       "class": {
         "dist": {
           "type": "categorical",
@@ -49,8 +49,8 @@
       "scale": 1,
       "material": "concrete"
     },
-    {
-      "id": 1,
+    "1": {
+      "name": "object 2",
       "class": {
         "dist": {
           "type": "categorical",
@@ -97,8 +97,8 @@
       "scale": 1,
       "material": "concrete"
     },
-    {
-      "id": 2,
+    "2": {
+      "name": "object 3",
       "class": {
         "dist": {
           "type": "categorical",
@@ -135,8 +135,8 @@
       "scale": 1,
       "material": "concrete"
     },
-    {
-      "id": 3,
+    "3": {
+      "name": "object 4",
       "class": {
         "dist": {
           "type": "categorical",
@@ -173,8 +173,8 @@
       "scale": 1,
       "material": "concrete"
     },
-    {
-      "id": 4,
+    "4": {
+      "name": "object 5",
       "class": {
         "dist": {
           "type": "categorical",
@@ -227,8 +227,8 @@
         }
       }
     },
-    {
-      "id": 5,
+    "5": {
+      "name": "object 6",
       "class": "tetrapod",
       "location": {
         "dist": {
@@ -275,5 +275,5 @@
       "scale": 1,
       "material": "concrete"
     }
-  ]
+  }
 }

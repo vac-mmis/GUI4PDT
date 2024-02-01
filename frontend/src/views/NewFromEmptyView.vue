@@ -46,7 +46,7 @@ const formIsValid = computed(() => {
 
 const submitFile = async () => {
 
-  console.log(projectName.value)
+  
   const data = {
     name: projectName.value,
 

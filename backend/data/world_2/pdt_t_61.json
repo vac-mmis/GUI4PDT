@@ -2,9 +2,9 @@
   "name": "world_2",
   "timestep": 61,
   "timestamp": null,
-  "objects": [
-    {
-      "id": 0,
+  "objects": {
+    "0": {
+      "name": "object_0",
       "class": {
         "dist": {
           "type": "categorical",
@@ -41,7 +41,6 @@
           ]
         }
       },
-      "material": "concrete",
       "rotation": {
         "dist": {
           "type": "von-mises",
@@ -57,10 +56,11 @@
           ]
         }
       },
-      "scale": 1
+      "scale": 1,
+      "material": "concrete"
     },
-    {
-      "id": 1,
+    "1": {
+      "name": "object_1",
       "class": "tetrapod",
       "location": {
         "dist": {
@@ -89,7 +89,6 @@
           ]
         }
       },
-      "material": "concrete",
       "rotation": {
         "dist": {
           "type": "von-mises",
@@ -105,10 +104,11 @@
           ]
         }
       },
-      "scale": 1
+      "scale": 1,
+      "material": "concrete"
     },
-    {
-      "id": 2,
+    "2": {
+      "name": "object_2",
       "class": "tetrapod",
       "location": {
         "dist": {
@@ -137,7 +137,6 @@
           ]
         }
       },
-      "material": "concrete",
       "rotation": {
         "dist": {
           "type": "von-mises",
@@ -153,10 +152,11 @@
           ]
         }
       },
-      "scale": 0.6
+      "scale": 0.6,
+      "material": "concrete"
     },
-    {
-      "id": 3,
+    "3": {
+      "name": "object_3",
       "class": "reefcone",
       "location": {
         "dist": {
@@ -185,7 +185,6 @@
           ]
         }
       },
-      "material": "concrete",
       "rotation": {
         "dist": {
           "type": "von-mises",
@@ -201,10 +200,11 @@
           ]
         }
       },
-      "scale": 1
+      "scale": 1,
+      "material": "concrete"
     },
-    {
-      "id": 4,
+    "4": {
+      "name": "object_4",
       "class": "reefring",
       "location": {
         "dist": {
@@ -233,7 +233,6 @@
           ]
         }
       },
-      "material": "concrete",
       "rotation": {
         "dist": {
           "type": "von-mises",
@@ -249,10 +248,11 @@
           ]
         }
       },
-      "scale": 1
+      "scale": 1,
+      "material": "concrete"
     },
-    {
-      "id": 5,
+    "5": {
+      "name": "object_5",
       "class": "container",
       "location": {
         "dist": {
@@ -281,7 +281,6 @@
           ]
         }
       },
-      "material": "metal",
       "rotation": {
         "dist": {
           "type": "von-mises",
@@ -297,10 +296,11 @@
           ]
         }
       },
-      "scale": 0.01
+      "scale": 0.01,
+      "material": "metal"
     },
-    {
-      "id": 6,
+    "6": {
+      "name": "object_6",
       "class": "bicycle",
       "location": {
         "dist": {
@@ -329,7 +329,6 @@
           ]
         }
       },
-      "material": "bicycle",
       "rotation": {
         "dist": {
           "type": "von-mises",
@@ -345,23 +344,24 @@
           ]
         }
       },
-      "scale": 1
+      "scale": 1,
+      "material": "bicycle"
     },
-    {
-      "id": 7,
+    "7": {
+      "name": "object_7",
       "class": "eiffeltower",
       "location": [
         -12,
         4,
         -20.5
       ],
-      "material": "eiffeltower",
       "rotation": [
         0,
         0,
         0
       ],
-      "scale": 0.022
+      "scale": 0.022,
+      "material": "eiffeltower"
     }
-  ]
+  }
 }

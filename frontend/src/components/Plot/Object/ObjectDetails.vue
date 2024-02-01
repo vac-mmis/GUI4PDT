@@ -1,6 +1,6 @@
 <template>
     <v-card v-if="opened && getPDT.selectedObject" class="card" ref="card"
-        :title="`Details on object: ${getPDT.selectedObject.objName}`" prepend-icon="fas fa-cubes" elevation="16">
+        :title="`Details on object: ${getPDT.selectedObject.objName[0]}`" prepend-icon="fas fa-cubes" elevation="16">
         <template v-slot:append>
             <v-btn :icon="maximized ? `$minimize` : `$maximize`" variant="text" @click="toggleWindow" />
             <v-btn icon="$close" variant="text" @click="onClose" />
@@ -17,7 +17,7 @@
                 <template v-if="tab === key">
                     <PropertyDetails :details="details[key]" />
                     <template v-if="editMode">
-                        <DetailsEdit @mouseover="isMoveable=false" @mouseleave="isMoveable=true" :property="key" :dist="getDist(key)" />
+                        <!-- <DetailsEdit @mouseover="isMoveable=false" @mouseleave="isMoveable=true" :property="key" :dist="getDist(key)" /> -->
                     </template>
                 </template>
 

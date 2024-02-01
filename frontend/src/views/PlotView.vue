@@ -15,9 +15,9 @@
                 <ObjectDetails :key="detailsKey" :time="timeLength > 1 ? selectedTime : 0" />
             </div>
 
-            
 
-        
+
+
         </div>
         <div v-if="timeLength > 1" class="position-relative w-75 ma-6 z-1">
             <TimeSlider @time="(t: number) => (selectedTime = t)" />
@@ -33,6 +33,18 @@
             <v-progress-linear indeterminate color="primary"></v-progress-linear>
         </div>
     </v-overlay>
+
+    <!-- Icon overlay -->
+
+    <div v-if="timeLength > 1" class="icon-overlay-timeline d-none d-sm-flex">
+        <v-img :width="220" src="uni_logo.svg"></v-img>
+        <v-img :width="120" src="mmis_logo.svg"></v-img>
+    </div>
+    <div v-else class="icon-overlay d-none d-sm-flex">
+        <v-img :width="220" src="uni_logo.svg"></v-img>
+        <v-img :width="120" src="mmis_logo.svg"></v-img>
+    </div>
+
 
     <!-- See errors -->
     <div v-if="getStatus.status === `error`" class="d-flex align-center h-auto w-100 pa-10">
@@ -51,7 +63,6 @@ import { storeToRefs } from "pinia";
 
 import ObjectDetails from "@/components/Plot/Object/ObjectDetails.vue";
 
-import DetailsEdit from "@/components/Plot/Object/DetailsEdit.vue";
 
 import SceneMenu from "@/components/Plot/Scene/SceneMenu.vue";
 import TimeSlider from "@/components/Plot/Scene/TimeSlider.vue";
@@ -62,10 +73,10 @@ import { modelStore } from "@/store/model.store";
 import { worldStore } from "@/store/world.store";
 import { materialStore } from "@/store/material.store";
 import { onBeforeMount } from "vue";
-import { onMounted } from "vue";
 import { Manager } from "socket.io-client";
+import { useRouter } from "vue-router";
 
-
+const router = useRouter();
 
 const manager = new Manager("http://localhost:3000", { transports: ['websocket'] });
 const socket = manager.socket("/");
@@ -92,88 +103,128 @@ const sceneKey = ref(0);
 const updateScene = () => {
     sceneKey.value += 1;
     sceneKey.value %= 2;
-
 }
 
+
+
 const clickedTest = () => {
-
-
 
 }
 
 onBeforeMount(async () => {
+
+    if (!getPDT.value.name){
+        router.push("/")
+    }
+
     world.setStatus({ status: "loading PDT", message: "Fetching selected PDT..." });
+    const offlineMode = import.meta.env.VITE_OFFLINE_MODE === 'true';
 
-    await models.fetch();
-    await materials.fetch();
-    await pdts.list()
-        .then((pdtList: string[]) => {
-            console.log(pdtList);
-        })
-        .catch((err: string) => {
-            console.error(err);
-        });
+    if (offlineMode) {
 
-    await pdts.fetch(getPDT.value.name ?? "default")
-        .catch((err: string) => {
-            world.setStatus({ status: "error", message: err });
-            console.error(err);
-        })
-        .finally(() => {
-            world.setStatus({
-                status: "loading world",
-                message: `${getPDT.value.name} loaded successfully`,
-            });
-        });
-
-    socket.on("new material", async () => {
-
-        await materials.fetch();
-
-        await pdts.fetch(getPDT.value.name)
-            .catch((err: any) => {
-                world.setStatus({ status: "error", message: err });
-                console.error(err);
+        models.fetchLocally()
+            .then(() => materials.fetchLocally())
+            .then(() => pdts.listLocally()).then((pdtList: string[]) => {
+               
             })
-        updateScene();
-    })
-    socket.on("new model", async () => {
-
-        await models.fetch();
-
-        await pdts.fetch(pdts.getPDT.name)
-            .catch((err: any) => {
-                world.setStatus({ status: "error", message: err });
-                console.error(err);
-            })
-        updateScene();
-    })
-
-    socket.on("new pdt", async () => {
-
-        await pdts.fetch(pdts.getPDT.name)
             .catch((err: string) => {
-                world.setStatus({ status: "error", message: err });
                 console.error(err);
-            })
-        updateScene();
-    })
+            }).then(() => pdts.fetchLocally(getPDT.value.name ?? "default")
+                .catch((err: string) => {
+                    world.setStatus({ status: "error", message: err });
+                    console.error(err);
+                })
+                .finally(() => {
+                    world.setStatus({
+                        status: "loading world",
+                        message: `${getPDT.value.name} loaded successfully`,
+                    });
+                }));
+
+    } else {
+        socket.on("connect", () => {
+            models.fetchRemotely()
+                .then(() => materials.fetchRemotely())
+                .then(() => pdts.list()).then((pdtList: string[]) => {
+                  
+                })
+                .catch((err: string) => {
+                    console.error(err);
+                }).then(() => pdts.fetchRemotely(getPDT.value.name ?? "default")
+                    .catch((err: string) => {
+                        world.setStatus({ status: "error", message: err });
+                        console.error(err);
+                    })
+                    .finally(() => {
+                        world.setStatus({
+                            status: "loading world",
+                            message: `${getPDT.value.name} loaded successfully`,
+                        });
+                    }));
+
+        });
 
 
+        socket.on("new material", async () => {
+
+            await materials.fetchRemotely();
+
+            await pdts.fetchRemotely(getPDT.value.name)
+                .catch((err: any) => {
+                    world.setStatus({ status: "error", message: err });
+                    console.error(err);
+                })
+            updateScene();
+        })
+        socket.on("new model", async () => {
+
+            await models.fetchRemotely();
+
+            await pdts.fetchRemotely(pdts.getPDT.name)
+                .catch((err: any) => {
+                    world.setStatus({ status: "error", message: err });
+                    console.error(err);
+                })
+            updateScene();
+        })
+
+        socket.on("new pdt", async () => {
+
+            await pdts.fetchRemotely(pdts.getPDT.name)
+                .catch((err: string) => {
+                    world.setStatus({ status: "error", message: err });
+                    console.error(err);
+                })
+            updateScene();
+        })
+
+    }
 });
-
-onMounted(() => {
-    
-   
-});
-
-
 
 onBeforeUnmount(() => {
-      socket.disconnect();
+    socket.disconnect();
 });
-
-
 
 
 </script>
+
+<style scoped>
+/* Your existing styles */
+
+.icon-overlay {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 1000;
+    cursor: pointer;
+    display: flex;
+}
+.icon-overlay-timeline {
+    position: absolute;
+    bottom: 90px;
+    right: 10px;
+    z-index: 1000;
+    cursor: pointer;
+    display: flex;
+}
+</style>

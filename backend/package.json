@@ -10,6 +10,7 @@
     },
     "main": "index.js",
     "scripts": {
+        "start-and-close": "npm run dev & wait-on http://localhost:3000 && npm run close-server",
         "start": "node dist/index.js",
         "dev": "nodemon",
         "build": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json",

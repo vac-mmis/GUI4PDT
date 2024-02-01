@@ -65,7 +65,7 @@ const submitFile = async () => {
 
   await axios.post('/upload', formData)
     .then((response) => {
-      console.log(response.data);
+     
     })
     .catch((error) => {
       console.log(error.response.data);

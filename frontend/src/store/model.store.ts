@@ -48,7 +48,7 @@ export const modelStore: any = defineStore("models", () => {
     /**
      * Fetch, load and store models from backend API.
      */
-    const fetch = async () => {
+    const fetchRemotely = async () => {
         await axios
             .get("models")
             .then(
@@ -59,6 +59,24 @@ export const modelStore: any = defineStore("models", () => {
                 _models.value = [];
                 _models.value.push(...models);
             });
+
+    };
+
+    
+    /**
+     * Fetch, load and store models from backend API.
+     */
+    const fetchLocally = async () => {
+        try {
+            const response = await fetch('saveData.json');
+            const data = await response.json();
+            const modelData = data["models"];
+           
+            const models = await Promise.all(modelData.map(async (model: ModelFile) => loadModel(model)))
+            _models.value.push(...models);
+        } catch (err) {
+            console.error("Error loading local model data:", err);
+        }
 
     };
 
@@ -73,5 +91,5 @@ export const modelStore: any = defineStore("models", () => {
         return toRaw(_models.value).find((model) => model.name === name) ?? getDefault(name);
     }
 
-    return { length, fetch, find, getModels };
+    return { length, fetchLocally,fetchRemotely, find, getModels };
 });

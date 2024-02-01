@@ -186,5 +186,5 @@ export class Class extends Group {
      *
      * @returns Class scaleFactor
      */
-    public getScaleFactor = (): (number | undefined)[] => this.scaleFactor;
+    public getScaleFactor = (): (any)[] => this.scaleFactor;
 }

@@ -35,7 +35,7 @@ export const PDTStore: any = defineStore("PDTs", () => {
      */
     const getPDTList = computed((): string[] => toRaw(_list.value));
 
-   
+
     /**
      * Fetch and returns List of available PDT.
      *
@@ -43,9 +43,29 @@ export const PDTStore: any = defineStore("PDTs", () => {
      */
     //TODO removed check so that the lsit always updates
     async function list(): Promise<string[]> {
-        
-            _list.value = await axios.get(`pdts/list`).then((res) => res.data);
-        
+
+        _list.value = await axios.get(`pdts/list`).then((res) => res.data);
+
+        return _list.value;
+    }
+    /**
+    * Fetch and returns List of available PDT.
+    *
+    * @returns PDT list
+    */
+    //TODO removed check so that the lsit always updates
+    async function listLocally(): Promise<string[]> {
+        if (_list.value.length === 0) {
+
+
+            const response = await fetch('saveData.json');
+            const data = await response.json();
+            const pdtData = data["pdts"];
+
+
+
+            _list.value = pdtData.map((pdt: PDTJSON) => pdt.name);
+        }
         return _list.value;
     }
 
@@ -66,7 +86,7 @@ export const PDTStore: any = defineStore("PDTs", () => {
      *
      * @param name Name of PDT to fetch.
      */
-    const fetch = async (pdtName: string) => {
+    const fetchRemotely = async (pdtName: string) => {
 
         const pdt = await axios.get(`pdt/${pdtName}`).then((res) => new PDT(res.data as PDTJSON));
         if (!pdt) {
@@ -78,5 +98,36 @@ export const PDTStore: any = defineStore("PDTs", () => {
 
     };
 
-    return { timeLength, getPDT, getPDTList, list, fetch, find };
+    /**
+     * Fetch, load and store desired PDT (by name) from backend API.
+     *
+     * @param name Name of PDT to fetch.
+     */
+    const fetchLocally = async (pdtName: string) => {
+        let pdt = find(pdtName)
+
+  
+
+        if (!pdt) {
+
+            const response = await fetch('saveData.json');
+            const data = await response.json();
+
+            const pdtData = data["pdts"].find((pdt: PDTJSON) => pdt.name === pdtName)
+            pdt = new PDT(pdtData as PDTJSON);
+            if (!pdt) {
+                throw new Error("PDT not found");
+            } else {
+                _PDTs.value.push(pdt);
+                _selectedPDT.value = pdt;
+            }
+        } else {
+            _selectedPDT.value = pdt;
+        }
+
+     
+
+    };
+
+    return { timeLength, getPDT, getPDTList, list, listLocally, fetchRemotely, fetchLocally, find };
 });

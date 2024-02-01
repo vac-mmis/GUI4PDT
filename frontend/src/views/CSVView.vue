@@ -50,8 +50,7 @@ const submitFile = async () => {
 
   const projectName = getPDT.value.name;
 
-  console.log(file.value)
-  console.log(projectName)
+
 
   if (!file.value || !projectName) {
     return
@@ -68,7 +67,7 @@ const submitFile = async () => {
   await axios.post('/uploadcsv', formData)
     .then((response) => {
 
-      console.log(response.data);
+    
     })
     .catch((error) => {
       console.log(error.response.data);

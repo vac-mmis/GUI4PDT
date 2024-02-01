@@ -89,7 +89,14 @@ export class PDTObject extends Group {
      */
     public getDetails(t: number): Record<string, ObjectDetails> {
         t = Math.trunc(t) % this._location.dist.length;
+
+     
+
         return {
+            // name: {
+            //     description: this._location.dist[t].toString(),
+            //     representation: undefined,
+            // },
             location: {
                 description: this._location.dist[t].toString(),
                 representation: undefined,
@@ -107,7 +114,7 @@ export class PDTObject extends Group {
                 representation: this.material.representation(t),
             },
             scale: {
-                description: this.class.getScaleFactor().toString(),
+                description: this.class.getScaleFactor()[t].toString(),
                 representation: undefined,
             },
 

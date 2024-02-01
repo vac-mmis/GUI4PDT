@@ -24,7 +24,7 @@ export const materialStore: any = defineStore("materials", () => {
     /**
      * Fetch, load and store materials from backend API.
      */
-    const fetch = async () => {
+    const fetchRemotely = async () => {
         return axios
             .get("materials")
             .then(
@@ -34,6 +34,22 @@ export const materialStore: any = defineStore("materials", () => {
                     )
             )
             .then((materials) => _materials.value.push(...materials));
+    };
+
+    /**
+     * Fetch, load and store materials from backend API.
+     */
+    const fetchLocally = async () => {
+        try {
+            const response = await fetch('saveData.json');
+            const data = await response.json();
+            const materialData = data["materials"];
+            
+            const materials = await Promise.all(materialData.map(async (material: MaterialFile) => loadMaterial(material)));
+            _materials.value.push(...materials)
+        } catch (err) {
+            console.error("Error loading local material data:", err);
+        }
     };
 
     /**
@@ -47,5 +63,5 @@ export const materialStore: any = defineStore("materials", () => {
         return toRaw(_materials.value).find((material) => material.name === name);
     }
 
-    return { length, fetch, find };
+    return { length, fetchLocally, fetchRemotely, find };
 });

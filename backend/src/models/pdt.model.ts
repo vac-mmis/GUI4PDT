@@ -28,6 +28,7 @@ export async function PDTTimestampsToPDTJSON(
     const JSONData = await Promise.all(
         timestampsFiles.map(async (file) => {
             const json = JSON.parse(await readFile(file, { encoding: "utf8" }));
+            
             if (json === undefined) {
                 throw new Error("JSON Data undefined");
             }
@@ -124,6 +125,7 @@ export class PDT {
             .filter((file) => file.split(".json")[0] !== file)
             .map((file) => `${this.PDTDir}/${file}`);
         const json = await PDTTimestampsToPDTJSON(timestamps); 
+        
 
         this.name = json.name || path.basename(this.PDTDir);
         this.objects = json.objects;
