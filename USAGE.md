@@ -28,6 +28,9 @@ After the build process, all server files are saved in a `dist` folder in the fr
     - VITE_OFFLINE_MODE=false
     - VITE_BASE_PATH="/"
 
+- all data is located in the backend/data directory
+
 - run `npm run dev` in backend
 
 - run `npm run dev` in frontend
+
