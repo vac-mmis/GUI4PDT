@@ -20,3 +20,4 @@ docs/.vitepress/cache
 *.sln
 *.sw?
 .obsidian
+backend/saveData.json
