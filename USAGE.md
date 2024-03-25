@@ -6,10 +6,10 @@
 # Offline
 - Make the following changes to the `.env` file inside the frontend directory
     - VITE_OFFLINE_MODE=true
-    - VITE_BASE_PATH="/home/server"
+    - VITE_BASE_PATH="/path/to/server"
 
-Change the VITE_BASE_PATH
-The `home` directory should be the home of your HTTP server.
+Change the VITE_BASE_PATH.
+
 The `server` is the directory in which you put all the server's files.
 
 - Run `run.sh` in the backend directory. 
