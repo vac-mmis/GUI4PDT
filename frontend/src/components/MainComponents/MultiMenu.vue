@@ -11,7 +11,7 @@
                         <v-list-item-title>{{ subItem.title }}</v-list-item-title>
 
                         <v-icon class="float-end ml-8" v-if="subItem.subMenus.length > 0"
-                            icon="fas fa-chevron-right fa-"></v-icon>
+                            icon="fas fa-chevron-right"></v-icon>
                         <v-icon class="float-end" v-else></v-icon>
                     </div>
 

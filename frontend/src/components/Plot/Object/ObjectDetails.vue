@@ -17,7 +17,7 @@
                 <template v-if="tab === key">
                     <PropertyDetails :details="details[key]" />
                     <template v-if="editMode">
-                        <!-- <DetailsEdit @mouseover="isMoveable=false" @mouseleave="isMoveable=true" :property="key" :dist="getDist(key)" /> -->
+                       <DetailsEdit v-if="isOnline" @mouseover="isMoveable=false" @mouseleave="isMoveable=true" :property="key" :dist="getDist(key)" /> 
                     </template>
                 </template>
 
@@ -59,6 +59,8 @@ const card = ref();
 const opened = ref(true);
 const maximized = ref(true);
 const editMode = ref(true);
+
+const isOnline = import.meta.env.VITE_OFFLINE_MODE === "false"
 
 const tab = ref<string>("");
 

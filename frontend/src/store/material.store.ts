@@ -21,6 +21,10 @@ export const materialStore: any = defineStore("materials", () => {
     /** Number of fetched material.  */
     const length = computed(() => _materials.value.length);
 
+    function getMaterials(): MeshStandardMaterial[] {
+        return toRaw(_materials.value);
+    }
+
     /**
      * Fetch, load and store materials from backend API.
      */
@@ -41,7 +45,7 @@ export const materialStore: any = defineStore("materials", () => {
      */
     const fetchLocally = async () => {
         try {
-            const response = await fetch('saveData.json');
+            const response = await fetch('backend_data.json');
             const data = await response.json();
             const materialData = data["materials"];
             
@@ -63,5 +67,5 @@ export const materialStore: any = defineStore("materials", () => {
         return toRaw(_materials.value).find((material) => material.name === name);
     }
 
-    return { length, fetchLocally, fetchRemotely, find };
+    return { length, fetchLocally, fetchRemotely, find,getMaterials };
 });

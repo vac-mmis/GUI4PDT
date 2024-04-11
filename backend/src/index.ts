@@ -141,9 +141,9 @@ const setup = async () => {
             }
 
 
-            fs.writeFile('saveData.json', JSON.stringify(saveData), (err) => {
+            fs.writeFile('offline/backend_data.json', JSON.stringify(saveData), (err) => {
                 if (err) throw err;
-                logger.info('All data has been saved into a file: saveData.json');
+                logger.info('All data has been saved into a file: offline/backend_data.json');
             });
 
 

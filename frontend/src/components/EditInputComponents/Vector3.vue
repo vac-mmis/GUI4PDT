@@ -39,6 +39,7 @@ const z = ref(props.value[2] || 0);
 
 .vector-input input {
     width: 50px;
-    margin-right: 5px;
+    margin: 2px;
+    border: 1px solid #ccc;
 }
 </style>

@@ -83,7 +83,11 @@ export class World<T extends WorldContent> {
 
         // Add helpers (axis and grid)
         const { axesHelper, gridHelper } = createHelpers();
-        this.scene.add(axesHelper, gridHelper);
+
+        //Remove Grid helper TODO
+        //this.scene.add(axesHelper);
+
+        
 
         // First rendering
         this.renderer.render(this.scene, this.camera);

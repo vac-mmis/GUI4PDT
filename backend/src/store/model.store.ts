@@ -4,9 +4,10 @@
  * @module model.store
  */
 
-import { readFile, readdir, stat } from "fs/promises";
+import {  readFile, readdir, stat } from "fs/promises";
 import path from "path";
 import "dotenv/config";
+import { checkFileExists } from "@/utils/files";
 
 import type { ModelFile } from "@/types/file.types";
 import { logger } from "@/utils/logger";
@@ -23,14 +24,36 @@ export async function load(): Promise<void> {
         .then((modelFiles) =>
             Promise.all(
                 modelFiles.map(async (file: string) => {
-                    const filePath = path.join(modelPath, file);
-                    const fileStat = await stat(filePath);
-                    if (fileStat.isFile()) {
-                        const fileData = await readFile(filePath);
-                        models.push({
-                            name: path.basename(file, path.extname(file)).toLowerCase(),
-                            content: fileData.toString("base64"),
-                        });
+                    let filePath = path.join(modelPath, file);
+                    const objName = path.basename(file, path.extname(file)).toLowerCase();
+                    if (!objName.endsWith("_low")) {
+
+                        const { dir, name, ext } = path.parse(filePath);
+
+                        const lowfilePath = path.join(dir, name + "_low" + ext);
+                        try {
+                            if (await checkFileExists(lowfilePath)) {
+                                filePath = lowfilePath;
+                              
+                            }
+                        }
+                        catch (error: any) {
+                            logger.warn(error)
+                        }
+
+                        const fileStat = await stat(filePath);
+
+                        if (fileStat.isFile()) {
+
+                    
+
+                            const fileData = await readFile(filePath);
+                            models.push({
+                                name: objName,
+                                content: fileData.toString("base64"),
+                            });
+
+                        }
 
                     }
                 })
@@ -65,3 +88,5 @@ export function get(): ModelFile[] {
 export function find(name: string) {
     return models.find((model) => model.name === name);
 }
+
+

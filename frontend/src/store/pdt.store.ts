@@ -58,7 +58,7 @@ export const PDTStore: any = defineStore("PDTs", () => {
         if (_list.value.length === 0) {
 
 
-            const response = await fetch('saveData.json');
+            const response = await fetch('backend_data.json');
             const data = await response.json();
             const pdtData = data["pdts"];
 
@@ -110,7 +110,7 @@ export const PDTStore: any = defineStore("PDTs", () => {
 
         if (!pdt) {
 
-            const response = await fetch('saveData.json');
+            const response = await fetch('backend_data.json');
             const data = await response.json();
 
             const pdtData = data["pdts"].find((pdt: PDTJSON) => pdt.name === pdtName)

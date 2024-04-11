@@ -1,40 +1,85 @@
 <template>
-    <v-card v-if="dist && property" elevation="0">
+    <v-card v-if="dist && property" elevation="0" :title="'Edit ' + property + ':'" class="card-container">
 
 
-        <v-card-title>Edit {{ property }}:</v-card-title>
+        <v-card-item>
 
-        <v-row>
+            <v-select v-model="selectedDistribution" density="compact" :items="getPropertyDistributions"
+                item-title="displayName" item-value="id" label="Distribution:"></v-select>
+
+        </v-card-item>
+
+        <v-card-item>
+        <v-row v-if="selectedDistribution"
+
+            v-for="(value, index) in distributionTypes[selectedDistribution]['groups']" key="index">
+
             <v-col>
-                <v-select v-model="selectedDistribution" density="compact" :items="getPropertyDistributions"
-                    item-title="displayName" item-value="id" label="Distribution:"></v-select>
-
-            </v-col>
-        </v-row>
-
-
-        <v-row v-if="selectedDistribution" v-for="(value, index) in distributionTypes[selectedDistribution]['groups']"
-            key="index">
-            <v-col>
-                <v-row v-if="value['name']">
+                <v-row>
                     <v-col>
-                        <v-label>
-                            {{ value['name'] }}
-                        </v-label>
+                        <v-btn icon="fas fa-plus" variant="text" @click="addGroup" />
+                        <v-btn icon="fas fa-minus" variant="text" @click="removeGroup" />
                     </v-col>
                 </v-row>
 
                 <v-row>
-                    <v-col v-for="(comp, index) in value['component']" :key="index">
-
-                       
-                        <component v-if="comp" :is="Vector3" :value="distToValue(value['name'], dist,comp)" />
-
+                    <v-col>
+                        {{ value['name'] }}
                     </v-col>
+                
+                    <v-col>
+                           <component v-if="value['component']" :is="value['component']"
+                        :value="distToValue(value['name'], dist, value['component'])" />
+                    </v-col>
+                    
+                 
                 </v-row>
-            </v-col>
 
+                <v-row>
+                    <v-col>
+                        {{ value['name'] }}
+                    </v-col>
+                
+                    <v-col>
+                           <component v-if="value['component']" :is="value['component']"
+                        :value="distToValue(value['name'], dist, value['component'])" />
+                    </v-col>
+                    
+                 
+                </v-row>
+            
+                <v-row>
+                    <v-col>
+                        {{ value['name'] }}
+                    </v-col>
+                
+                    <v-col>
+                           <component v-if="value['component']" :is="value['component']"
+                        :value="distToValue(value['name'], dist, value['component'])" />
+                    </v-col>
+                    
+                 
+                </v-row>
+            
+            
+            </v-col>
+           
+                
+                
+              
+                
+                    
+               
+            
         </v-row>
+    </v-card-item>
+
+        <v-card-item class="text-right" >
+
+            <v-btn append-icon="fas" color="primary" density="compact" elevation="8"  rounded="xs"> Save</v-btn>
+
+</v-card-item>
+       
     </v-card>
 </template>
 
@@ -44,19 +89,12 @@
 
 import { computed, ref, onBeforeMount } from "vue";
 import { Distribution } from "@/models/Distributions";
+import {modelStore } from "@/store/model.store";
+import {materialStore } from "@/store/material.store";
+import type { Group } from "three";
 
-
-
-import Vector3 from "@/components/EditInputComponents/Vector3.vue";
-import Vector2 from "@/components/EditInputComponents/Vector2.vue";
-import Matrix3_3 from "@/components/EditInputComponents/Matrix3_3.vue";
-import Combo from "@/components/EditInputComponents/Combo.vue";
-import ComboWithValue from "@/components/EditInputComponents/ComboWithValue.vue";
-import Number from "@/components/EditInputComponents/Number.vue";
-import StringFormElement from "@/components/EditInputComponents/StringFormElement.vue";
-
-
-
+const models = modelStore();
+const materials = materialStore();
 
 
 const props = defineProps<{
@@ -65,87 +103,52 @@ const props = defineProps<{
 }>();
 
 
-const applyChanges = async () => {
-
-};
 
 
+const distToValue = (name: string, dist: Distribution | number[] | number | string, componentType: string) => {
 
-const distToValue = (name: string, dist: Distribution | number[] | number | string, componentType:string) => {
+    //TODO GIVE CORRECT START VALUES FOR EACH COMPONENT
 
-   console.log(componentType);
-   
-    console.log(name);
+    console.log(name, dist, componentType)
+
     if (name === "none") {
-        return { value: dist };
+        return dist;
     }
 
-    
-  
 
-    
     if (typeof dist === "object" && "type" in dist) {
         if (name in dist) {
-            return { value: ((dist as Record<string,any>)[name]) };
+            console.log((dist as Record<string, any>)[name])
+            return (dist as Record<string, any>)[name];
         }
     }
-
-
-
-
 
     return {}
 
 };
 
+function logging(value: any) {
+    console.log(typeof value)
+}
 
+
+//TODO add group with element and group id in UI
+function addGroup() {
+   
+}
+
+function removeGroup() {
+
+}
 
 
 const selectedDistribution = ref<string>();
 
 
 
-const getDistributions = () => [
-
-    {
-        id: "multivariateNormal",
-        displayName: "multivariate-normal"
-    },
-    {
-        id: "noneVector3",
-        displayName: "none"
-    },
-    {
-        id: "uniformContinous",
-        displayName: "uniform-continous"
-    },
-    {
-        id: "vonMises",
-        displayName: "von-mises"
-    },
-    {
-        id: "noneNumber",
-        displayName: "none"
-    },
-    {
-        id: "categorical",
-        displayName: "categorical"
-    },
-    {
-        id: "noneCombo",
-        displayName: "none"
-    },
-    {
-        id: "noneString",
-        displayName: "none"
-    }
-
-
-]
-
 const getPropertyDistributions = computed(() => {
     return (propertiesBlueprint[props.property].distributions as string[]).map((dist) => {
-        return getDistributions().find((d) => d.id === dist);
+        return { id: dist, displayName: distributionTypes[dist]["name"] };
 
     })
 });
@@ -157,12 +160,13 @@ const propertiesBlueprint: Record<string, any> = {
     "class": {
         name: "Class",
         distributions: ["categorical", "noneCombo"],
-        comboboxDefault: ["combo1","combo2","combo3"],
+        items: models.getModels()
 
     },
     "material": {
         name: "Material",
         distributions: ["categorical", "noneCombo"],
+        items: materials.getMaterials()
 
     },
     "location": {
@@ -182,13 +186,13 @@ const propertiesBlueprint: Record<string, any> = {
 }
 
 const distributionTypes: Record<string, any> = {
-   
+
     noneString: {
         name: "none",
         groups: [
             {
                 name: "none",
-                components: "String",
+                component: "String",
                 multiple: false,
             }
         ],
@@ -218,7 +222,7 @@ const distributionTypes: Record<string, any> = {
         groups: [
             {
                 name: "none",
-                component:"Number",
+                component: "Number",
                 multiple: false,
             },
 
@@ -232,6 +236,7 @@ const distributionTypes: Record<string, any> = {
                 component: "ComboWithValue",
                 multiple: true,
                 
+
             }
         ],
     },
@@ -240,11 +245,11 @@ const distributionTypes: Record<string, any> = {
         groups: [
             {
                 name: "mean",
-                component: "Vector_3",
+                component: "Vector3",
                 multiple: false,
             },
             {
-                name: "covariance",
+                name: "cov",
                 component: "Matrix3_3",
                 multiple: false,
             }
@@ -291,27 +296,28 @@ onBeforeMount(async () => {
 
 
 
-
-
-
-    
     if (type) {
-        selectedDistribution.value = getDistributions().find((d) => d.displayName === type)?.id;
+        for (const distributionType in distributionTypes as object){
+            if (distributionTypes[distributionType]["name"] === type){
+                selectedDistribution.value = distributionType
+            }
+        }
+            
     } else {
 
         if (typeof dist === "number") {
-            selectedDistribution.value = getDistributions().find((d) => d.id === "noneNumber")?.id;
+            selectedDistribution.value = "noneNumber";
         }
         if (typeof dist === "string") {
-            selectedDistribution.value = getDistributions().find((d) => d.id === "noneString")?.id;
-        } 
+            selectedDistribution.value = "noneString";
+        }
         if (Array.isArray(dist) && dist.length === 3) {
-            selectedDistribution.value = getDistributions().find((d) => d.id === "noneVector3")?.id;
+            selectedDistribution.value = "noneVector3";
         }
 
     }
 
-    console.log(selectedDistribution.value);
+
 
 
 });
@@ -323,6 +329,13 @@ onBeforeMount(async () => {
 
 
 
+
+
 </script>
 
-<style scoped></style>
+<style scoped>
+
+.card-container {
+  max-height: 26rem; /* Set maximum height as needed */
+  overflow-y: auto; /* Enable vertical scrolling */
+}</style>

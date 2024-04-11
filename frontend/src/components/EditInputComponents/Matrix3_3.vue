@@ -1,24 +1,18 @@
 <template>
     <div class="vector-input no-spinners">
-        <row>
-            <input v-model="x1" type="number" placeholder="X1" />
-            <input v-model="x2" type="number" placeholder="X2" />
-            <input v-model="x3" type="number" placeholder="X3" />
-        </row>
-        <row>
-            <input v-model="y1" type="number" placeholder="Y1" />
-            <input v-model="y2" type="number" placeholder="Y2" />
-            <input v-model="y3" type="number" placeholder="Y3" />
-        </row>
-        <row>
-            <input v-model="z1" type="number" placeholder="Z1" />
-            <input v-model="z2" type="number" placeholder="Z2" />
-            <input v-model="z3" type="number" placeholder="Z3" />
-        </row>
-
-
-
-
+        <input v-model="x11" type="number" placeholder="X11" />
+        <input v-model="x12" type="number" placeholder="X12" />
+        <input v-model="x13" type="number" placeholder="X13" />
+    </div>
+    <div class="vector-input no-spinners">
+        <input v-model="x21" type="number" placeholder="X21" />
+        <input v-model="x22" type="number" placeholder="X22" />
+        <input v-model="x23" type="number" placeholder="X23" />
+    </div>
+    <div class="vector-input no-spinners">
+        <input v-model="x31" type="number" placeholder="X31" />
+        <input v-model="x32" type="number" placeholder="X32" />
+        <input v-model="x33" type="number" placeholder="X33" />
     </div>
 </template>
 
@@ -30,19 +24,22 @@ const props = defineProps<{
     value: any;
 }>();
 
-const x1 = ref(props.value[0][0] || 0);
-const x2 = ref(props.value[1][0] || 0);
-const x3 = ref(props.value[2][0] || 0);
+const x11 = ref(props.value[0][0] || 0);
+const x12 = ref(props.value[0][1] || 0);
+const x13 = ref(props.value[0][2] || 0);
 
-const y1 = ref(props.value[0][1] || 0);
-const y2 = ref(props.value[1][1] || 0);
-const y3 = ref(props.value[2][1] || 0);
+const x21 = ref(props.value[1][0] || 0);
+const x22 = ref(props.value[1][1] || 0);
+const x23 = ref(props.value[1][2] || 0);
 
-const z1 = ref(props.value[0][2] || 0);
-const z2 = ref(props.value[1][2] || 0);
-const z3 = ref(props.value[2][2] || 0);
+const x31 = ref(props.value[2][0] || 0);
+const x32 = ref(props.value[2][1] || 0);
+const x33 = ref(props.value[2][2] || 0);
+
+
 
 </script>
+
 
 <style scoped>
 .no-spinners ::-webkit-inner-spin-button,
@@ -61,6 +58,7 @@ const z3 = ref(props.value[2][2] || 0);
 
 .vector-input input {
     width: 50px;
-    margin-right: 5px;
+    margin: 2px;
+    border: 1px solid #ccc;
 }
 </style>

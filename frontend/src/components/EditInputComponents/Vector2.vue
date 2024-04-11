@@ -33,9 +33,9 @@ const y = ref(props.value[1] || 0);
 .vector-input {
     display: flex;
 }
-
 .vector-input input {
     width: 50px;
-    margin-right: 5px;
+    margin: 2px;
+    border: 1px solid #ccc;
 }
 </style>

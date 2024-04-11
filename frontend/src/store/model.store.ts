@@ -68,7 +68,7 @@ export const modelStore: any = defineStore("models", () => {
      */
     const fetchLocally = async () => {
         try {
-            const response = await fetch('saveData.json');
+            const response = await fetch('backend_data.json');
             const data = await response.json();
             const modelData = data["models"];
            
