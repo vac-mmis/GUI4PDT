@@ -12,12 +12,12 @@
         <v-sheet v-if="openMenu && getPDT.name" class="w-full h-full">
             <v-expansion-panels>
                 <!-- Elevation map control -->
-                <v-expansion-panel v-if="elevationMapController">
+                <v-expansion-panel v-if="elevationMapControllers">
                     <v-expansion-panel-title>
                         <h1 class="text-subtitle-1">Elevation Map</h1>
                     </v-expansion-panel-title>
                     <v-expansion-panel-text>
-                        <ControlButtons :controllers="[elevationMapController]" />
+                        <ControlButtons :controllers="elevationMapControllers" />
                     </v-expansion-panel-text>
                 </v-expansion-panel>
 
@@ -86,7 +86,7 @@ const openMenu = ref(false);
 const changePDT = () => setStatus({ status: `waiting`, message: `Wait for user PDT selection` });
 
 // Objects to control
-const elevationMap: ComputedRef<Map | undefined> = computed(() => getPDT.value.getElevationMap());
+const elevationMaps: ComputedRef<Map[] | undefined> = computed(() => getPDT.value.getElevationMaps());
 const objects: ComputedRef<PDTObject[]> = computed(() => getPDT.value.getObjects());
 
 // Updaters
@@ -95,9 +95,11 @@ const updateGlobal = ref(0);
 
 // Controllers
 const objectControllers = (object: PDTObject): Controller<any>[] => object.getControllers();
-const elevationMapController = elevationMap.value?.getController();
+const elevationMapControllers = elevationMaps.value?.map((elevation_map) => elevation_map.getController());
 
 const globalObjectsControllers = Controller.buildGlobalBooleanController(
     objects.value.map((object) => objectControllers(object))
 );
+
+
 </script>

@@ -24,5 +24,5 @@ export interface ObjectJSON {
 export interface PDTJSON {
     name: string;
     objects: Record<string,ObjectJSON>;
-    elevationMap?: [number, number, number, number][];
+    elevationMaps?: [string,[number, number, number, number][]][];
 }

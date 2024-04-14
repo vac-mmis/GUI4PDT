@@ -6,7 +6,7 @@
 
 import type { MultiVonMisesJSON } from "@/interfaces/distribution";
 import { MultivariateNormal } from "@/models/Distributions";
-import { vectorToKaTeX } from "@/utils";
+import { vectorToKaTeX } from "@/utils/katex";
 
 /**
  * Implementation of multivariate Von Mises distribution.
@@ -107,6 +107,9 @@ export class MultivariateVonMises implements MultiVonMisesJSON {
         );
     }
 
+
+    
+
     /**
      * Give flatten `N` vectors from distribution.
      *
@@ -129,7 +132,7 @@ export class MultivariateVonMises implements MultiVonMisesJSON {
      * @returns Von Mises representation as 1000 flatten vectors.
      */
     public representation(relative: boolean = false): number[] {
-        return this.randomN(1000, relative);
+        return this.randomN(100, relative);
     }
 
     public toString(): string {
@@ -137,4 +140,6 @@ export class MultivariateVonMises implements MultiVonMisesJSON {
         const kappaString = vectorToKaTeX(this.kappa);
         return `Distribution : Von-Mises distribution with :\n * $\\mu = ${meanString}$\n * $\\kappa = ${kappaString}$`;
     }
+
+    
 }

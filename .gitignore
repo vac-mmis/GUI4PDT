@@ -21,3 +21,6 @@ docs/.vitepress/cache
 *.sw?
 .obsidian
 backend/saveData.json
+backend/data/dol_pdt/modify.py
+backend/data/dol_pdt/test.py
+backend/data/world_2/create_water.py

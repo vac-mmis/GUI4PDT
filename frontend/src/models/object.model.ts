@@ -30,7 +30,7 @@ export class PDTObject extends Group {
     /** Object material. Used to create class representation. */
     readonly material: Material;
     /** Object location. @remark `this._location = this.children[1]`. */
-    private _location: Location;
+    readonly location: Location;
     /** Object rotation. @remark `this._rotation = this.children[2]`. */
     private _rotation: Rotation;
     
@@ -57,12 +57,17 @@ export class PDTObject extends Group {
         this.add(this.class);
 
         // setup location from JSON data
-        this._location = new Location(this, objJSON.location);
-        this.add(this._location);
+        this.location = new Location(this, objJSON.location);
+        this.add(this.location);
+        
+
+
 
         // setup rotation from JSON data
         this._rotation = new Rotation(this, objJSON.rotation);
         this.add(this._rotation);
+
+        
     }
 
     /**
@@ -74,7 +79,7 @@ export class PDTObject extends Group {
 
     public getControllers = (): Controller<any>[] => [
         this.class.getController(),
-        this._location.getController(),
+        this.location.getController(),
         this._rotation.getController(),
     ];
 
@@ -88,7 +93,7 @@ export class PDTObject extends Group {
      * @returns Object properties details.
      */
     public getDetails(t: number): Record<string, ObjectDetails> {
-        t = Math.trunc(t) % this._location.dist.length;
+        t = Math.trunc(t) % this.location.dist.length;
 
      
 
@@ -98,7 +103,7 @@ export class PDTObject extends Group {
             //     representation: undefined,
             // },
             location: {
-                description: this._location.dist[t].toString(),
+                description: this.location.dist[t].toString(),
                 representation: undefined,
             },
             rotation: {
@@ -131,7 +136,7 @@ export class PDTObject extends Group {
         this.class.update(time);
 
         // update object position
-        this._location.update(time);
+        this.location.update(time);
 
         // update object rotation
         this._rotation.update(time);
