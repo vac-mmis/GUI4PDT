@@ -3,11 +3,12 @@
     <div v-if="getStatus.status === `loading world` || getStatus.status === `success`"
         class="position-absolute h-100 w-100 d-flex justify-center align-center z-0">
 
-        <ThreeScene @click="clickedTest" :key="sceneKey" @update="updateDetails" />
+        <ThreeScene :key="sceneKey" @update="updateDetails" />
     </div>
 
     <!-- Scene controllers (menu, slider) -->
-    <div v-if="getStatus.status === `success`" class="d-flex flex-column justify-space-between align-center h-100 w-100">
+    <div v-if="getStatus.status === `success`"
+        class="d-flex flex-column justify-space-between align-center h-100 w-100">
         <div class="w-100 d-flex flex-row justify-space-between">
             <SceneMenu @update="updateDetails" class="position-relative overflow-visible z-1" />
 
@@ -15,10 +16,9 @@
                 <ObjectDetails :key="detailsKey" :time="timeLength > 1 ? selectedTime : 0" />
             </div>
 
-
-
-
         </div>
+
+
         <div v-if="timeLength > 1" class="position-relative w-75 ma-6 z-1">
             <TimeSlider @time="(t: number) => (selectedTime = t)" />
         </div>
@@ -57,7 +57,8 @@
 <script setup lang="ts">
 
 
-import { ref, onBeforeUnmount } from "vue";
+
+import { onBeforeMount, onBeforeUnmount, onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 
 
@@ -68,27 +69,35 @@ import SceneMenu from "@/components/Plot/Scene/SceneMenu.vue";
 import TimeSlider from "@/components/Plot/Scene/TimeSlider.vue";
 import ThreeScene from "@/components/Plot/Scene/ThreeScene.vue";
 
+
 import { PDTStore } from "@/store/pdt.store";
 import { modelStore } from "@/store/model.store";
 import { worldStore } from "@/store/world.store";
 import { materialStore } from "@/store/material.store";
-import { onBeforeMount } from "vue";
-import { Manager } from "socket.io-client";
 import { useRouter } from "vue-router";
+import { Manager, Socket } from "socket.io-client";
+import type { DefaultEventsMap } from "@socket.io/component-emitter";
 
-const router = useRouter();
-
-const manager = new Manager("http://localhost:3000", { transports: ['websocket'] });
-const socket = manager.socket("/");
 
 const models = modelStore();
 const pdts = PDTStore();
 const materials = materialStore();
-const world = worldStore();
 
-const { timeLength, getPDT } = storeToRefs(PDTStore());
+const router = useRouter();
+
+const { timeLength } = storeToRefs(PDTStore());
 const { getStatus } = storeToRefs(worldStore());
 
+const { getPDT } = storeToRefs(PDTStore());
+const world = worldStore();
+
+let manager = null;
+let socket: Socket<DefaultEventsMap, DefaultEventsMap> | null = null;
+
+const updateScene = () => {
+    sceneKey.value += 1;
+    sceneKey.value %= 2;
+}
 
 const selectedTime = ref<number>(0);
 
@@ -98,34 +107,23 @@ const updateDetails = () => {
     detailsKey.value %= 2;
 };
 
+
 const sceneKey = ref(0);
 
-const updateScene = () => {
-    sceneKey.value += 1;
-    sceneKey.value %= 2;
-}
 
 
-
-const clickedTest = () => {
-
-}
-
-onBeforeMount(async () => {
-
-    if (!getPDT.value.name){
-        router.push("/")
-    }
+onBeforeMount(() => {
 
     world.setStatus({ status: "loading PDT", message: "Fetching selected PDT..." });
     const offlineMode = import.meta.env.VITE_OFFLINE_MODE === 'true';
 
     if (offlineMode) {
 
+
         models.fetchLocally()
             .then(() => materials.fetchLocally())
             .then(() => pdts.listLocally()).then((pdtList: string[]) => {
-               
+
             })
             .catch((err: string) => {
                 console.error(err);
@@ -142,11 +140,14 @@ onBeforeMount(async () => {
                 }));
 
     } else {
+        manager = new Manager("http://localhost:3000", { transports: ['websocket'] });
+        socket = manager.socket("/");
+
         socket.on("connect", () => {
             models.fetchRemotely()
                 .then(() => materials.fetchRemotely())
                 .then(() => pdts.list()).then((pdtList: string[]) => {
-                  
+
                 })
                 .catch((err: string) => {
                     console.error(err);
@@ -197,13 +198,17 @@ onBeforeMount(async () => {
                 })
             updateScene();
         })
+    }
 
+});
+onBeforeUnmount(() => {
+    if (socket) {
+        socket.disconnect();
     }
 });
 
-onBeforeUnmount(() => {
-    socket.disconnect();
-});
+
+
 
 
 </script>
@@ -219,6 +224,7 @@ onBeforeUnmount(() => {
     cursor: pointer;
     display: flex;
 }
+
 .icon-overlay-timeline {
     position: absolute;
     bottom: 90px;

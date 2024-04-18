@@ -142,7 +142,7 @@ export class PDT {
                 
                 const parts = path.basename(el_map).split("_elevation_map.csv");
                 const materialName = parts[0].split("_").slice(-1)[0];
-                console.log(parts)
+              
                 await parseMap(el_map)
                     .then((res) => {
                         this.elevationMaps!.push([materialName,res]);

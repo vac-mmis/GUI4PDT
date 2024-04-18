@@ -13,7 +13,8 @@ import type { WorldContent } from "@/World/interface";
 import { materialStore } from "@/store/material.store";
 import type { MultivariateNormal } from "./Distributions";
 import type { MultiNormalJSON } from "@/interfaces/distribution";
-
+import axios from "axios";
+import JSZip from 'jszip';
 
 /**
  * Implements PDT representation, including objects and global data.
@@ -69,11 +70,15 @@ export class PDT extends Group implements WorldContent {
 
         }
 
-        
+
+       
+
+
+
 
     }
 
-    public async loadData(path:string){
+    public async loadData(path: string) {
         const response = await fetch(path);
         if (!response.ok) {
             throw new Error('Network response was not ok');

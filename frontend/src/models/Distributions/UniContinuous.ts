@@ -56,4 +56,8 @@ export class UniformContinuous implements UniContinuousJSON {
         const paramsString = matrixToKaTeX(this.params);
         return `Distribution : $\\mathcal{U}_{a,b}$ with : \n - mean : $${meanString}$ \n - params : $${paramsString}$`;
     }
+
+   
+    
+    
 }

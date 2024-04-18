@@ -4,17 +4,21 @@
 import { createRouter, createWebHistory } from "vue-router";
 const ThreeView = () => import("@/views/PlotView.vue");
 const AboutView = () => import("@/views/AboutView.vue");
-const ImportView = () => import("@/views/FileHandlerView.vue");
 const OpenView = () => import("@/views/OpenView.vue")
-const CSVView = () => import("@/views/CSVView.vue")
-const NewFromEmptyView = () => import("@/views/NewFromEmptyView.vue")
+const Startup = () => import("@/views/StartHandler.vue")
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
+        {
+            path: "/:pathMatch(.*)",
+            redirect: "/" 
+        },
+
+     
 
         {
-            path: "/",
+            path: "/open",
             name: "Open Project",
             component: OpenView,
             meta: {
@@ -41,6 +45,15 @@ const router = createRouter({
             path: "/plot",
             name: "See Plot",
             component: ThreeView,
+            meta: {
+                icon: "fa fa-info",
+            },
+        },
+
+        {
+            path: "/",
+            name: "start",
+            component: Startup,
             meta: {
                 icon: "fa fa-info",
             },
@@ -73,9 +86,12 @@ router.beforeEach((to, from, next) => {
     // Check if it's a page refresh
     const isPageRefresh = !from.name;
 
+   
+
     // Check if the target route is not the current route to avoid infinite redirection
-    if (isPageRefresh && to.name !== "Open Project") {
-        next({ name: "Open Project" });
+    if (isPageRefresh && to.path == "/plot") {
+        next("/");
+        //next({ name: "Open Project" });
     } else {
         // Continue with the regular navigation
         next();

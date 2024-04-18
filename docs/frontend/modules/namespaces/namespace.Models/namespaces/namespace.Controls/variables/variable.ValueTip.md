@@ -26,7 +26,7 @@ Dictionary which links command values and their tips.
 
 ### `move`
 
-> **move**: `string` = `"Distribution as random mouvement"`
+> **move**: `string` = `"Distribution as random movement"`
 
 ## Defined In
 

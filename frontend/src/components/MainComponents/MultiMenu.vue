@@ -52,7 +52,7 @@ const menu = [
             //     ]
             // ),
             new CustomMenu(
-                "Open", "fas fa-file-import", "/",
+                "Open", "fas fa-file-import", "/open",
                 [
 
                 ]
@@ -69,6 +69,9 @@ const menu = [
     ),
     new CustomMenu(
         "Plot", "fas fa-mountain-sun", "/plot"
+    ),
+    new CustomMenu(
+        "About", "$info", "/about"
     ),
     
 

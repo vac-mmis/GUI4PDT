@@ -168,9 +168,9 @@ export function newfromempty(req: Request, res: Response): void {
 
         fs.writeFile(filePath, JSON.stringify(getEmpty(projectName), null, 2), (err) => {
             if (err) {
-                console.error('Error writing file:', err);
+                logger.error('Error writing file:', err);
             } else {
-                console.log(`File ${filePath} created successfully in ${projectPath}`);
+                logger.info(`File ${filePath} created successfully in ${projectPath}`);
             }
         });
 

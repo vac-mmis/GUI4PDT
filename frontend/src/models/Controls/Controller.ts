@@ -26,7 +26,7 @@ export const ValueTip = {
     visible: "Show",
     alpha: "Distribution as transparency",
     plot: "Distribution as points",
-    move: "Distribution as random mouvement",
+    move: "Distribution as random movement",
 };
 
 /**

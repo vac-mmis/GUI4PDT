@@ -18,7 +18,7 @@ import { PDTStore } from "@/store/pdt.store";
  * Defines world status message format
  */
 export type Status = {
-    status: "waiting" | "loading PDT" | "loading world" | "error" | "success";
+    status: "waiting" | "loading PDT" | "loading world" | "error" | "success"| "ready";
     message: string;
 };
 

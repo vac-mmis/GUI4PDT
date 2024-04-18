@@ -186,6 +186,7 @@ export class Location extends Group {
                 this.updateDirection(time);
                 const dist = this.dist[index];
                 if ("type" in dist) {
+                    
                     (this.children[0] as Representation).update(dist.representation(true));
                    
                 }

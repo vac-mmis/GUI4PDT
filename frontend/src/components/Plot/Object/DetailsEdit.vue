@@ -109,7 +109,7 @@ const distToValue = (name: string, dist: Distribution | number[] | number | stri
 
     //TODO GIVE CORRECT START VALUES FOR EACH COMPONENT
 
-    console.log(name, dist, componentType)
+   
 
     if (name === "none") {
         return dist;
@@ -127,9 +127,7 @@ const distToValue = (name: string, dist: Distribution | number[] | number | stri
 
 };
 
-function logging(value: any) {
-    console.log(typeof value)
-}
+
 
 
 //TODO add group with element and group id in UI
