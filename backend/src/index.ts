@@ -23,7 +23,8 @@ import path from "path";
 import fs from "fs";
 
 const port = process.env.PORT ?? 3000;
-const wsPort = process.env.WEBSOCKET_PORT ?? 8080;
+
+const wsPort = process.env.WEBSOCKET_PORT ?? 3030;
 
 const app = express();
 
@@ -78,7 +79,7 @@ wss.on("connection", (ws: WebSocket) => {
  */
 app.use(
     cors({
-        origin: "http://localhost:5173", // Ersetze dies durch den tatsächlichen Ursprung deiner Vue.js-App
+        origin: process.env.CORS_ORIGIN_DOCKER || "http://localhost:5173", // Ersetze dies durch den tatsächlichen Ursprung deiner Vue.js-App
         methods: ["GET", "POST"],
     })
 )

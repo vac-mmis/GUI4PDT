@@ -14,4 +14,5 @@ RUN npm run build
 
 # Export port and run application
 EXPOSE 3000
+EXPOSE 3030
 CMD  ["npm" ,"start"]

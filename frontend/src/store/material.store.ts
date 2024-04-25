@@ -80,7 +80,7 @@ export const materialStore: any = defineStore("materials", () => {
     }
 
     const initWebSocket = () => {
-        const ws = new WebSocket("ws://localhost:8080");
+        const ws = new WebSocket("ws://localhost:3030");
 
         ws.onmessage = async (event) => {
             if (event.data === "new material") {
