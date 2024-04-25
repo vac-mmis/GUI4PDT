@@ -5,4 +5,3 @@
  */
 
 export * from "./katex";
-export * from "./files";

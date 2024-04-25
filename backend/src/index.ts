@@ -15,23 +15,28 @@ import { PDTStore, ModelStore, MaterialStore } from "@/store";
 import { logger } from "@/utils/logger";
 
 import http from "http";
-import { Server } from "socket.io";
+import WebSocket from "ws";
+
+import { debounce } from "lodash";
 import chokidar from "chokidar";
 import path from "path";
-import fs, { readdir } from "fs";
-
-
+import fs from "fs";
 
 const port = process.env.PORT ?? 3000;
+const wsPort = process.env.WEBSOCKET_PORT ?? 8080;
+
 const app = express();
 
-const server = http.createServer(app)
-const io = new Server(server, { transports: ['websocket'] });
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ port: wsPort as number });
 
 const pdtsPath = path.resolve(process.env.DATA ?? "").normalize();
 const modelsPath = path.resolve(process.env.MODELS ?? "").normalize();
 const materialsPath = path.resolve(process.env.MATERIALS ?? "").normalize();
 
+/**
+ * Initializing file watching that notices if the data has changed
+ */
 const watcherModels = chokidar.watch(modelsPath, {
     ignored: /(^|[/\\])\../,
     persistent: true,
@@ -45,28 +50,40 @@ const watcherMaterials = chokidar.watch(materialsPath, {
     persistent: true,
 });
 
-//TODO websockets
-io.on('connection', (socket) => {
-    console.log('Client connected');
-    io.emit("new pdt", "OK");
-    io.emit("new material", "OK");
-    io.emit("new model", "OK");
+/**
+ * Send a message to the client to reload the pdt if the model or material has changed and has already been reloaded
+ */
+wss.on("connection", (ws: WebSocket) => {
+    console.log("Client connected");
 
-
-    socket.on('disconnect', () => {
-        console.log('Client disconnected');
+    ws.on("message", (data: Buffer, isBinary: boolean) => {
+        if (!isBinary) {
+            const message = data.toString();
+            if (message === "update pdt") {
+                wss.clients.forEach((client) => {
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send("new pdt");
+                    }
+                });
+            }
+        }
+    });
+    ws.on("close", () => {
+        console.log("Client disconnected");
     });
 });
 
-
-app.use(cors(
-    {
-        origin: 'http://localhost:5173', // Ersetze dies durch den tatsächlichen Ursprung deiner Vue.js-App
-        methods: ['GET', 'POST'],
-    }
-)).use(bodyParser.json({ limit: "50mb" }))
+/**
+ * Init the server with configuration
+ */
+app.use(
+    cors({
+        origin: "http://localhost:5173", // Ersetze dies durch den tatsächlichen Ursprung deiner Vue.js-App
+        methods: ["GET", "POST"],
+    })
+)
+    .use(bodyParser.json({ limit: "50mb" }))
     .use("/api", router);
-
 
 /**
  * This async reloadProjectNames function checks the PDT directory and adapts the name inside the PDT definition for each file according to the project folder name
@@ -75,7 +92,6 @@ const reloadProjectNames = async () => {
     const dirs = await fs.promises.readdir(pdtsPath);
 
     try {
-
         dirs.forEach(async (dir) => {
             const projectPath = path.join(pdtsPath, dir);
             const projectName = dir;
@@ -83,117 +99,113 @@ const reloadProjectNames = async () => {
             const files = await fs.promises.readdir(projectPath);
 
             files.forEach((file) => {
-
                 const filePath = path.join(projectPath, file);
                 if (path.extname(file) === ".json") {
-
-                    // Read the JSON file
-                    const jsonData = JSON.parse(fs.readFileSync(filePath, 'utf-8') === "" ? "{}" : fs.readFileSync(filePath, 'utf-8'));
-
-                    // Check if the JSON has a 'name' attribute
-                    if (jsonData.hasOwnProperty('name')) {
-                        // Update the 'name' attribute
+                    const jsonData = JSON.parse(
+                        fs.readFileSync(filePath, "utf-8") === ""
+                            ? "{}"
+                            : fs.readFileSync(filePath, "utf-8")
+                    );
+                    // eslint-disable-next-line no-prototype-builtins
+                    if (jsonData.hasOwnProperty("name")) {
                         jsonData.name = projectName;
-
-                        // Write the updated JSON back to the file
                         fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2));
                     }
-
                 }
-
             });
         });
-
-    } catch (error: any) {
-        logger.error(error, error.message)
+    } catch (error) {
+        logger.error(error);
     }
-
-
-}
-
+};
 
 /**
  * This async setup function loads all necessary folders to serve PDTs and starts Express.JS server
  */
 const setup = async () => {
-
     logger.info(`Backend starting...`);
 
-    //TODO start watching files and updating also messaging the client vie websoicket
     let isProcessingMat = false;
     let isProcessingMod = false;
     let isProcessingPDT = false;
 
-    //load and save data offine once at start
-    await MaterialStore.load().catch((err) => logger.error(err, err.message))
+    await MaterialStore.load()
+        .catch((err) => logger.error(err, err.message))
         .then(() => ModelStore.load().catch((err) => logger.error(err, err.message)))
         .then(() => reloadProjectNames())
         .then(() => PDTStore.load().catch((err) => logger.error(err, err.message)))
         .then(() => {
-            const models = ModelStore.get(); // get all models
-            const materials = MaterialStore.get(); // get all materials
-            const pdts = PDTStore.get(); // get all pdts
+            const models = ModelStore.get();
+            const materials = MaterialStore.get();
+            const pdts = PDTStore.get();
 
-            const saveData: any = {
-                "models": models,
-                "materials": materials,
-                "pdts": pdts
-            }
+            const saveData: unknown = {
+                models: models,
+                materials: materials,
+                pdts: pdts,
+            };
 
-
-            fs.writeFile('offline/backend_data.json', JSON.stringify(saveData), (err) => {
+            fs.writeFile("offline/backend_data.json", JSON.stringify(saveData), (err) => {
                 if (err) throw err;
-                logger.info('All data has been saved into a file: offline/backend_data.json');
+                logger.info("All data has been saved into a file: offline/backend_data.json");
             });
-
-
         });
 
-    watcherMaterials.on("all" || "add", async () => {
+    /**
+     * Send a message to the client via websockets when the data has changed.
+     * Use lodash's debounce(), to minimize multiple calls.
+     */
+    const debounceMaterialsUpdate = debounce(async () => {
         if (!isProcessingMat) {
             isProcessingMat = true;
             await MaterialStore.load().catch((err) => logger.error(err, err.message));
-            io.emit("new material");
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send("new material");
+                }
+            });
             isProcessingMat = false;
         }
-    });
-    watcherModels.on("all" || "add", async () => {
+    }, 500);
+
+    const debounceModelsUpdate = debounce(async () => {
         if (!isProcessingMod) {
             isProcessingMod = true;
             await ModelStore.load().catch((err) => logger.error(err, err.message));
-            io.emit("new model");
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send("new model");
+                }
+            });
             isProcessingMod = false;
         }
-    });
+    }, 500);
 
-    watcherPDT.on("all", async () => {
+    const debouncePDTUpdate = debounce(async () => {
         if (!isProcessingPDT) {
             isProcessingPDT = true;
             await reloadProjectNames();
             try {
-                await PDTStore.load()
-                io.emit("new pdt");
-            } catch (err: any) {
-                logger.error(err, err.message)
-
+                await PDTStore.load();
+                wss.clients.forEach((client) => {
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send("new pdt");
+                    }
+                });
+            } catch (err) {
+                logger.error(err);
             }
-
             isProcessingPDT = false;
-
         }
     });
 
-    
-
-
-
+    watcherMaterials.on("all", debounceMaterialsUpdate);
+    watcherModels.on("all", debounceModelsUpdate);
+    watcherPDT.on("all", debouncePDTUpdate);
 
     server.listen(port, () => {
         logger.info(`Backend started successfully! Server listen on port ${port}`);
     });
-
-
-
 };
 
 setup();

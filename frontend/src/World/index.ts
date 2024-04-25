@@ -82,12 +82,14 @@ export class World<T extends WorldContent> {
         this.scene.add(ambientLight, mainLight);
 
         // Add helpers (axis and grid)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { axesHelper, gridHelper } = createHelpers();
 
-        //Remove Grid helper TODO
+        /**
+         * Add Grid helper if you want to
+         */
         this.scene.add(axesHelper);
-
-        
+        //this.scene.add(gridHelper);
 
         // First rendering
         this.renderer.render(this.scene, this.camera);

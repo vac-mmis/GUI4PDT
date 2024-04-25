@@ -9,9 +9,6 @@ import { Request, Response } from "express";
 import { logger } from "@/utils/logger";
 import multer from "multer";
 import path from "path";
-import fs from "fs";
-import unzipper from 'unzipper';
-
 
 //TODO documentation for uploading file
 /**
@@ -26,66 +23,46 @@ const pdtPath = path.resolve(process.env.DATA ?? "").normalize();
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      
         const projectName = req.body.projectName;
         const projectPath = path.join(pdtPath, projectName).toString();
 
-
-
-
         cb(null, projectPath);
-
     },
     filename: (req, file, cb) => {
         const filename = file.originalname;
         cb(null, filename);
     },
-
 });
 const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-
-    const allowedFileTypes = [
-        "text/csv",
-    ];
+    const allowedFileTypes = ["text/csv"];
 
     if (allowedFileTypes.includes(file.mimetype)) {
         cb(null, true);
     } else {
         cb(new Error("This file is not allowed"));
     }
-}
+};
 
 const upload = multer({
     storage: storage,
-    fileFilter: fileFilter
+    fileFilter: fileFilter,
 });
 const multerUploadMulti = upload.single("csvFile");
 
 export function uploadCSV(req: Request, res: Response): void {
-
-
     multerUploadMulti(req, res, (err) => {
-
         if (err) {
             logger.error(err, err.message);
 
             res.status(500).json({
-                "success": false,
-                "message": err.message
+                success: false,
+                message: err.message,
             });
-
         } else {
-           
-
-
-                res.status(200).json({
-                    "success": true,
-                    "message": "File(s) uploaded successfully."
-                });
-
-           
+            res.status(200).json({
+                success: true,
+                message: "File(s) uploaded successfully.",
+            });
         }
     });
-
 }
-

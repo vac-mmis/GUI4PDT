@@ -7,9 +7,10 @@ import { ref, computed, toRaw } from "vue";
 import axios from "axios";
 import { defineStore } from "pinia";
 
-
 import type { PDTJSON } from "@/interfaces/pdt";
 import { PDT } from "@/models/pdt.model";
+
+const offlineMode = import.meta.env.VITE_OFFLINE_MODE === "true";
 
 /**
  * PDT store handle by Pinia.
@@ -35,38 +36,44 @@ export const PDTStore: any = defineStore("PDTs", () => {
      */
     const getPDTList = computed((): string[] => toRaw(_list.value));
 
+    /**
+     * Fetch and returns List of available PDT from the backend API
+     *
+     * @returns PDT list
+     */
+    async function listRemotely(): Promise<string[]> {
+        _list.value = await axios.get(`pdts/list`).then((res) => res.data);
+        return _list.value;
+    }
+
+    /**
+     * Fetch and returns List of available PDT from the a file
+     *
+     * @returns PDT list
+     */
+    async function listLocally(): Promise<string[]> {
+        const response = await fetch("backend_data.json");
+        const data = await response.json();
+        const pdtData = data["pdts"];
+
+        _list.value = pdtData.map((pdt: PDTJSON) => pdt.name);
+        return _list.value;
+    }
 
     /**
      * Fetch and returns List of available PDT.
      *
      * @returns PDT list
      */
-    //TODO removed check so that the lsit always updates
     async function list(): Promise<string[]> {
-
-        _list.value = await axios.get(`pdts/list`).then((res) => res.data);
-
-        return _list.value;
-    }
-    /**
-    * Fetch and returns List of available PDT.
-    *
-    * @returns PDT list
-    */
-    //TODO removed check so that the lsit always updates
-    async function listLocally(): Promise<string[]> {
-        if (_list.value.length === 0) {
-
-
-            const response = await fetch('backend_data.json');
-            const data = await response.json();
-            const pdtData = data["pdts"];
-
-
-
-            _list.value = pdtData.map((pdt: PDTJSON) => pdt.name);
+        if (_list.value.length > 0) {
+            return _list.value;
         }
-        return _list.value;
+        if (offlineMode) {
+            return listLocally();
+        } else {
+            return listRemotely();
+        }
     }
 
     /**
@@ -80,14 +87,12 @@ export const PDTStore: any = defineStore("PDTs", () => {
         return toRaw(_PDTs.value as PDT[]).find((pdt: PDT) => pdt.name === pdtName);
     }
 
-
     /**
      * Fetch, load and store desired PDT (by name) from backend API.
      *
      * @param name Name of PDT to fetch.
      */
     const fetchRemotely = async (pdtName: string) => {
-
         const pdt = await axios.get(`pdt/${pdtName}`).then((res) => new PDT(res.data as PDTJSON));
         if (!pdt) {
             throw new Error("PDT not found");
@@ -95,7 +100,6 @@ export const PDTStore: any = defineStore("PDTs", () => {
             _PDTs.value.push(pdt);
             _selectedPDT.value = pdt;
         }
-
     };
 
     /**
@@ -104,16 +108,13 @@ export const PDTStore: any = defineStore("PDTs", () => {
      * @param name Name of PDT to fetch.
      */
     const fetchLocally = async (pdtName: string) => {
-        let pdt = find(pdtName)
-
-  
+        let pdt = find(pdtName);
 
         if (!pdt) {
-
-            const response = await fetch('backend_data.json');
+            const response = await fetch("backend_data.json");
             const data = await response.json();
 
-            const pdtData = data["pdts"].find((pdt: PDTJSON) => pdt.name === pdtName)
+            const pdtData = data["pdts"].find((pdt: PDTJSON) => pdt.name === pdtName);
             pdt = new PDT(pdtData as PDTJSON);
             if (!pdt) {
                 throw new Error("PDT not found");
@@ -124,10 +125,26 @@ export const PDTStore: any = defineStore("PDTs", () => {
         } else {
             _selectedPDT.value = pdt;
         }
-
-     
-
     };
 
-    return { timeLength, getPDT, getPDTList, list, listLocally, fetchRemotely, fetchLocally, find };
+    async function fetchData(pdtName: string) {
+        if (offlineMode) {
+            return fetchLocally(pdtName);
+        } else {
+            return fetchRemotely(pdtName);
+        }
+    }
+    const initWebSocket = () => {
+        const ws = new WebSocket("ws://localhost:8080");
+
+        ws.onmessage = async (event) => {
+            if (event.data === "new pdt") {
+                await fetchData(_selectedPDT.value.name);
+            }
+        };
+    };
+
+    initWebSocket();
+
+    return { timeLength, getPDT, getPDTList, list, fetchData, find };
 });

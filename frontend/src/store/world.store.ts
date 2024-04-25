@@ -18,7 +18,7 @@ import { PDTStore } from "@/store/pdt.store";
  * Defines world status message format
  */
 export type Status = {
-    status: "waiting" | "loading PDT" | "loading world" | "error" | "success"| "ready";
+    status: "waiting" | "loading PDT" | "loading world" | "error" | "success" | "ready";
     message: string;
 };
 
@@ -34,7 +34,6 @@ export const worldStore: any = defineStore("worldStore", () => {
     /** Returns stored world */
     const getWorld = computed((): World<PDT> => toRaw(_World.value as World<PDT>));
 
-     
     /** Returns world loading status */
     const getStatus = computed((): Status => toRaw(_status.value));
 

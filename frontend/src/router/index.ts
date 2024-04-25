@@ -4,18 +4,20 @@
 import { createRouter, createWebHistory } from "vue-router";
 const ThreeView = () => import("@/views/PlotView.vue");
 const AboutView = () => import("@/views/AboutView.vue");
-const OpenView = () => import("@/views/OpenView.vue")
-const Startup = () => import("@/views/StartHandler.vue")
+const OpenView = () => import("@/views/OpenView.vue");
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
             path: "/:pathMatch(.*)",
-            redirect: "/" 
+            redirect: "/",
         },
 
-     
+        {
+            path: "/",
+            redirect: "/plot",
+        },
 
         {
             path: "/open",
@@ -50,14 +52,6 @@ const router = createRouter({
             },
         },
 
-        {
-            path: "/",
-            name: "start",
-            component: Startup,
-            meta: {
-                icon: "fa fa-info",
-            },
-        },
         // {
         //     path: "/csv",
         //     name: "Add CSV",
@@ -74,28 +68,7 @@ const router = createRouter({
         //         icon: "fa fa-info",
         //     },
         // },
-       
-        
     ],
-});
-
-
-//Router Navigation Guard to prevent from reloading errors
-
-router.beforeEach((to, from, next) => {
-    // Check if it's a page refresh
-    const isPageRefresh = !from.name;
-
-   
-
-    // Check if the target route is not the current route to avoid infinite redirection
-    if (isPageRefresh && to.path == "/plot") {
-        next("/");
-        //next({ name: "Open Project" });
-    } else {
-        // Continue with the regular navigation
-        next();
-    }
 });
 
 export default router;

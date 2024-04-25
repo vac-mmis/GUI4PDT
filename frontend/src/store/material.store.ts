@@ -12,6 +12,8 @@ import { defineStore } from "pinia";
 
 import type { MaterialFile } from "@/interfaces/assets";
 
+const offlineMode = import.meta.env.VITE_OFFLINE_MODE === "true";
+
 /**
  * Material store handle by Pinia.
  */
@@ -45,16 +47,26 @@ export const materialStore: any = defineStore("materials", () => {
      */
     const fetchLocally = async () => {
         try {
-            const response = await fetch('backend_data.json');
+            const response = await fetch("backend_data.json");
             const data = await response.json();
             const materialData = data["materials"];
-            
-            const materials = await Promise.all(materialData.map(async (material: MaterialFile) => loadMaterial(material)));
-            _materials.value.push(...materials)
+
+            const materials = await Promise.all(
+                materialData.map(async (material: MaterialFile) => loadMaterial(material))
+            );
+            _materials.value.push(...materials);
         } catch (err) {
             console.error("Error loading local material data:", err);
         }
     };
+
+    async function fetchData() {
+        if (offlineMode) {
+            return fetchLocally();
+        } else {
+            return fetchRemotely();
+        }
+    }
 
     /**
      * Returns desired material from storage with given name.
@@ -67,5 +79,17 @@ export const materialStore: any = defineStore("materials", () => {
         return toRaw(_materials.value).find((material) => material.name === name);
     }
 
-    return { length, fetchLocally, fetchRemotely, find,getMaterials };
+    const initWebSocket = () => {
+        const ws = new WebSocket("ws://localhost:8080");
+
+        ws.onmessage = async (event) => {
+            if (event.data === "new material") {
+                await fetchData();
+                ws.send("update pdt");
+            }
+        };
+    };
+    initWebSocket();
+
+    return { length, fetchData, find, getMaterials };
 });

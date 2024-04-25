@@ -1,50 +1,46 @@
 <template>
     <!-- Three Scene -->
-    <div v-if="getStatus.status === `loading world` || getStatus.status === `success`"
-        class="position-absolute h-100 w-100 d-flex justify-center align-center z-0">
-
+    <div
+        v-if="getStatus.status === `loading world` || getStatus.status === `success`"
+        class="position-absolute h-100 w-100 d-flex justify-center align-center z-0"
+    >
         <ThreeScene :key="sceneKey" @update="updateDetails" />
     </div>
 
     <!-- Scene controllers (menu, slider) -->
-    <div v-if="getStatus.status === `success`"
-        class="d-flex flex-column justify-space-between align-center h-100 w-100">
+    <div
+        v-if="getStatus.status === `success`"
+        class="d-flex flex-column justify-space-between align-center h-100 w-100"
+    >
         <div class="w-100 d-flex flex-row justify-space-between">
             <SceneMenu @update="updateDetails" class="position-relative overflow-visible z-1" />
 
             <div class="position-relative pa-6 z-1">
                 <ObjectDetails :key="detailsKey" :time="timeLength > 1 ? selectedTime : 0" />
             </div>
-
         </div>
-
 
         <div v-if="timeLength > 1" class="position-relative w-75 ma-6 z-1">
             <TimeSlider @time="(t: number) => (selectedTime = t)" />
         </div>
     </div>
 
+    <!-- PDT loader, used to switch PDT -->
+    <div v-if="getStatus.status === `waiting`" class="d-flex position-relative h-100 w-auto">
+        <PDTLoader />
+    </div>
 
     <!-- Loading overlay -->
-    <v-overlay :model-value="getStatus.status === `loading PDT` || getStatus.status === `loading world`" contained
-        class="align-center justify-center">
+    <v-overlay
+        :model-value="getStatus.status === `loading PDT` || getStatus.status === `loading world`"
+        contained
+        class="align-center justify-center"
+    >
         <div class="d-flex flex-column align-center">
             <span class="text-h5 text-primary pa-4">{{ getStatus.message }}</span>
             <v-progress-linear indeterminate color="primary"></v-progress-linear>
         </div>
     </v-overlay>
-
-    <!-- Icon overlay -->
-
-    <div v-if="timeLength > 1" class="icon-overlay-timeline d-none d-sm-flex">
-        <v-img :width="220" src="uni_logo.svg"></v-img>
-        <v-img :width="120" src="mmis_logo.svg"></v-img>
-    </div>
-    <div v-else class="icon-overlay d-none d-sm-flex">
-        <v-img :width="220" src="uni_logo.svg"></v-img>
-        <v-img :width="120" src="mmis_logo.svg"></v-img>
-    </div>
-
 
     <!-- See errors -->
     <div v-if="getStatus.status === `error`" class="d-flex align-center h-auto w-100 pa-10">
@@ -55,49 +51,21 @@
 </template>
 
 <script setup lang="ts">
-
-
-
-import { onBeforeMount, onBeforeUnmount, onMounted, ref } from "vue";
+import { ref } from "vue";
 import { storeToRefs } from "pinia";
 
-
 import ObjectDetails from "@/components/Plot/Object/ObjectDetails.vue";
-
+import PDTLoader from "@/components/Plot/Controls/PDTLoader.vue";
 
 import SceneMenu from "@/components/Plot/Scene/SceneMenu.vue";
 import TimeSlider from "@/components/Plot/Scene/TimeSlider.vue";
 import ThreeScene from "@/components/Plot/Scene/ThreeScene.vue";
 
-
 import { PDTStore } from "@/store/pdt.store";
-import { modelStore } from "@/store/model.store";
 import { worldStore } from "@/store/world.store";
-import { materialStore } from "@/store/material.store";
-import { useRouter } from "vue-router";
-import { Manager, Socket } from "socket.io-client";
-import type { DefaultEventsMap } from "@socket.io/component-emitter";
-
-
-const models = modelStore();
-const pdts = PDTStore();
-const materials = materialStore();
-
-const router = useRouter();
 
 const { timeLength } = storeToRefs(PDTStore());
 const { getStatus } = storeToRefs(worldStore());
-
-const { getPDT } = storeToRefs(PDTStore());
-const world = worldStore();
-
-let manager = null;
-let socket: Socket<DefaultEventsMap, DefaultEventsMap> | null = null;
-
-const updateScene = () => {
-    sceneKey.value += 1;
-    sceneKey.value %= 2;
-}
 
 const selectedTime = ref<number>(0);
 
@@ -107,110 +75,7 @@ const updateDetails = () => {
     detailsKey.value %= 2;
 };
 
-
 const sceneKey = ref(0);
-
-
-
-onBeforeMount(() => {
-
-    world.setStatus({ status: "loading PDT", message: "Fetching selected PDT..." });
-    const offlineMode = import.meta.env.VITE_OFFLINE_MODE === 'true';
-
-    if (offlineMode) {
-
-
-        models.fetchLocally()
-            .then(() => materials.fetchLocally())
-            .then(() => pdts.listLocally()).then((pdtList: string[]) => {
-
-            })
-            .catch((err: string) => {
-                console.error(err);
-            }).then(() => pdts.fetchLocally(getPDT.value.name ?? "default")
-                .catch((err: string) => {
-                    world.setStatus({ status: "error", message: err });
-                    console.error(err);
-                })
-                .finally(() => {
-                    world.setStatus({
-                        status: "loading world",
-                        message: `${getPDT.value.name} loaded successfully`,
-                    });
-                }));
-
-    } else {
-        manager = new Manager("http://localhost:3000", { transports: ['websocket'] });
-        socket = manager.socket("/");
-
-        socket.on("connect", () => {
-            models.fetchRemotely()
-                .then(() => materials.fetchRemotely())
-                .then(() => pdts.list()).then((pdtList: string[]) => {
-
-                })
-                .catch((err: string) => {
-                    console.error(err);
-                }).then(() => pdts.fetchRemotely(getPDT.value.name ?? "default")
-                    .catch((err: string) => {
-                        world.setStatus({ status: "error", message: err });
-                        console.error(err);
-                    })
-                    .finally(() => {
-                        world.setStatus({
-                            status: "loading world",
-                            message: `${getPDT.value.name} loaded successfully`,
-                        });
-                    }));
-
-        });
-
-
-        socket.on("new material", async () => {
-
-            await materials.fetchRemotely();
-
-            await pdts.fetchRemotely(getPDT.value.name)
-                .catch((err: any) => {
-                    world.setStatus({ status: "error", message: err });
-                    console.error(err);
-                })
-            updateScene();
-        })
-        socket.on("new model", async () => {
-
-            await models.fetchRemotely();
-
-            await pdts.fetchRemotely(pdts.getPDT.name)
-                .catch((err: any) => {
-                    world.setStatus({ status: "error", message: err });
-                    console.error(err);
-                })
-            updateScene();
-        })
-
-        socket.on("new pdt", async () => {
-
-            await pdts.fetchRemotely(pdts.getPDT.name)
-                .catch((err: string) => {
-                    world.setStatus({ status: "error", message: err });
-                    console.error(err);
-                })
-            updateScene();
-        })
-    }
-
-});
-onBeforeUnmount(() => {
-    if (socket) {
-        socket.disconnect();
-    }
-});
-
-
-
-
-
 </script>
 
 <style scoped>
