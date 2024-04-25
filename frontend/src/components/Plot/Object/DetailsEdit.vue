@@ -164,7 +164,7 @@ const distributionTypes: Record<string, any> = {
         groups: [
             {
                 name: "none",
-                component: "String",
+                component: "CustomString",
                 multiple: false,
             },
         ],
@@ -174,7 +174,7 @@ const distributionTypes: Record<string, any> = {
         groups: [
             {
                 name: "none",
-                component: "Combo",
+                component: "CustomCombo",
                 multiple: false,
             },
         ],
@@ -184,7 +184,7 @@ const distributionTypes: Record<string, any> = {
         groups: [
             {
                 name: "none",
-                component: "Vector3",
+                component: "CustomVector3",
                 multiple: false,
             },
         ],
@@ -194,7 +194,7 @@ const distributionTypes: Record<string, any> = {
         groups: [
             {
                 name: "none",
-                component: "Number",
+                component: "CustomNumber",
                 multiple: false,
             },
         ],
@@ -204,7 +204,7 @@ const distributionTypes: Record<string, any> = {
         groups: [
             {
                 name: "mass",
-                component: "ComboWithValue",
+                component: "CustomComboWithValue",
                 multiple: true,
             },
         ],
@@ -214,12 +214,12 @@ const distributionTypes: Record<string, any> = {
         groups: [
             {
                 name: "mean",
-                component: "Vector3",
+                component: "CustomVector3",
                 multiple: false,
             },
             {
                 name: "cov",
-                component: "Matrix3_3",
+                component: "CustomMatrix3x3",
                 multiple: false,
             },
         ],
@@ -229,7 +229,7 @@ const distributionTypes: Record<string, any> = {
         groups: [
             {
                 name: "params", //TODO when multiple take default from json , like how many  are there
-                component: "Vector2",
+                component: "CustomVector2",
                 multiple: true,
             },
         ],
@@ -239,12 +239,12 @@ const distributionTypes: Record<string, any> = {
         groups: [
             {
                 name: "mean",
-                component: "Vector3",
+                component: "CustomVector3",
                 multiple: false,
             },
             {
                 name: "kappa",
-                component: "Vector3",
+                component: "CustomVector3",
                 multiple: false,
             },
         ],

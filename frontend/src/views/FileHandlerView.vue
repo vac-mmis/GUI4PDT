@@ -4,7 +4,9 @@
         <v-container>
             <v-form @submit.prevent="submitFile" enctype="multipart/form-data">
                 <v-label>
-                    <h1 slot="default">Import</h1>
+                    <template v-slot:default>
+                        <h1>Import</h1>
+                    </template>
                 </v-label>
                 <v-spacer vertical></v-spacer>
                 <v-text-field
@@ -75,7 +77,7 @@ const submitFile = async () => {
 
     await axios
         .post("/upload", formData)
-        .then((response) => {})
+        .then(() => {})
         .catch((error) => {
             console.log(error.response.data);
         });

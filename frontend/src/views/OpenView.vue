@@ -3,7 +3,9 @@
     <div>
         <v-container>
             <v-label>
-                <h1 slot="default">Open</h1>
+                <template v-slot:default>
+                    <h1>Open</h1>
+                </template>
             </v-label>
             <v-card max-width="300">
                 <v-list dense :key="update">
