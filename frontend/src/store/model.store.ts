@@ -109,7 +109,9 @@ export const modelStore: any = defineStore("models", () => {
             }
         };
     };
-    initWebSocket();
+    if (import.meta.env.VITE_OFFLINE_MODE === "false") {
+        initWebSocket();
+    }
 
     return { length, fetchData, find, getModels };
 });

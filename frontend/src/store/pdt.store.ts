@@ -144,7 +144,9 @@ export const PDTStore: any = defineStore("PDTs", () => {
         };
     };
 
-    initWebSocket();
+    if (import.meta.env.VITE_OFFLINE_MODE === "false") {
+        initWebSocket();
+    }
 
     return { timeLength, getPDT, getPDTList, list, fetchData, find };
 });

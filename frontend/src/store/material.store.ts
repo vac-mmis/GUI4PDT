@@ -89,7 +89,10 @@ export const materialStore: any = defineStore("materials", () => {
             }
         };
     };
-    initWebSocket();
+    //TODO: REname OFFLINE TO STATIC MODE
+    if (import.meta.env.VITE_OFFLINE_MODE === "false") {
+        initWebSocket();
+    }
 
     return { length, fetchData, find, getMaterials };
 });
