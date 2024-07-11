@@ -3,7 +3,7 @@
  *
  * @module World.Camera
  */
-import { PerspectiveCamera } from "three";
+import { PerspectiveCamera, Vector3 } from "three";
 
 /**
  * Creates a new Camera for {@link World} module.
@@ -21,7 +21,10 @@ export function createCamera(): PerspectiveCamera {
     );
 
     // move the camera back so we can view the scene
-    camera.position.set(0, -20, 10);
+    camera.position.set(0, -50, 20);
+
+    
+    
 
     return camera;
 }

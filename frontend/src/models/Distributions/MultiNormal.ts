@@ -25,7 +25,7 @@ export class MultivariateNormal implements MultiNormalJSON {
     readonly cov: number[][];
 
     /** Inverted covariance matrix. Stored for computation efficiency. */
-    private invCov: number[][];
+    readonly invCov: number[][];
 
     /**
      * Creates new multivariate normal distribution from given distribution data.
@@ -51,11 +51,13 @@ export class MultivariateNormal implements MultiNormalJSON {
         return Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
     }
 
-    public getMode = () => this.mean;
+    public getMode(){
+        return this.mean;
+    } 
 
     public random(relative: boolean = false) {
         const X: number[] = Array.from({ length: this.mean.length }, () =>
-            MultivariateNormal.randomGauss()
+           MultivariateNormal.randomGauss()
         );
         const XInvCov = multiply(this.invCov, X);
         return relative ? XInvCov : add(XInvCov, this.mean);
@@ -70,36 +72,32 @@ export class MultivariateNormal implements MultiNormalJSON {
      *
      * @returns Array of N flatten vectors (with distance if `withDistance`)
      * */
-    private randomN(
-        N: number = 1,
-        relative: boolean = false,
-        withDistance: boolean = true
-    ): number[] {
-        const dataPoints = Array.from({ length: N }, () => {
-            const Y = this.random(relative);
-            // Add distance to the mean
-            if (withDistance) {
-                const distance = Math.sqrt(
-                    sum(Y.map((y, i) => Math.pow(y - (relative ? 0 : this.mean[i]), 2)))
-                );
-                if (distance < 0) {
-                    throw new Error("Negative distance");
-                }
-                return [...Y, distance];
+    private randomN(N: number = 1, relative: boolean = false, withDistance: boolean = true): number[] {
+        const dataPoints: number[][] = [];
+        const mean = relative ? Array.from({ length: this.mean.length }, () => 0) : this.mean as number[];
+    
+        for (let i = 0; i < N; i++) {
+            const X = Array.from({ length: this.mean.length }, () => MultivariateNormal.randomGauss());
+            const Y = multiply(this.invCov, X);
+            const distance = withDistance ? Math.sqrt(sum(Y.map((y, j) => (y - mean[j]) ** 2))) : 0;
+    
+            if (withDistance && distance < 0) {
+                throw new Error("Negative distance");
             }
-            return Y;
-        });
-
-        const maxDistance = withDistance ? Math.max(...dataPoints.map((Y) => Y[Y.length - 1])) : 1;
-
-        return dataPoints.flatMap((Y) => {
-            // Compute relative distance between mean and max
+    
+            const point = withDistance ? [...Y, distance] : Y;
+            dataPoints.push(point);
+        }
+    
+        const maxDistance = withDistance ? Math.max(...dataPoints.map(point => point[point.length - 1])) : 1;
+    
+        return dataPoints.flatMap(point => {
             if (withDistance) {
-                const distance = Y.pop()!;
+                const distance = point.pop()!;
                 const prob = 1 - distance / maxDistance;
-                return [...Y, prob < 1 ? prob : 0];
+                return [...point, prob < 1 ? prob : 0];
             }
-            return Y;
+            return point;
         });
     }
 
@@ -113,7 +111,7 @@ export class MultivariateNormal implements MultiNormalJSON {
      * @returns multivariate normal representation as 1000 flatten cloud points with relative distance to the mean.
      */
     public representation(relative: boolean = false) {
-        return this.randomN(1000, relative, true);
+        return this.randomN(100, relative, true);
     }
 
     public toString(): string {

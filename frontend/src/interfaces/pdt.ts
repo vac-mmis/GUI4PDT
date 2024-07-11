@@ -9,7 +9,7 @@ import type { ClassJSON, LocationJSON, MaterialJSON, RotationJSON } from "@/inte
  * PDT object data type, following the backend API data format.
  */
 export interface ObjectJSON {
-    id: number;
+    name: string;
     class: ClassJSON[];
     location: LocationJSON[];
     rotation: RotationJSON[];
@@ -23,6 +23,6 @@ export interface ObjectJSON {
  */
 export interface PDTJSON {
     name: string;
-    objects: ObjectJSON[];
-    elevationMap?: [number, number, number, number][];
+    objects: Record<string,ObjectJSON>;
+    elevationMaps?: [string,[number, number, number, number][]][];
 }

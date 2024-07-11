@@ -19,6 +19,7 @@ import { makeRepresentation, type ObjectRepresentation } from "@/models/Represen
 
 import { modelStore } from "@/store/model.store";
 
+
 const ClassVisibilities = ["visible", "alpha"] as const;
 type ClassVisibility = (typeof ClassVisibilities)[number];
 
@@ -65,6 +66,7 @@ export class Class extends Group {
         // Create object representation
         const object = Object.entries((this.dist[0] as Categorical).mass).map(
             (type: [string, number]) =>
+            
                 makeRepresentation(
                     "object",
                     modelStore().find(type[0]),
@@ -73,6 +75,9 @@ export class Class extends Group {
                     type[1]
                 )
         );
+
+        
+
         this.add(...object);
 
         // init controller
@@ -175,4 +180,11 @@ export class Class extends Group {
             labels: data.filter((_: any, i: number) => i % 2 == 0),
         };
     }
+
+    /**
+     * Get actual class visibility
+     *
+     * @returns Class scaleFactor
+     */
+    public getScaleFactor = (): (any)[] => this.scaleFactor;
 }

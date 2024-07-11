@@ -13,6 +13,7 @@ import { finished } from "stream/promises";
 import { logger } from "@/utils/logger";
 import type { ObjectJSON, ObjectTimestamp } from "@/types/object.types";
 
+
 /**
  * Transforms timestamps PDT files into object attributes.
  *
@@ -24,10 +25,11 @@ import type { ObjectJSON, ObjectTimestamp } from "@/types/object.types";
  */
 export async function PDTTimestampsToPDTJSON(
     timestampsFiles: string[]
-): Promise<{ name: string; objects: ObjectJSON[] }> {
+): Promise<{ name: string; objects: Record<string, ObjectJSON> }> {
     const JSONData = await Promise.all(
         timestampsFiles.map(async (file) => {
             const json = JSON.parse(await readFile(file, { encoding: "utf8" }));
+
             if (json === undefined) {
                 throw new Error("JSON Data undefined");
             }
@@ -35,14 +37,16 @@ export async function PDTTimestampsToPDTJSON(
         })
     );
 
-    const res = { name: JSONData[0].name, objects: [] as Array<ObjectJSON> };
-    JSONData.forEach((pdtTimestamp: { timestep: number; objects: ObjectTimestamp[] }) => {
-        pdtTimestamp.objects.forEach((object) => {
+    const res = { name: JSONData[0].name, objects: {} as Record<string, ObjectJSON> };
+
+    JSONData.forEach((pdtTimestamp: { timestep: number; objects: Record<string, ObjectTimestamp> }) => {
+        Object.entries(pdtTimestamp.objects).forEach(([objID, object]) => {
+
             const i = pdtTimestamp.timestep;
-            const resObject = res.objects.find((obj) => obj.id === object.id);
+            const resObject = res.objects[objID];
             if (!resObject) {
-                res.objects[object.id] = {
-                    id: object.id,
+                res.objects[objID] = {
+                    name: [],
                     class: [],
                     location: [],
                     material: [],
@@ -51,12 +55,13 @@ export async function PDTTimestampsToPDTJSON(
                     physics: [],
                 } as ObjectJSON;
             }
-            res.objects[object.id].class[i] = object.class;
-            res.objects[object.id].location[i] = object.location;
-            res.objects[object.id].material[i] = object.material;
-            res.objects[object.id].rotation[i] = object.rotation;
-            res.objects[object.id].scale[i] = object.scale;
-            res.objects[object.id].physics[i] = object.physics;
+            res.objects[objID].name[i] = object.name;
+            res.objects[objID].class[i] = object.class;
+            res.objects[objID].location[i] = object.location;
+            res.objects[objID].material[i] = object.material;
+            res.objects[objID].rotation[i] = object.rotation;
+            res.objects[objID].scale[i] = object.scale;
+            res.objects[objID].physics[i] = object.physics;
         });
     });
     return res;
@@ -100,9 +105,9 @@ export class PDT {
     /** PDT directory. Only used for PDT loading*/
     private PDTDir: string;
     /** PDT objects ready for providing  */
-    objects!: ObjectJSON[];
+    objects!: Record<string, ObjectJSON>;
     /** PDT see elevation map */
-    elevationMap?: number[][];
+    elevationMaps?: [string,number[][]][];
 
     /**
      * Creates new empty PDT with only its directory path. Should be initialized with init() method
@@ -122,13 +127,36 @@ export class PDT {
             .map((file) => `${this.PDTDir}/${file}`);
         const json = await PDTTimestampsToPDTJSON(timestamps);
 
+
         this.name = json.name || path.basename(this.PDTDir);
         this.objects = json.objects;
-        await parseMap(`${this.PDTDir}/gp_elevation_map.csv`)
-            .then((res) => {
-                this.elevationMap = res;
-            })
-            .catch(() => logger.warn(`No elevation map available for ${this.name}.`));
+
+        const maps = (await readdir(this.PDTDir))
+            .filter(file => file.endsWith("elevation_map.csv"))
+            .map((file) => `${this.PDTDir}/${file}`);;
+
+        if (maps.length > 0) {
+            this.elevationMaps = [];
+
+            for (const el_map of maps) {
+                
+                const parts = path.basename(el_map).split("_elevation_map.csv");
+                const materialName = parts[0].split("_").slice(-1)[0];
+              
+                await parseMap(el_map)
+                    .then((res) => {
+                        this.elevationMaps!.push([materialName,res]);
+                    })
+                    .catch(() => logger.warn(`No elevation map available for ${this.name}.`));
+                }
+
+        } else {
+            logger.warn(`No elevation map available for ${this.name}.`)
+        }
+
+        
+
+
     }
 
     /**
@@ -138,10 +166,13 @@ export class PDT {
      */
     public getPublicPDT(): {
         name: string;
-        objects: ObjectJSON[];
-        elevationMap?: number[][];
+        objects: Record<string, ObjectJSON>;
+        elevationMaps?: [string,number[][]][];
+
+        
     } {
-        return { name: this.name, objects: this.objects, elevationMap: this.elevationMap };
+       
+        return { name: this.name, objects: this.objects, elevationMaps: this.elevationMaps };
     }
 
     /**

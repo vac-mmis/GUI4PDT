@@ -12,6 +12,8 @@ import { defineStore } from "pinia";
 
 import type { ModelFile } from "@/interfaces/assets";
 
+const offlineMode = import.meta.env.VITE_OFFLINE_MODE === "true";
+
 /**
  * Model store handle by Pinia.
  */
@@ -40,18 +42,51 @@ export const modelStore: any = defineStore("models", () => {
         return defaultModel;
     }
 
+    function getModels(): Group[] {
+        return toRaw(_models.value);
+    }
+
     /**
      * Fetch, load and store models from backend API.
      */
-    const fetch = async () => {
+    const fetchRemotely = async () => {
         await axios
             .get("models")
             .then(
                 async (res) =>
                     await Promise.all(res.data.map(async (model: ModelFile) => loadModel(model)))
             )
-            .then((models) => _models.value.push(...models));
+            .then((models) => {
+                _models.value = [];
+                _models.value.push(...models);
+            });
     };
+
+    /**
+     * Fetch, load and store models from backend API.
+     */
+    const fetchLocally = async () => {
+        try {
+            const response = await fetch("backend_data.json");
+            const data = await response.json();
+            const modelData = data["models"];
+
+            const models = await Promise.all(
+                modelData.map(async (model: ModelFile) => loadModel(model))
+            );
+            _models.value.push(...models);
+        } catch (err) {
+            console.error("Error loading local model data:", err);
+        }
+    };
+
+    async function fetchData() {
+        if (offlineMode) {
+            return fetchLocally();
+        } else {
+            return fetchRemotely();
+        }
+    }
 
     /**
      * Returns desired model from storage with given name.
@@ -64,5 +99,19 @@ export const modelStore: any = defineStore("models", () => {
         return toRaw(_models.value).find((model) => model.name === name) ?? getDefault(name);
     }
 
-    return { length, fetch, find };
+    const initWebSocket = () => {
+        const ws = new WebSocket("ws://localhost:3030");
+
+        ws.onmessage = async (event) => {
+            if (event.data === "new model") {
+                await fetchData();
+                ws.send("update pdt");
+            }
+        };
+    };
+    if (import.meta.env.VITE_OFFLINE_MODE === "false") {
+        initWebSocket();
+    }
+
+    return { length, fetchData, find, getModels };
 });

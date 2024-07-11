@@ -11,6 +11,7 @@ import type { LocationJSON } from "@/interfaces/properties";
 import { type Distribution, makeDistribution } from "@/models/Distributions";
 import { type Representation, makeRepresentation } from "@/models/Representations";
 import type { PDTObject } from "@/models/object.model";
+import type { PDT } from "../pdt.model";
 
 /**
  * Associates used distributions to their representations
@@ -34,6 +35,9 @@ export class Location extends Group {
 
     /** Location distribution through time. */
     readonly dist: (Distribution | [number, number, number])[] = [];
+
+    /** Location distribution through time. */
+    public distAsPoints: Representation[] = [];
 
     /** Current direction of object*/
     private direction: Vector3 = new Vector3();
@@ -78,6 +82,8 @@ export class Location extends Group {
                 }
             }
         });
+
+       
 
         // initialize position
         this.getWorldPosition(this.beginPosition);
@@ -180,7 +186,9 @@ export class Location extends Group {
                 this.updateDirection(time);
                 const dist = this.dist[index];
                 if ("type" in dist) {
+                    
                     (this.children[0] as Representation).update(dist.representation(true));
+                   
                 }
             }
             this.delta = time - index;

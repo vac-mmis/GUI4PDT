@@ -1,37 +1,61 @@
 <template>
     <v-app-bar color="primary" dark collapse-on-scroll>
-        <v-app-bar-nav-icon icon="fas fa-home" @click="toggleDrawer"> </v-app-bar-nav-icon>
-        <v-toolbar-title>OTC-DaTA GUI</v-toolbar-title>
+
+        <v-row align-md="center" justify="space-between" class="mx-10">
+
+            <v-col cols="auto">
+
+                <v-app-bar-title> OTC-DaTA GUI</v-app-bar-title>
+            </v-col>
+
+            <v-col cols="auto" class="me-auto mx-10">
+
+                <MultiMenu></MultiMenu>
+
+
+            </v-col>
+
+            <v-col cols="auto">
+
+
+               
+            </v-col>
+
+            <v-col cols="auto">
+                <v-row>
+                    
+                    <v-col>
+                        
+                        <v-label v-if="offline" class="text-h5" color="white">
+                            {{ "static mode" }}
+                        </v-label>
+                        <v-label v-else class="text-h5" color="white">
+                            {{ "live mode" }}
+                        </v-label>
+                        
+                    </v-col>
+                </v-row>
+            </v-col>
+
+
+        </v-row>
+
     </v-app-bar>
-    <v-navigation-drawer color="primary" temporary dark v-model="drawer" elevation="1">
-        <v-list>
-            <v-list-item
-                v-for="item of menuItems"
-                :key="item.title"
-                :to="item.route"
-                link
-                :prepend-icon="item.icon"
-                :title="item.title"
-            >
-            </v-list-item>
-        </v-list>
-    </v-navigation-drawer>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
 
-let drawer = ref(false);
 
-const toggleDrawer = () => {
-    drawer.value = !drawer.value;
-};
+import MultiMenu from "@/components/MainComponents/MultiMenu.vue";
 
-/**
- * Add a item in the menu drawer here
- */
-const menuItems = [
-    { title: "Plot", icon: "fas fa-cube", route: "/" },
-    { title: "About", icon: "$info", route: "/about" },
-];
+import {ref} from "vue";
+
+
+const offline = ref<boolean>(import.meta.env.VITE_OFFLINE_MODE === 'true')
+
+
+
 </script>
+
+
+<style></style>

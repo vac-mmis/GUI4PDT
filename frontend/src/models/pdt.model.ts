@@ -6,12 +6,12 @@
 
 import { Group, Object3D, type Intersection, MeshStandardMaterial } from "three";
 
-import type { PDTJSON, ObjectJSON } from "@/interfaces/pdt";
+import type { PDTJSON } from "@/interfaces/pdt";
 import { PDTObject } from "@/models/object.model";
 import { Map } from "@/models/map.model";
 import type { WorldContent } from "@/World/interface";
-
 import { materialStore } from "@/store/material.store";
+
 
 /**
  * Implements PDT representation, including objects and global data.
@@ -28,7 +28,7 @@ export class PDT extends Group implements WorldContent {
     /** Objects inside PDT. */
     readonly objects: PDTObject[];
     /** Elevation map of the sea in PDT. */
-    private elevationMap?: Map;
+    private elevationMaps?: Map[];
 
     /** Selected object */
     public selectedObject?: PDTObject;
@@ -41,25 +41,50 @@ export class PDT extends Group implements WorldContent {
         super();
         this.name = pdt.name;
         this.userData.type = "PDT";
-        this.timeLength = pdt.objects[0].location.length;
+        this.timeLength = Object.values(pdt.objects)[0].location.length;
+
+
 
         // Add objects as new children group
-        this.objects = pdt.objects.map((obj: ObjectJSON) => new PDTObject(this, obj));
+        this.objects = Object.entries(pdt.objects).map(([objID, objJSON]) => new PDTObject(this, objID, objJSON));
         this.add(new Group().add(...this.objects));
 
         // Add elevation map as new children
-        if (pdt.elevationMap) {
-            const { find }: { find: (name: string) => MeshStandardMaterial | undefined } =
-                materialStore();
-            const mapMaterial = find("water");
-            if (mapMaterial) {
-                mapMaterial.opacity = 0.7;
-                mapMaterial.transparent = true;
+        if (pdt.elevationMaps) {
+            this.elevationMaps = [];
+            for (const ele_map of pdt.elevationMaps) {
+                const { find }: { find: (name: string) => MeshStandardMaterial | undefined } =
+                    materialStore();
+                const mapMaterial = find(ele_map[0]);
+
+                if (mapMaterial?.name === "water") {
+                    mapMaterial.opacity = 0.7;
+                    mapMaterial.transparent = true;
+                }
+                this.elevationMaps.push(new Map(ele_map[1], mapMaterial));
+                this.add(this.elevationMaps[this.elevationMaps.length - 1]);
             }
-            this.elevationMap = new Map(pdt.elevationMap, mapMaterial);
-            this.add(this.elevationMap);
+
         }
+
+
+       
+
+
+
+
     }
+
+    public async loadData(path: string) {
+        const response = await fetch(path);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data
+    }
+
+
 
     /**
      * Returns PDT objects or global representation which action on hover is desired.
@@ -90,7 +115,7 @@ export class PDT extends Group implements WorldContent {
     /**
      * @returns PDT Elevation map.
      */
-    public getElevationMap = (): Map | undefined => this.elevationMap;
+    public getElevationMaps = (): Map[] | undefined => this.elevationMaps;
 
     /**
      * @returns Number of timestamps.

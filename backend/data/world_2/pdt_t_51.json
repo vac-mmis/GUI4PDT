@@ -1,0 +1,367 @@
+{
+  "name": "world_2",
+  "timestep": 51,
+  "timestamp": null,
+  "objects": {
+    "0": {
+      "class": {
+        "dist": {
+          "type": "categorical",
+          "mass": {
+            "tetrapod": 0.6385869565217391,
+            "reefcone": 0.36141304347826086
+          }
+        }
+      },
+      "location": {
+        "dist": {
+          "type": "multivariate-normal",
+          "mean": [
+            -26,
+            4,
+            -20
+          ],
+          "cov": [
+            [
+              0.21712499999999998,
+              0,
+              0
+            ],
+            [
+              0,
+              0.21712499999999998,
+              0
+            ],
+            [
+              0,
+              0,
+              0.001
+            ]
+          ]
+        }
+      },
+      "material": "concrete",
+      "rotation": {
+        "dist": {
+          "type": "von-mises",
+          "mean": [
+            0,
+            0,
+            0
+          ],
+          "kappa": [
+            10000000000,
+            10000000000,
+            778.2216674063513
+          ]
+        }
+      },
+      "scale": 1,
+      "name": "object0"
+    },
+    "1": {
+      "class": "tetrapod",
+      "location": {
+        "dist": {
+          "type": "multivariate-normal",
+          "mean": [
+            -20,
+            -5,
+            -20
+          ],
+          "cov": [
+            [
+              0.17397520661157026,
+              0,
+              0
+            ],
+            [
+              0,
+              0.17397520661157026,
+              0
+            ],
+            [
+              0,
+              0,
+              0.0001
+            ]
+          ]
+        }
+      },
+      "material": "concrete",
+      "rotation": {
+        "dist": {
+          "type": "von-mises",
+          "mean": [
+            0,
+            0,
+            0
+          ],
+          "kappa": [
+            37888934877.96159,
+            37888934877.96159,
+            8576.072272472391
+          ]
+        }
+      },
+      "scale": 1,
+      "name": "object1"
+    },
+    "2": {
+      "class": "tetrapod",
+      "location": {
+        "dist": {
+          "type": "multivariate-normal",
+          "mean": [
+            -22,
+            -10,
+            -20.2
+          ],
+          "cov": [
+            [
+              0.24456521739130432,
+              0,
+              0
+            ],
+            [
+              0,
+              0.24456521739130432,
+              0
+            ],
+            [
+              0,
+              0,
+              0.001
+            ]
+          ]
+        }
+      },
+      "material": "concrete",
+      "rotation": {
+        "dist": {
+          "type": "von-mises",
+          "mean": [
+            0,
+            0,
+            25
+          ],
+          "kappa": [
+            10000000000,
+            10000000000,
+            114.70479662310441
+          ]
+        }
+      },
+      "scale": 0.6,
+      "name": "object2"
+    },
+    "3": {
+      "class": "reefcone",
+      "location": {
+        "dist": {
+          "type": "multivariate-normal",
+          "mean": [
+            -20,
+            -1,
+            -19.8
+          ],
+          "cov": [
+            [
+              0.17397520661157026,
+              0,
+              0
+            ],
+            [
+              0,
+              0.17397520661157026,
+              0
+            ],
+            [
+              0,
+              0,
+              0.0001
+            ]
+          ]
+        }
+      },
+      "material": "concrete",
+      "rotation": {
+        "dist": {
+          "type": "von-mises",
+          "mean": [
+            0,
+            0,
+            0
+          ],
+          "kappa": [
+            37888934877.96159,
+            37888934877.96159,
+            8576.072272472391
+          ]
+        }
+      },
+      "scale": 1,
+      "name": "object3"
+    },
+    "4": {
+      "class": "reefring",
+      "location": {
+        "dist": {
+          "type": "multivariate-normal",
+          "mean": [
+            -25.7,
+            0,
+            -20.2
+          ],
+          "cov": [
+            [
+              0.19626530612244897,
+              0,
+              0
+            ],
+            [
+              0,
+              0.19626530612244897,
+              0
+            ],
+            [
+              0,
+              0,
+              0.0001
+            ]
+          ]
+        }
+      },
+      "material": "concrete",
+      "rotation": {
+        "dist": {
+          "type": "von-mises",
+          "mean": [
+            0,
+            0,
+            0
+          ],
+          "kappa": [
+            44984326689.694534,
+            44984326689.694534,
+            3452.2549418701424
+          ]
+        }
+      },
+      "scale": 1,
+      "name": "object4"
+    },
+    "5": {
+      "class": "container",
+      "location": {
+        "dist": {
+          "type": "multivariate-normal",
+          "mean": [
+            -20,
+            8,
+            -20.5
+          ],
+          "cov": [
+            [
+              0.17397520661157026,
+              0,
+              0
+            ],
+            [
+              0,
+              0.17397520661157026,
+              0
+            ],
+            [
+              0,
+              0,
+              0.0001
+            ]
+          ]
+        }
+      },
+      "material": "metal",
+      "rotation": {
+        "dist": {
+          "type": "von-mises",
+          "mean": [
+            0,
+            0,
+            0
+          ],
+          "kappa": [
+            37888934877.96159,
+            37888934877.96159,
+            5047.48694221897
+          ]
+        }
+      },
+      "scale": 0.01,
+      "name": "object5"
+    },
+    "6": {
+      "class": "bicycle",
+      "location": {
+        "dist": {
+          "type": "multivariate-normal",
+          "mean": [
+            -27,
+            -7,
+            -20.5
+          ],
+          "cov": [
+            [
+              0.006500000000000006,
+              0,
+              0
+            ],
+            [
+              0,
+              0.006500000000000006,
+              0
+            ],
+            [
+              0,
+              0,
+              0.0001
+            ]
+          ]
+        }
+      },
+      "material": "bicycle",
+      "rotation": {
+        "dist": {
+          "type": "von-mises",
+          "mean": [
+            0,
+            70,
+            180
+          ],
+          "kappa": [
+            100000000000,
+            100000000000,
+            35938136638.04626
+          ]
+        }
+      },
+      "scale": 1,
+      "name": "object6"
+    },
+    "7": {
+      "class": "eiffeltower",
+      "location": [
+        -12,
+        4,
+        -20.5
+      ],
+      "material": "eiffeltower",
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": 0.022,
+      "name": "object7"
+    }
+  }
+}

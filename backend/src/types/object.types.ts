@@ -49,7 +49,7 @@ export type MaterialJSON = string | { dist: Categorical };
  * Represents object type in PDT JSON timestamps **before** the parsing executed in {@link Models.PDTTimestampsToPDTJSON | PDT.init()}.
  */
 export type ObjectTimestamp = {
-    id: number;
+    name: string;
     class: ClassJSON;
     location: LocationJSON;
     rotation?: RotationJSON;
@@ -62,7 +62,7 @@ export type ObjectTimestamp = {
  * Represents object type served to the API, therefore **after** {@link Models.PDTTimestampsToPDTJSON | PDT.init()}.
  */
 export type ObjectJSON = {
-    id: number;
+    name: string[];
     class: ClassJSON[];
     location: LocationJSON[];
     material: MaterialJSON[];

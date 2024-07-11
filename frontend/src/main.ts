@@ -22,9 +22,19 @@ import router from "./router";
 // Vuetify
 import "vuetify/styles";
 import { aliases, fa } from "vuetify/iconsets/fa";
+import { mdi } from "vuetify/iconsets/mdi";
+
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
+
+import CustomVector3 from "@/components/EditInputComponents/CustomVector3.vue";
+import CustomVector2 from "@/components/EditInputComponents/CustomVector2.vue";
+import CustomMatrix3x3 from "@/components/EditInputComponents/CustomMatrix3x3.vue";
+import CustomCombo from "@/components/EditInputComponents/CustomCombo.vue";
+import CustomComboWithValue from "@/components/EditInputComponents/CustomComboWithValue.vue";
+import CustomNumber from "@/components/EditInputComponents/CustomNumber.vue";
+import CustomString from "@/components/EditInputComponents/CustomString.vue";
 
 const myCustomLightTheme = {
     dark: false,
@@ -53,6 +63,7 @@ const vuetify = createVuetify({
         },
         sets: {
             fa,
+            mdi,
         },
     },
     theme: {
@@ -69,7 +80,29 @@ axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL ?? "";
 // Pinia initialization
 const pinia = createPinia();
 
-createApp(App).use(VueDOMPurifyHTML).use(vuetify).use(pinia).use(router).mount("#app");
+declare global {
+    interface Window {
+        OFFLINE_MODE: boolean;
+    }
+}
+
+// Define a global variable on the custom window object
+window.OFFLINE_MODE = true;
+
+createApp(App)
+    .use(VueDOMPurifyHTML)
+    .use(vuetify)
+    .use(pinia)
+    .use(router)
+    .component("CustomCombo", CustomCombo)
+    .component("CustomComboWithValue", CustomComboWithValue)
+    .component("CustomVector2", CustomVector2)
+    .component("CustomVector3", CustomVector3)
+    .component("CustomMatrix3_3", CustomMatrix3x3)
+    .component("CustomNumber", CustomNumber)
+    .component("CustomStringFormElement", CustomString)
+
+    .mount("#app");
 
 export * as Interfaces from "@/interfaces";
 export * as Models from "@/models";

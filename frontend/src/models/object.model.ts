@@ -18,28 +18,35 @@ export class PDTObject extends Group {
     /** Object which has this location. */
     declare parent: PDT;
     /** Object ID */
-    readonly objID: number;
+    readonly objID: string;
     /** Current time index to show. */
     private time: number = 0;
+
+    /** Object name. */
+    private objName: string;
 
     /** Object class. @remark `this.class = this.children[0]`. */
     readonly class: Class;
     /** Object material. Used to create class representation. */
     readonly material: Material;
     /** Object location. @remark `this._location = this.children[1]`. */
-    private _location: Location;
+    readonly location: Location;
     /** Object rotation. @remark `this._rotation = this.children[2]`. */
     private _rotation: Rotation;
+    
+    
+    dist: any;
 
     /**
      * Creates a PDT object from JSON data.
      *
      * @param objJSON Object data, from backend API.
      */
-    constructor(parent: PDT, objJSON: ObjectJSON) {
+    constructor(parent: PDT, objID: string, objJSON: ObjectJSON) {
         super();
         this.parent = parent;
-        this.objID = objJSON.id;
+        this.objID = objID;
+        this.objName = objJSON.name;
         this.userData.type = "Object";
 
         // get material from JSON data
@@ -50,12 +57,17 @@ export class PDTObject extends Group {
         this.add(this.class);
 
         // setup location from JSON data
-        this._location = new Location(this, objJSON.location);
-        this.add(this._location);
+        this.location = new Location(this, objJSON.location);
+        this.add(this.location);
+        
+
+
 
         // setup rotation from JSON data
         this._rotation = new Rotation(this, objJSON.rotation);
         this.add(this._rotation);
+
+        
     }
 
     /**
@@ -67,21 +79,31 @@ export class PDTObject extends Group {
 
     public getControllers = (): Controller<any>[] => [
         this.class.getController(),
-        this._location.getController(),
+        this.location.getController(),
         this._rotation.getController(),
     ];
 
     /**
      * Returns object properties details (description, 2D graph...).
+     * 
+     * Add new property details by adding new entries to the returned object.
+     * 
      * @param t Desired time to gat details.
      *
      * @returns Object properties details.
      */
     public getDetails(t: number): Record<string, ObjectDetails> {
-        t = Math.trunc(t) % this._location.dist.length;
+        t = Math.trunc(t) % this.location.dist.length;
+
+     
+
         return {
+            // name: {
+            //     description: this._location.dist[t].toString(),
+            //     representation: undefined,
+            // },
             location: {
-                description: this._location.dist[t].toString(),
+                description: this.location.dist[t].toString(),
                 representation: undefined,
             },
             rotation: {
@@ -96,6 +118,11 @@ export class PDTObject extends Group {
                 description: this.material.dist[t].toString(),
                 representation: this.material.representation(t),
             },
+            scale: {
+                description: this.class.getScaleFactor()[t].toString(),
+                representation: undefined,
+            },
+
         };
     }
 
@@ -109,7 +136,7 @@ export class PDTObject extends Group {
         this.class.update(time);
 
         // update object position
-        this._location.update(time);
+        this.location.update(time);
 
         // update object rotation
         this._rotation.update(time);

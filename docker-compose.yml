@@ -6,6 +6,8 @@ services:
         environment:
             # Don't change the API url as it can't be dynamically changed in the frontend container without rebuilding
             - VITE_API_BASE_URL=http://localhost:3000/api
+            - VITE_OFFLINE_MODE=false
+            - VITE_BASE_PATH=""
         build:
             context: ./frontend
             dockerfile: Dockerfile
@@ -22,19 +24,21 @@ services:
             dockerfile: Dockerfile
         environment:
             # Data and assets folders
-            DATA: data
-            MODELS: assets/models
-            MATERIALS: assets/materials
+            - CORS_ORIGIN_DOCKER=http://localhost:8080
+            - DATA=data
+            - MODELS=assets/models
+            - MATERIALS=assets/materials
 
             # Log configuration
-            LOG_FILE: backend.log
-            LOG_LEVEL: info
+            - LOG_FILE=backend.log
+            - LOG_LEVEL=info
         volumes:
             - ./backend/data:/usr/src/app/data
             - ./backend/assets:/usr/src/app/assets
         ports:
             # Don't change 3000 host port as it can't be dynamically changed in the frontend container
             - 3000:3000
+            - 3030:3030
         networks:
             - backend
 
