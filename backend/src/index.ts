@@ -157,6 +157,7 @@ const setup = async () => {
      * Use lodash's debounce(), to minimize multiple calls.
      */
     const debounceMaterialsUpdate = debounce(async () => {
+       
         if (!isProcessingMat) {
             isProcessingMat = true;
             await MaterialStore.load().catch((err) => logger.error(err, err.message));
@@ -170,6 +171,7 @@ const setup = async () => {
     }, 500);
 
     const debounceModelsUpdate = debounce(async () => {
+       
         if (!isProcessingMod) {
             isProcessingMod = true;
             await ModelStore.load().catch((err) => logger.error(err, err.message));
@@ -182,15 +184,34 @@ const setup = async () => {
         }
     }, 500);
 
-    const debouncePDTUpdate = debounce(async () => {
+    const debouncePDTUpdate = debounce(async (eventType, fileName) => {
+        console.log("watcher")
+
+        const pdtName = path.basename(path.dirname(fileName));
+        const eventName = eventType;
+        const isDirectory = path.basename(fileName) === pdtName;
+
+        if (hasLockFile(path.dirname(fileName))){
+            return;
+        } 
+
         if (!isProcessingPDT) {
             isProcessingPDT = true;
-            await reloadProjectNames();
+            //await reloadProjectNames();
             try {
                 await PDTStore.load();
                 wss.clients.forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {
-                        client.send("new pdt");
+                        const pdtMessage = {
+                            object:"pdt",
+                            event:eventName,
+                            name: pdtName,
+                            isDirectory:isDirectory,
+                        }
+                        //TODO lösdchen erst wenn da Verzeichnis gelöscht wird 
+                        //ansonten nur change
+                        client.send(JSON.stringify(pdtMessage));
+
                     }
                 });
             } catch (err) {
@@ -198,16 +219,35 @@ const setup = async () => {
             }
             isProcessingPDT = false;
         }
-    });
+    },300);
 
     watcherMaterials.on("all", debounceMaterialsUpdate);
     watcherModels.on("all", debounceModelsUpdate);
-    watcherPDT.on("all", debouncePDTUpdate);
+
+    watcherPDT.on("all", (eventType, fileName) => {
+      
+           
+                debouncePDTUpdate(eventType, fileName);
+              
+           
+           
+            
+          
+        });
+
+      
+    
+   
+    
 
     server.listen(port, () => {
         logger.info(`Backend started successfully! Server listen on port ${port}`);
     });
 };
+
+function hasLockFile(dir: string) {
+    return fs.existsSync(path.join(dir, 'lock'));
+  }
 
 setup();
 

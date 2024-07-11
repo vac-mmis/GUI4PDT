@@ -6,15 +6,12 @@
 
 import { Group, Object3D, type Intersection, MeshStandardMaterial } from "three";
 
-import type { PDTJSON, ObjectJSON } from "@/interfaces/pdt";
+import type { PDTJSON } from "@/interfaces/pdt";
 import { PDTObject } from "@/models/object.model";
 import { Map } from "@/models/map.model";
 import type { WorldContent } from "@/World/interface";
 import { materialStore } from "@/store/material.store";
-import type { MultivariateNormal } from "./Distributions";
-import type { MultiNormalJSON } from "@/interfaces/distribution";
-import axios from "axios";
-import JSZip from 'jszip';
+
 
 /**
  * Implements PDT representation, including objects and global data.

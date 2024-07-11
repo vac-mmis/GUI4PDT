@@ -3,12 +3,15 @@
  *
  * @module Store.PDT
  */
-import { ref, computed, toRaw } from "vue";
+import { ref, computed, toRaw} from "vue";
 import axios from "axios";
 import { defineStore } from "pinia";
 
 import type { PDTJSON } from "@/interfaces/pdt";
 import { PDT } from "@/models/pdt.model";
+
+
+
 
 const offlineMode = import.meta.env.VITE_OFFLINE_MODE === "true";
 
@@ -22,6 +25,9 @@ export const PDTStore: any = defineStore("PDTs", () => {
     const _selectedPDT = ref<PDT>({} as PDT);
     /** PDT names list */
     const _list = ref<string[]>([]);
+
+    /** PDT status (deleted, etc.) */
+    const _selectedPDTStatus = ref("add");
 
     /** Number of timestamps. */
     const timeLength = computed(() => _selectedPDT.value.getTimeLength());
@@ -138,8 +144,23 @@ export const PDTStore: any = defineStore("PDTs", () => {
         const ws = new WebSocket("ws://localhost:3030");
 
         ws.onmessage = async (event) => {
-            if (event.data === "new pdt") {
-                await fetchData(_selectedPDT.value.name);
+            const data = JSON.parse(event.data);
+
+            console.log(data);
+
+            if (data.object === "pdt") {
+                if (data.name === _selectedPDT.value.name) {
+                    if (data.event === "add" || data.event === "change"|| data.event === "unlink") {
+                        if (data.isDirectory){
+                            //TODO BACK TO OPEN
+                        } else{
+                            console.log("updatedata")
+                            await fetchData(_selectedPDT.value.name);
+                        }
+                        
+                    }
+                    
+                }
             }
         };
     };
