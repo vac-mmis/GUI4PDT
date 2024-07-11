@@ -74,8 +74,4 @@ const menu = [
 
 ];
 
-
-let isSubMenuOpen = false;
-
-const aboutPage = { title: "About", icon: "$info", route: "/about" }
 </script>
