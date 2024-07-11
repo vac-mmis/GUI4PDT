@@ -31,10 +31,6 @@
 
 <script lang="ts" setup>
 
-
-
-import { ref } from "vue";
-
 import { CustomMenu } from "@/models/CustomMenu";
 /**
  * Menu structure with depth 3

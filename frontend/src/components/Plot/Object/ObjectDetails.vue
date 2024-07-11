@@ -16,9 +16,10 @@
             <template v-for="key in Object.keys(details)" :key="key">
                 <template v-if="tab === key">
                     <PropertyDetails :details="details[key]" />
-                    <template v-if="editMode">
+                    
+                    <!-- TODO <template v-if="editMode">
                        <DetailsEdit v-if="isOnline" @mouseover="isMoveable=false" @mouseleave="isMoveable=true" :property="key" :dist="getDist(key)" /> 
-                    </template>
+                    </template> -->
                 </template>
 
             </template>
