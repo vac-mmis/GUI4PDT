@@ -51,7 +51,7 @@ import MultiMenu from "@/components/MainComponents/MultiMenu.vue";
 import {ref} from "vue";
 
 
-const offline = ref<boolean>(import.meta.env.VITE_OFFLINE_MODE === 'true')
+const offline = ref<boolean>(import.meta.env.VITE_STATIC_MODE === 'true')
 
 
 

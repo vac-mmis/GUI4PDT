@@ -6,7 +6,7 @@ services:
         environment:
             # Don't change the API url as it can't be dynamically changed in the frontend container without rebuilding
             - VITE_API_BASE_URL=http://localhost:3000/api
-            - VITE_OFFLINE_MODE=false
+            - VITE_STATIC_MODE=false
             - VITE_BASE_PATH=""
         build:
             context: ./frontend

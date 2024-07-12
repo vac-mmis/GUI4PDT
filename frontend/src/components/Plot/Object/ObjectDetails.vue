@@ -62,7 +62,7 @@ const maximized = ref(true);
 const editMode = ref(true);
 
 //TODO RENAME ONLINE MODE TO LIVE MODE
-const isOnline = import.meta.env.VITE_OFFLINE_MODE === "false"
+const isOnline = import.meta.env.VITE_STATIC_MODE === "false"
 
 const tab = ref<string>("");
 

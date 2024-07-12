@@ -13,7 +13,7 @@ import { PDT } from "@/models/pdt.model";
 
 
 
-const offlineMode = import.meta.env.VITE_OFFLINE_MODE === "true";
+const offlineMode = import.meta.env.VITE_STATIC_MODE === "true";
 
 /**
  * PDT store handle by Pinia.
@@ -165,7 +165,7 @@ export const PDTStore: any = defineStore("PDTs", () => {
         };
     };
 
-    if (import.meta.env.VITE_OFFLINE_MODE === "false") {
+    if (import.meta.env.VITE_STATIC_MODE === "false") {
         initWebSocket();
     }
 

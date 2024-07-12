@@ -146,9 +146,9 @@ const setup = async () => {
                 pdts: pdts,
             };
 
-            fs.writeFile("offline/backend_data.json", JSON.stringify(saveData), (err) => {
+            fs.writeFile("static_mode/backend_data.json", JSON.stringify(saveData), (err) => {
                 if (err) throw err;
-                logger.info("All data has been saved into a file: offline/backend_data.json");
+                logger.info("All data has been saved into a file: static_mode/backend_data.json");
             });
         });
 
