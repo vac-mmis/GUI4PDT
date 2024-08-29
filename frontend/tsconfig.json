@@ -20,7 +20,7 @@
         "outDir": "./dist",
         "module": "ESNext",
         "types": ["node", "jsdom", "vite/client"],
-        "typeRoots": ["./node_modules/@types", "./src/types"],
+        "typeRoots": ["./node_modules/@types", "./src/types"]
     },
     "typedocOptions": {
         "entryPoints": ["src/main.ts"],

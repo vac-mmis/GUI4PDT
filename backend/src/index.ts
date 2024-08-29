@@ -156,89 +156,84 @@ const setup = async () => {
      * Send a message to the client via websockets when the data has changed.
      * Use lodash's debounce(), to minimize multiple calls.
      */
-    const debounceMaterialsUpdate = debounce(async () => {
-       
-        if (!isProcessingMat) {
-            isProcessingMat = true;
-            await MaterialStore.load().catch((err) => logger.error(err, err.message));
-            wss.clients.forEach((client) => {
-                if (client.readyState === WebSocket.OPEN) {
-                    client.send("new material");
-                }
-            });
-            isProcessingMat = false;
-        }
-    }, 500);
-
-    const debounceModelsUpdate = debounce(async () => {
-       
-        if (!isProcessingMod) {
-            isProcessingMod = true;
-            await ModelStore.load().catch((err) => logger.error(err, err.message));
-            wss.clients.forEach((client) => {
-                if (client.readyState === WebSocket.OPEN) {
-                    client.send("new model");
-                }
-            });
-            isProcessingMod = false;
-        }
-    }, 500);
-
-    const debouncePDTUpdate = debounce(async (eventType, fileName) => {
-        console.log("watcher")
-
-        const pdtName = path.basename(path.dirname(fileName));
-        const eventName = eventType;
-        const isDirectory = path.basename(fileName) === pdtName;
-
-        if (hasLockFile(path.dirname(fileName))){
-            return;
-        } 
-
-        if (!isProcessingPDT) {
-            isProcessingPDT = true;
-            //await reloadProjectNames();
-            try {
-                await PDTStore.load();
+    const debounceMaterialsUpdate = debounce(
+        async () => {
+            if (!isProcessingMat) {
+                isProcessingMat = true;
+                await MaterialStore.load().catch((err) => logger.error(err, err.message));
                 wss.clients.forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {
-                        const pdtMessage = {
-                            object:"pdt",
-                            event:eventName,
-                            name: pdtName,
-                            isDirectory:isDirectory,
-                        }
-                        //TODO lösdchen erst wenn da Verzeichnis gelöscht wird 
-                        //ansonten nur change
-                        client.send(JSON.stringify(pdtMessage));
-
+                        client.send("new material");
                     }
                 });
-            } catch (err) {
-                logger.error(err);
+                isProcessingMat = false;
             }
-            isProcessingPDT = false;
-        }
-    },300);
+        },
+        500,
+        { maxWait: 3000, trailing: true }
+    );
+
+    const debounceModelsUpdate = debounce(
+        async () => {
+            if (!isProcessingMod) {
+                isProcessingMod = true;
+                await ModelStore.load().catch((err) => logger.error(err, err.message));
+                wss.clients.forEach((client) => {
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send("new model");
+                    }
+                });
+                isProcessingMod = false;
+            }
+        },
+        500,
+        { maxWait: 3000, trailing: true }
+    );
+
+    const debouncePDTUpdate = debounce(
+        async (eventType, fileName) => {
+            const pdtName = path.basename(path.dirname(fileName));
+            const eventName = eventType;
+            const isDirectory = path.basename(fileName) === pdtName;
+
+            if (hasLockFile(path.dirname(fileName))) {
+                return;
+            }
+
+            if (!isProcessingPDT) {
+                isProcessingPDT = true;
+                //await reloadProjectNames();
+                try {
+                    await PDTStore.load();
+                    wss.clients.forEach((client) => {
+                        if (client.readyState === WebSocket.OPEN) {
+                            const pdtMessage = {
+                                object: "pdt",
+                                event: eventName,
+                                name: pdtName,
+                                isDirectory: isDirectory,
+                            };
+                            //TODO lösdchen erst wenn da Verzeichnis gelöscht wird
+                            //ansonten nur change
+                            client.send(JSON.stringify(pdtMessage));
+                        }
+                    });
+                } catch (err) {
+                    logger.error(err);
+                }
+                isProcessingPDT = false;
+            }
+        },
+        300,
+        { maxWait: 3000, trailing: true }
+    );
 
     watcherMaterials.on("all", debounceMaterialsUpdate);
     watcherModels.on("all", debounceModelsUpdate);
 
     watcherPDT.on("all", (eventType, fileName) => {
-      
-           
-                debouncePDTUpdate(eventType, fileName);
-              
-           
-           
-            
-          
-        });
-
-      
-    
-   
-    
+        debouncePDTUpdate(eventType, fileName);
+    });
 
     server.listen(port, () => {
         logger.info(`Backend started successfully! Server listen on port ${port}`);
@@ -246,8 +241,8 @@ const setup = async () => {
 };
 
 function hasLockFile(dir: string) {
-    return fs.existsSync(path.join(dir, 'lock'));
-  }
+    return fs.existsSync(path.join(dir, "lock"));
+}
 
 setup();
 

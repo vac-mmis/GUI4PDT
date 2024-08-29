@@ -48,7 +48,7 @@
                 <td class="credits-right">Reef data</td>
             </tr>
           <tr>
-                <td class="credits-left"><a target="_blank" href="https://www.freepik.com/free-vector/dark-blue-grunge-texture-design_853759.htm">dotstudio at Freepik</a></td>
+                <td class="credits-left"><a target="_blank" href="https://www.freepik.com/free-vector/dark-blue-grunge-texture-design_853759.html">dotstudio at Freepik</a></td>
                 <td class="credits-right">ROV texture</td>
             </tr>
            
