@@ -41,12 +41,6 @@ Run containers
 docker compose up
 ```
 
-Run as daemon
-
-```sh
-docker compose up -d
-```
-
 The tool can now be reached at [localhost:8080](http://localhost:8080/).
 
 Stop containers
