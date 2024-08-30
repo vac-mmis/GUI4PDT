@@ -8,7 +8,7 @@ import { loadModel } from "@/World/systems/loader";
 
 import { ref, computed, toRaw } from "vue";
 import axios from "axios";
-import { defineStore } from "pinia";
+import { defineStore, type StoreDefinition } from "pinia";
 
 import type { ModelFile } from "@/interfaces/assets";
 
@@ -17,7 +17,7 @@ const offlineMode = import.meta.env.VITE_STATIC_MODE === "true";
 /**
  * Model store handle by Pinia.
  */
-export const modelStore: any = defineStore("models", () => {
+export const modelStore: StoreDefinition = defineStore("models", () => {
     const _models = ref([] as Group[]);
     /** Default model */
     const _default = computed(() => {

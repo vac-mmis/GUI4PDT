@@ -12,7 +12,6 @@ import { Map } from "@/models/map.model";
 import type { WorldContent } from "@/World/interface";
 import { materialStore } from "@/store/material.store";
 
-
 /**
  * Implements PDT representation, including objects and global data.
  */
@@ -43,10 +42,10 @@ export class PDT extends Group implements WorldContent {
         this.userData.type = "PDT";
         this.timeLength = Object.values(pdt.objects)[0].location.length;
 
-
-
         // Add objects as new children group
-        this.objects = Object.entries(pdt.objects).map(([objID, objJSON]) => new PDTObject(this, objID, objJSON));
+        this.objects = Object.entries(pdt.objects).map(
+            ([objID, objJSON]) => new PDTObject(this, objID, objJSON)
+        );
         this.add(new Group().add(...this.objects));
 
         // Add elevation map as new children
@@ -64,27 +63,17 @@ export class PDT extends Group implements WorldContent {
                 this.elevationMaps.push(new Map(ele_map[1], mapMaterial));
                 this.add(this.elevationMaps[this.elevationMaps.length - 1]);
             }
-
         }
-
-
-       
-
-
-
-
     }
 
     public async loadData(path: string) {
         const response = await fetch(path);
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        return data
+        return data;
     }
-
-
 
     /**
      * Returns PDT objects or global representation which action on hover is desired.

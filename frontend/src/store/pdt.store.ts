@@ -3,22 +3,19 @@
  *
  * @module Store.PDT
  */
-import { ref, computed, toRaw} from "vue";
+import { ref, computed, toRaw } from "vue";
 import axios from "axios";
-import { defineStore } from "pinia";
+import { defineStore, type StoreDefinition } from "pinia";
 
 import type { PDTJSON } from "@/interfaces/pdt";
 import { PDT } from "@/models/pdt.model";
-
-
-
 
 const offlineMode = import.meta.env.VITE_STATIC_MODE === "true";
 
 /**
  * PDT store handle by Pinia.
  */
-export const PDTStore: any = defineStore("PDTs", () => {
+export const PDTStore: StoreDefinition = defineStore("PDTs", () => {
     /** Stored PDT. */
     const _PDTs = ref([] as PDT[]);
     /** Current selected PDT. */
@@ -146,20 +143,19 @@ export const PDTStore: any = defineStore("PDTs", () => {
         ws.onmessage = async (event) => {
             const data = JSON.parse(event.data);
 
-            console.log(data);
-
             if (data.object === "pdt") {
                 if (data.name === _selectedPDT.value.name) {
-                    if (data.event === "add" || data.event === "change"|| data.event === "unlink") {
-                        if (data.isDirectory){
+                    if (
+                        data.event === "add" ||
+                        data.event === "change" ||
+                        data.event === "unlink"
+                    ) {
+                        if (data.isDirectory) {
                             //TODO BACK TO OPEN
-                        } else{
-                            console.log("updatedata")
+                        } else {
                             await fetchData(_selectedPDT.value.name);
                         }
-                        
                     }
-                    
                 }
             }
         };

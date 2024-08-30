@@ -8,7 +8,7 @@ import { loadMaterial } from "@/World/systems/loader";
 
 import { ref, computed, toRaw } from "vue";
 import axios from "axios";
-import { defineStore } from "pinia";
+import { defineStore, type StoreDefinition } from "pinia";
 
 import type { MaterialFile } from "@/interfaces/assets";
 
@@ -17,7 +17,7 @@ const offlineMode = import.meta.env.VITE_STATIC_MODE === "true";
 /**
  * Material store handle by Pinia.
  */
-export const materialStore: any = defineStore("materials", () => {
+export const materialStore: StoreDefinition = defineStore("materials", () => {
     const _materials = ref([] as MeshStandardMaterial[]);
 
     /** Number of fetched material.  */

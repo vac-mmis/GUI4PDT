@@ -56,21 +56,57 @@ docker compose down
 ```
 
 
-### Manual installation and local running
+### Manual installation
 
-As this application is split in two parts, it requires two separate installation or local running. Therefore, please refer to the dedicated documentation of each part :
+As this application is split in two parts, it requires two separate installation or local running. 
+
+#### 1. Frontend
+
+#### Environment variables
+
+Before installing frontend, you will to specify URL to backend API in setting `VITE_API_BASE_URL` variable in [`.env`](/frontend/.env) file. Default value could be setup with :
+
+```sh
+cp .env.example .env # Get right environment variables
+```
+
+#### Install dependencies
+
+```sh
+npm install
+```
+
+
+#### 2. Backend
+
+#### Environment variables
+
+To run this project, you will need to add the following environment variables to your `.env` file :
+
+-   `PORT` : Express.JS server port
+-   `DATA` : Main data folder
+-   `MODELS` : Models folder
+-   `MATERIALS` : Material folder
+
+Defaults could be setup with :
+
+```sh
+cp .env.example .env # Get right environment variables
+```
+
+#### Install dependencies
+
+```sh
+npm install
+```
+
+
+For further information, please refer to the dedicated documentation of each part :
 
 -   [Frontend README](/frontend/README.md)
 -   [Backend README](/backend/README.md)
-- With Node.JS version 18.0 or higher: 
-    - just run `npm install` in the `/frontend` and `/backend` directory
 
-
-### Static Mode vs. Live Mode
-If you do not want to use a separate backend server, 
-it is possible to save all data in a file and provide 
-the tool with a single HTTP server. 
-We call this variant Static Mode.
+## Running
 
 ### Live Mode (Default)
 - Make the following changes to the `.env` file inside the frontend directory
@@ -81,6 +117,10 @@ We call this variant Static Mode.
 - Reach the tool by default at [localhost:5173](http://localhost:5173/) or just have a look in the frontend console.
 
 ### Static Mode
+If you do not want to use a separate backend server, 
+it is possible to save all data in a file and provide 
+the tool with a single HTTP server. 
+We call this variant Static Mode.
 - Make the following changes to the `.env` file inside the `/frontend` directory
     - VITE_STATIC_MODE=true
 -   VITE_BASE_PATH="/path/to/server"
@@ -91,7 +131,7 @@ Change the VITE_BASE_PATH. (Only if you are not in `/home`, otherwise just leave
 
 Now you need to save all backend data into a file:
 
-- Run `nom run dev` in the `/backend` directory.  
+- Run `npm run dev` in the `/backend` directory.  
 After the server is started, all data is saved into `/backend/static_mode/backend_data.json`. You can close the server now.
 - Run `npm run build` in the frontend directory.
 

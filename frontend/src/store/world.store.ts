@@ -5,7 +5,7 @@
  */
 
 import { ref, computed, toRaw } from "vue";
-import { defineStore, storeToRefs } from "pinia";
+import { defineStore, storeToRefs, type StoreDefinition } from "pinia";
 import type { Object3D } from "three";
 
 import { World } from "@/World";
@@ -25,7 +25,7 @@ export type Status = {
 /**
  * World store handle by Pinia.
  */
-export const worldStore: any = defineStore("worldStore", () => {
+export const worldStore: StoreDefinition = defineStore("worldStore", () => {
     /** World internal store */
     const _World = ref<World<PDT>>();
     /** World loading status */

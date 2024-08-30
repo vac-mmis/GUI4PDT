@@ -83,8 +83,6 @@ export class Location extends Group {
             }
         });
 
-       
-
         // initialize position
         this.getWorldPosition(this.beginPosition);
         this.getWorldPosition(this.endPosition);
@@ -186,9 +184,7 @@ export class Location extends Group {
                 this.updateDirection(time);
                 const dist = this.dist[index];
                 if ("type" in dist) {
-                    
                     (this.children[0] as Representation).update(dist.representation(true));
-                   
                 }
             }
             this.delta = time - index;
