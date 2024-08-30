@@ -56,6 +56,8 @@ As this application is split in two parts, it requires two separate installation
 
 #### 1. Frontend
 
+Go into the `/frontend` directory.
+
 #### Environment variables
 
 Before installing frontend, you will to specify URL to backend API in setting `VITE_API_BASE_URL` variable in [`.env`](/frontend/.env) file. Default value could be setup with :
@@ -72,6 +74,8 @@ npm install
 
 
 #### 2. Backend
+
+Go into the `/backend` directory.
 
 #### Environment variables
 
