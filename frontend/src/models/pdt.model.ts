@@ -52,8 +52,7 @@ export class PDT extends Group implements WorldContent {
         if (pdt.elevationMaps) {
             this.elevationMaps = [];
             for (const ele_map of pdt.elevationMaps) {
-                const { find }: { find: (name: string) => MeshStandardMaterial | undefined } =
-                    materialStore();
+                const { find } = materialStore(); //TODO does that error change something?
                 const mapMaterial = find(ele_map[0]);
 
                 if (mapMaterial?.name === "water") {

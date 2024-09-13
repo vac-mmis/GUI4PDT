@@ -60,6 +60,11 @@ export class Box extends Mesh implements Representation {
      */
     public update(dim: [number, number, number]): void {
         dim = Box.nonZero(dim);
+
+        this.position.x += (this.currentDim[0] - dim[0]) / 2;
+        this.position.y += (this.currentDim[1] - dim[1]) / 2;
+        this.position.z += (this.currentDim[2] - dim[2]) / 2;
+
         this.geometry.scale(
             dim[0] / this.currentDim[0],
             dim[1] / this.currentDim[1],

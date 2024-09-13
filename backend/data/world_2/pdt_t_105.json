@@ -13,33 +13,35 @@
           }
         }
       },
-      "location": {
-        "dist": {
-          "type": "multivariate-normal",
-          "mean": [
-            -26,
-            4,
-            -20
-          ],
-          "cov": [
-            [
-              0.129375,
-              0,
-              0
+      "location": [
+        {
+          "dist": {
+            "type": "multivariate-normal",
+            "mean": [
+              -26,
+              4,
+              -20
             ],
-            [
-              0,
-              0.129375,
-              0
-            ],
-            [
-              0,
-              0,
-              0.001
+            "cov": [
+              [
+                0.129375,
+                0,
+                0
+              ],
+              [
+                0,
+                0.129375,
+                0
+              ],
+              [
+                0,
+                0,
+                0.001
+              ]
             ]
-          ]
+          }
         }
-      },
+      ],
       "material": "concrete",
       "rotation": {
         "dist": {

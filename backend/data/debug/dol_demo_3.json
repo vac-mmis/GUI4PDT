@@ -1,0 +1,45 @@
+{
+  "name": "debug",
+  "timestep": 3,
+  "timestamp": null,
+  "objects": {
+    "5": {
+      "class": {
+        "dist": {
+          "type": "categorical",
+          "mass": {
+            "tetrapod": 0.5,
+            "reefcone": 0.5
+          }
+        }
+      },
+      "location": {
+        "dist": {
+          "type": "uniform-continuous",
+          "params": [
+            [
+              -75,
+              -44
+            ],
+            [
+              10,
+              25
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "rotation": [
+        1.9533,
+        -0.4678,
+        -0.6059
+      ],
+      "material": "concrete",
+      "scale": 0.8,
+      "name": "object5"
+    }
+  }
+}

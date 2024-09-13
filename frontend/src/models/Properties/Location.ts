@@ -184,7 +184,10 @@ export class Location extends Group {
                 this.updateDirection(time);
                 const dist = this.dist[index];
                 if ("type" in dist) {
+                    console.log(time);
                     (this.children[0] as Representation).update(dist.representation(true));
+                } else {
+                    (this.children[0] as Representation).update([0, 0, 0]);
                 }
             }
             this.delta = time - index;

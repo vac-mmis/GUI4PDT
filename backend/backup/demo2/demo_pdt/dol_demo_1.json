@@ -1,88 +1,8 @@
 {
-  "name": "demo_pdt",
+  "name": "debug",
   "timestep": 1,
   "timestamp": null,
   "objects": {
-    "0": {
-      "class": "reefring",
-      "location": [
-        -17.7992,
-        25.3103,
-        1.125
-      ],
-      "rotation": [
-        0,
-        0,
-        -0.6283
-      ],
-      "material": "concrete",
-      "scale": 1,
-      "name": "object0"
-    },
-    "1": {
-      "class": "reefcone",
-      "location": [
-        -57.9554,
-        -40.7855,
-        0.685
-      ],
-      "rotation": [
-        0,
-        0,
-        1.4311
-      ],
-      "material": "concrete",
-      "scale": 1,
-      "name": "object1"
-    },
-    "2": {
-      "class": "tetrapod",
-      "location": [
-        -30.0718,
-        -10.639,
-        2.3174
-      ],
-      "rotation": [
-        1.451,
-        0.0809,
-        -2.1936
-      ],
-      "material": "concrete",
-      "scale": 0.8,
-      "name": "object2"
-    },
-    "3": {
-      "class": "tetrapod",
-      "location": [
-        -2.0019,
-        44.6584,
-        2.7124
-      ],
-      "rotation": [
-        -2.6309,
-        -0.3857,
-        1.9931
-      ],
-      "material": "concrete",
-      "scale": 0.8,
-      "name": "object3"
-    },
-    "4": {
-      "class": "tetrapod",
-      "location": [
-        -1.1531,
-        38.1024,
-        0.7424
-      ],
-      "rotation": [
-        -2.3165,
-        0.1267,
-        -1.7131
-      ],
-      "material": "concrete",
-      "scale": 0.8,
-      "name": "object4"
-    },
     "5": {
       "class": {
         "dist": {
