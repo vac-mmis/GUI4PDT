@@ -11,7 +11,6 @@ import type { LocationJSON } from "@/interfaces/properties";
 import { type Distribution, makeDistribution } from "@/models/Distributions";
 import { type Representation, makeRepresentation } from "@/models/Representations";
 import type { PDTObject } from "@/models/object.model";
-import type { PDT } from "../pdt.model";
 
 /**
  * Associates used distributions to their representations

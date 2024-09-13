@@ -9,8 +9,6 @@ import { worldStore } from "@/store/world.store";
 
 import { PDTStore } from "@/store/pdt.store";
 
-const pdtStore = storeToRefs(PDTStore());
-
 const emits = defineEmits<
     /**
      * Emits a number as signal to update some other components in `PlotView`.

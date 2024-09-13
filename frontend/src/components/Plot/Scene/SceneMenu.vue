@@ -77,16 +77,15 @@ import { Controller } from "@/models/Controls/Controller";
 import type { PDTObject } from "@/models/object.model";
 import type { Map } from "@/models/map.model";
 import { PDTStore } from "@/store/pdt.store";
-import { worldStore } from "@/store/world.store";
 
 const { getPDT } = storeToRefs(PDTStore());
-const { setStatus } = worldStore();
 
 const openMenu = ref(false);
-const changePDT = () => setStatus({ status: `waiting`, message: `Wait for user PDT selection` });
 
 // Objects to control
-const elevationMaps: ComputedRef<Map[] | undefined> = computed(() => getPDT.value.getElevationMaps());
+const elevationMaps: ComputedRef<Map[] | undefined> = computed(() =>
+    getPDT.value.getElevationMaps()
+);
 const objects: ComputedRef<PDTObject[]> = computed(() => getPDT.value.getObjects());
 
 // Updaters
@@ -95,11 +94,11 @@ const updateGlobal = ref(0);
 
 // Controllers
 const objectControllers = (object: PDTObject): Controller<any>[] => object.getControllers();
-const elevationMapControllers = elevationMaps.value?.map((elevation_map) => elevation_map.getController());
+const elevationMapControllers = elevationMaps.value?.map((elevation_map) =>
+    elevation_map.getController()
+);
 
 const globalObjectsControllers = Controller.buildGlobalBooleanController(
     objects.value.map((object) => objectControllers(object))
 );
-
-
 </script>

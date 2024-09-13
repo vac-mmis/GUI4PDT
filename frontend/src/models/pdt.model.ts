@@ -4,7 +4,7 @@
  * @module PDT
  */
 
-import { Group, Object3D, type Intersection, MeshStandardMaterial } from "three";
+import { Group, Object3D, type Intersection } from "three";
 
 import type { PDTJSON } from "@/interfaces/pdt";
 import { PDTObject } from "@/models/object.model";

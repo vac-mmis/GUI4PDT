@@ -3,20 +3,20 @@ version: "3"
 services:
     frontend:
         image: mmis-gui-frontend
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
         environment:
             # Don't change the API url as it can't be dynamically changed in the frontend container without rebuilding
             - VITE_API_BASE_URL=http://localhost:3000/api
             - VITE_STATIC_MODE=false
             - VITE_BASE_PATH=""
-        build:
-            context: ./frontend
-            dockerfile: Dockerfile
+            - DEFAULT_PDT="demo_pdt"
         ports:
             - 8080:80
         networks:
             - frontend
             - backend
-
     backend:
         image: mmis-gui-backend
         build:
@@ -42,6 +42,16 @@ services:
         networks:
             - backend
 
+
+    nginx:
+        image: nginx:alpine
+        container_name: nginx-app
+        volumes:
+        - ./frontend/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        ports:
+        - 80:80
+        depends_on:
+        - frontend
 networks:
     frontend:
     backend:

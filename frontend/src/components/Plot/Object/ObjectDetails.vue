@@ -1,8 +1,18 @@
 <template>
-    <v-card v-if="opened && getPDT.selectedObject" class="card" ref="card"
-        :title="`Details on object: ${getPDT.selectedObject.objName[0]}`" prepend-icon="fas fa-cubes" elevation="16">
+    <v-card
+        v-if="opened && getPDT.selectedObject"
+        class="card"
+        ref="card"
+        :title="`Details on object: ${getPDT.selectedObject.objName[0]}`"
+        prepend-icon="fas fa-cubes"
+        elevation="16"
+    >
         <template v-slot:append>
-            <v-btn :icon="maximized ? `$minimize` : `$maximize`" variant="text" @click="toggleWindow" />
+            <v-btn
+                :icon="maximized ? `$minimize` : `$maximize`"
+                variant="text"
+                @click="toggleWindow"
+            />
             <v-btn icon="$close" variant="text" @click="onClose" />
         </template>
 
@@ -16,20 +26,26 @@
             <template v-for="key in Object.keys(details)" :key="key">
                 <template v-if="tab === key">
                     <PropertyDetails :details="details[key]" />
-                    
+
                     <!-- TODO <template v-if="editMode">
                        <DetailsEdit v-if="isOnline" @mouseover="isMoveable=false" @mouseleave="isMoveable=true" :property="key" :dist="getDist(key)" /> 
                     </template> -->
                 </template>
-
             </template>
-
         </v-card-item>
-       
     </v-card>
 
-    <Moveable :key="maximized ? 1 : 2" v-if="opened && isMoveable && getPDT.selectedObject" className="moveable" :target="['.card']"
-        :draggable="true" :origin="false" :edge="true" :hide-default-lines="true" @drag="onDrag" />
+    <Moveable
+        :key="maximized ? 1 : 2"
+        v-if="opened && isMoveable && getPDT.selectedObject"
+        className="moveable"
+        :target="['.card']"
+        :draggable="true"
+        :origin="false"
+        :edge="true"
+        :hide-default-lines="true"
+        @drag="onDrag"
+    />
 </template>
 
 <script lang="ts" setup>
@@ -38,11 +54,7 @@ import Moveable, { type OnDrag } from "vue3-moveable";
 import { storeToRefs } from "pinia";
 
 import PropertyDetails from "@/components/Plot/Object/PropertyDetails.vue";
-import DetailsEdit from "@/components/Plot/Object/DetailsEdit.vue";
-
 import { PDTStore } from "@/store/pdt.store";
-
-
 
 const { getPDT } = storeToRefs(PDTStore());
 const props = defineProps<{
@@ -62,7 +74,7 @@ const maximized = ref(true);
 const editMode = ref(true);
 
 //TODO RENAME ONLINE MODE TO LIVE MODE
-const isOnline = import.meta.env.VITE_STATIC_MODE === "false"
+const isOnline = import.meta.env.VITE_STATIC_MODE === "false";
 
 const tab = ref<string>("");
 
@@ -70,10 +82,7 @@ const onClose = () => {
     opened.value = false;
 };
 
-
-const getDist = (key:string) => {
-    
-
+const getDist = (key: string) => {
     if (key === "location") {
         return pdtObject.value.children[1].dist[0];
     }
@@ -86,13 +95,11 @@ const getDist = (key:string) => {
     return pdtObject.value[key].dist[0];
 };
 
-
 const toggleWindow = () => {
     maximized.value = !maximized.value;
 };
 
 const isMoveable = ref(true);
-
 
 watch(
     () => getPDT.value.selectedObject,
@@ -102,9 +109,6 @@ watch(
 );
 
 const onDrag = (e: OnDrag) => {
-
     e.target.style.transform = e.transform;
 };
 </script>
-
-

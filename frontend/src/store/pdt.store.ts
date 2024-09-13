@@ -23,9 +23,6 @@ export const PDTStore: StoreDefinition = defineStore("PDTs", () => {
     /** PDT names list */
     const _list = ref<string[]>([]);
 
-    /** PDT status (deleted, etc.) */
-    const _selectedPDTStatus = ref("add");
-
     /** Number of timestamps. */
     const timeLength = computed(() => _selectedPDT.value.getTimeLength());
 
