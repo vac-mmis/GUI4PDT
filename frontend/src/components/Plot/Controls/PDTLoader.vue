@@ -19,7 +19,6 @@ const selectedPDT = ref(pdt.getPDT.name ?? "");
 const default_pdt = import.meta.env.VITE_DEFAULT_PDT ?? "";
 
 onBeforeMount(async () => {
-
     if (selectedPDT.value !== "") {
         world.setStatus({ status: "success", message: `` });
         return;
@@ -54,7 +53,5 @@ onBeforeMount(async () => {
                 message: `${selectedPDT.value} loaded successfully`,
             });
         });
-
-    
 });
 </script>

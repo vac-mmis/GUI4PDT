@@ -33,7 +33,7 @@ export class Box extends Mesh implements Representation {
         const material = new MeshStandardMaterial({
             color: 0xf0f921,
             transparent: true,
-            opacity: 0.5,
+            opacity: 0.1,
         });
         super(geometry, material);
         this.currentDim = dim;

@@ -9,6 +9,7 @@ import { defineStore, type StoreDefinition } from "pinia";
 
 import type { PDTJSON } from "@/interfaces/pdt";
 import { PDT } from "@/models/pdt.model";
+import { worldStore } from "./world.store";
 
 const offlineMode = import.meta.env.VITE_STATIC_MODE === "true";
 
@@ -66,9 +67,6 @@ export const PDTStore: StoreDefinition = defineStore("PDTs", () => {
      * @returns PDT list
      */
     async function list(): Promise<string[]> {
-        if (_list.value.length > 0) {
-            return _list.value;
-        }
         if (offlineMode) {
             return listLocally();
         } else {
@@ -94,6 +92,7 @@ export const PDTStore: StoreDefinition = defineStore("PDTs", () => {
      */
     const fetchRemotely = async (pdtName: string) => {
         const pdt = await axios.get(`pdt/${pdtName}`).then((res) => new PDT(res.data as PDTJSON));
+
         if (!pdt) {
             throw new Error("PDT not found");
         } else {
@@ -150,7 +149,14 @@ export const PDTStore: StoreDefinition = defineStore("PDTs", () => {
                         if (data.isDirectory) {
                             //TODO BACK TO OPEN
                         } else {
-                            await fetchData(_selectedPDT.value.name);
+                            await fetchData(_selectedPDT.value.name).catch((err: string) => {
+                                const world = worldStore();
+                                world.setStatus({
+                                    status: "error",
+                                    message: "No PDT found or server unavailable",
+                                });
+                                console.error(err);
+                            });
                         }
                     }
                 }

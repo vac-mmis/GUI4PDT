@@ -16,7 +16,7 @@ const router = createRouter({
 
         {
             path: "/",
-            redirect: "/open",
+            redirect: "/plot",
         },
 
         {
