@@ -86,39 +86,39 @@ app.use(
     .use(bodyParser.json({ limit: "50mb" }))
     .use("/api", router);
 
-/**
- * This async reloadProjectNames function checks the PDT directory and adapts the name inside the PDT definition for each file according to the project folder name
- */
-const reloadProjectNames = async () => {
-    const dirs = await fs.promises.readdir(pdtsPath);
+// /**
+//  * This async reloadProjectNames function checks the PDT directory and adapts the name inside the PDT definition for each file according to the project folder name
+//  */
+// const reloadProjectNames = async () => {
+//     const dirs = await fs.promises.readdir(pdtsPath);
 
-    try {
-        dirs.forEach(async (dir) => {
-            const projectPath = path.join(pdtsPath, dir);
-            const projectName = dir;
+//     try {
+//         dirs.forEach(async (dir) => {
+//             const projectPath = path.join(pdtsPath, dir);
+//             const projectName = dir;
 
-            const files = await fs.promises.readdir(projectPath);
+//             const files = await fs.promises.readdir(projectPath);
 
-            files.forEach((file) => {
-                const filePath = path.join(projectPath, file);
-                if (path.extname(file) === ".json") {
-                    const jsonData = JSON.parse(
-                        fs.readFileSync(filePath, "utf-8") === ""
-                            ? "{}"
-                            : fs.readFileSync(filePath, "utf-8")
-                    );
-                    // eslint-disable-next-line no-prototype-builtins
-                    if (jsonData.hasOwnProperty("name")) {
-                        jsonData.name = projectName;
-                        fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2));
-                    }
-                }
-            });
-        });
-    } catch (error) {
-        logger.error(error);
-    }
-};
+//             files.forEach((file) => {
+//                 const filePath = path.join(projectPath, file);
+//                 if (path.extname(file) === ".json") {
+//                     const jsonData = JSON.parse(
+//                         fs.readFileSync(filePath, "utf-8") === ""
+//                             ? "{}"
+//                             : fs.readFileSync(filePath, "utf-8")
+//                     );
+//                     // eslint-disable-next-line no-prototype-builtins
+//                     if (jsonData.hasOwnProperty("name")) {
+//                         jsonData.name = projectName;
+//                         fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2));
+//                     }
+//                 }
+//             });
+//         });
+//     } catch (error) {
+//         logger.error(error);
+//     }
+// };
 
 /**
  * This async setup function loads all necessary folders to serve PDTs and starts Express.JS server
@@ -133,7 +133,7 @@ const setup = async () => {
     await MaterialStore.load()
         .catch((err) => logger.error(err, err.message))
         .then(() => ModelStore.load().catch((err) => logger.error(err, err.message)))
-        .then(() => reloadProjectNames())
+        //.then(() => reloadProjectNames())
         .then(() => PDTStore.load().catch((err) => logger.error(err, err.message)))
         .then(() => {
             const models = ModelStore.get();
@@ -145,7 +145,6 @@ const setup = async () => {
                 materials: materials,
                 pdts: pdts,
             };
-            //TODO create if not exist
             fs.writeFile("static_mode/backend_data.json", JSON.stringify(saveData), (err) => {
                 if (err) throw err;
                 logger.info("All data has been saved into a file: static_mode/backend_data.json");
