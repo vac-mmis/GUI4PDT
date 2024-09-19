@@ -1,12 +1,14 @@
+/**
+ * Implementation of objects inside PDTs.
+ *
+ * @module PDT.Object
+ */
 export class CustomMenu {
     constructor(
         public title: string,
         public icon?: string,
         public route: string = "",
         public subMenus: CustomMenu[] = [],
-        public callback?: (object: Object) => void) {
-    }
+        public callback?: (object: Object) => void
+    ) {}
 }
-
-
-

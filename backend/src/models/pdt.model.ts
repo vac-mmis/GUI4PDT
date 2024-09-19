@@ -129,7 +129,7 @@ export class PDT {
 
         //prefer basename over name in json file
         this.name = path.basename(this.PDTDir) || json.name;
-        console.log(path.basename(this.PDTDir));
+
         this.objects = json.objects;
 
         const maps = (await readdir(this.PDTDir))

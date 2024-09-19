@@ -10,9 +10,6 @@ import { defineStore, type StoreDefinition } from "pinia";
 import type { PDTJSON } from "@/interfaces/pdt";
 import { PDT } from "@/models/pdt.model";
 import { worldStore } from "./world.store";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
 
 const staticMode = import.meta.env.VITE_STATIC_MODE === "true";
 
@@ -144,14 +141,15 @@ export const PDTStore: StoreDefinition = defineStore("PDTs", () => {
 
             if (data.object === "pdt") {
                 await list();
+
                 if (data.name === _selectedPDT.value.name) {
                     if (
                         data.event === "add" ||
                         data.event === "change" ||
                         data.event === "unlink"
                     ) {
+                        // eslint-disable-next-line no-empty
                         if (data.isDirectory) {
-                            router.push("/open");
                         } else {
                             await fetchData(_selectedPDT.value.name).catch((err: string) => {
                                 const world = worldStore();
@@ -166,6 +164,18 @@ export const PDTStore: StoreDefinition = defineStore("PDTs", () => {
                             });
                         }
                     }
+                } else if (data.name === null) {
+                    await fetchData(_selectedPDT.value.name).catch((err: string) => {
+                        const world = worldStore();
+                        world.setStatus({
+                            status: "error",
+                            message:
+                                "PDT " +
+                                _selectedPDT.value.name +
+                                " was not found or server unavailable",
+                        });
+                        console.error(err);
+                    });
                 }
             }
         };

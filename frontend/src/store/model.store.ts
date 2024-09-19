@@ -103,9 +103,20 @@ export const modelStore: StoreDefinition = defineStore("models", () => {
         const ws = new WebSocket("ws://localhost:3030");
 
         ws.onmessage = async (event) => {
-            if (event.data === "new model") {
+            const data = JSON.parse(event.data);
+
+            if (data.object === "model") {
                 await fetchData();
-                ws.send("update pdt");
+
+                const message = {
+                    object: "pdt",
+                    event: null,
+                    name: null,
+                    isDirectory: null,
+                };
+                //TODO lösdchen erst wenn da Verzeichnis gelöscht wird
+                //ansonten nur change
+                ws.send(JSON.stringify(message));
             }
         };
     };

@@ -61,15 +61,18 @@ wss.on("connection", (ws: WebSocket) => {
     ws.on("message", (data: Buffer, isBinary: boolean) => {
         if (!isBinary) {
             const message = data.toString();
-            if (message === "update pdt") {
+            const dataObject = JSON.parse(message);
+
+            if (dataObject.object === "pdt" && dataObject.name === null) {
                 wss.clients.forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {
-                        client.send("new pdt");
+                        client.send(JSON.stringify(dataObject));
                     }
                 });
             }
         }
     });
+
     ws.on("close", () => {
         console.log("Client disconnected");
     });
@@ -163,7 +166,15 @@ const setup = async () => {
                 await MaterialStore.load().catch((err) => logger.error(err, err.message));
                 wss.clients.forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {
-                        client.send("new material");
+                        const pdtMessage = {
+                            object: "material",
+                            event: null,
+                            name: null,
+                            isDirectory: null,
+                        };
+                        //TODO lösdchen erst wenn da Verzeichnis gelöscht wird
+                        //ansonten nur change
+                        client.send(JSON.stringify(pdtMessage));
                     }
                 });
                 isProcessingMat = false;
@@ -180,7 +191,15 @@ const setup = async () => {
                 await ModelStore.load().catch((err) => logger.error(err, err.message));
                 wss.clients.forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {
-                        client.send("new model");
+                        const pdtMessage = {
+                            object: "model",
+                            event: null,
+                            name: null,
+                            isDirectory: null,
+                        };
+                        //TODO lösdchen erst wenn da Verzeichnis gelöscht wird
+                        //ansonten nur change
+                        client.send(JSON.stringify(pdtMessage));
                     }
                 });
                 isProcessingMod = false;

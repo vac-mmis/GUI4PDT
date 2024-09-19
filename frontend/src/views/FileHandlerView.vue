@@ -23,7 +23,7 @@
                     accept=".json,.csv,.png,.zip,.bmp,.jpg,.jpeg,.glb"
                     prepend-icon="fas fa-file-import"
                 ></v-file-input>
-
+                <v-alert v-if="errorMessage" type="error">{{ errorMessage }}</v-alert>
                 <v-btn color="primary" type="submit" :disabled="!formIsValid">Upload</v-btn>
             </v-form>
         </v-container>
@@ -33,9 +33,14 @@
 <script setup lang="ts">
 import axios from "axios";
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const files = ref<File[]>([]);
 const projectName = ref();
+
+const errorMessage = ref("");
 
 const fileRules = [
     (value: any) => {
@@ -48,6 +53,10 @@ const projectNameRules = [
     (value: any) => {
         if (value) return true;
         return "You must give your project a name";
+    },
+    (value: any) => {
+        if (/\s/.test(value)) return "Project name cannot contain spaces";
+        return true;
     },
 ];
 
@@ -77,9 +86,13 @@ const submitFile = async () => {
 
     await axios
         .post("/upload", formData)
-        .then(() => {})
+        .then(() => {
+            errorMessage.value = "";
+            router.push("/open");
+        })
         .catch((error) => {
-            console.log(error.response.data);
+            console.log(error);
+            errorMessage.value = error.response?.data.message || "An error occured.";
         });
 };
 </script>

@@ -83,9 +83,18 @@ export const materialStore: StoreDefinition = defineStore("materials", () => {
         const ws = new WebSocket("ws://localhost:3030");
 
         ws.onmessage = async (event) => {
-            if (event.data === "new material") {
+            const data = JSON.parse(event.data);
+
+            if (data.object === "material") {
                 await fetchData();
-                ws.send("update pdt");
+
+                const message = {
+                    object: "pdt",
+                    event: null,
+                    name: null,
+                    isDirectory: null,
+                };
+                ws.send(JSON.stringify(message));
             }
         };
     };

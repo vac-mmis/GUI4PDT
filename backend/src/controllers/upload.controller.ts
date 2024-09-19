@@ -12,15 +12,6 @@ import path from "path";
 import fs from "fs";
 import unzipper from "unzipper";
 
-//TODO documentation for uploading file
-/**
- * Upload single PDT
- * @param req HTTP Request. Must have `name` attribute with the desired PDT
- * @param res HTTP Response :
- * - 200 confirmation + requested PDT
- * - 404 error if desired PDT doesn't exist
- */
-
 const pdtPath = path.resolve(process.env.DATA ?? "").normalize();
 
 const storage = multer.diskStorage({
@@ -51,9 +42,12 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilt
         "image/png",
         "image/bmp",
         "image/jpg",
+        "application/zip",
+        "application/octet-stream",
+        "application/x-zip-compressed",
+        "multipart/x-zip",
         "text/csv",
         "application/json",
-        "application/zip",
         "model/gltf-binary",
     ];
 
@@ -70,11 +64,17 @@ const upload = multer({
 });
 const multerUploadMulti = upload.array("files");
 
+/**
+ * Create a new project folder in /data and upload multiple files. ZIP files are automatically unzipped.
+ *
+ * @param req files attribute which contains the list of the uploaded files
+ * @param res HTTP Response :
+ * - 200 confirmation + project was created / files uploaded and unzipped if necessary
+ * - 400 error + project was not created
+ */
 export function uploadFiles(req: Request, res: Response): void {
     multerUploadMulti(req, res, (err) => {
         if (err) {
-            logger.error(err, err.message);
-
             res.status(500).json({
                 success: false,
                 message: err.message,
@@ -119,10 +119,10 @@ function getEmpty(filename: string) {
         objects: [
             {
                 id: 0,
-                class: "vac",
-                location: [5, 0, 0],
-                rotation: [4.7, 0, 0],
-                scale: 0.4,
+                class: "reefring",
+                location: [0, 0, 0],
+                rotation: [0, 0, 0],
+                scale: 1,
                 material: "concrete",
             },
         ],
@@ -132,6 +132,14 @@ function getEmpty(filename: string) {
     return jsonData;
 }
 
+/**
+ * Create a new project folder in /data and inserts an PDT with a dummy object.
+ *
+ * @param req req.body.name contains the name of the PDT
+ * @param res HTTP Response :
+ * - 200 confirmation + project was created
+ * - 400 error writing the file or project already exists
+ */
 export function newfromempty(req: Request, res: Response): void {
     const pdtPath = path.resolve(process.env.DATA ?? "").normalize();
 
@@ -186,7 +194,11 @@ export function updateClassname(req: Request, res: Response): void {
             try {
                 fs.writeFileSync(filePath, JSON.stringify(obj, null, 2));
             } catch (error) {
-                logger.error("Error writing the file: ", error);
+                res.status(400).json({
+                    success: true,
+                    message: "Error writing the file",
+                });
+                logger.error(error);
             }
             break;
         }
@@ -196,12 +208,6 @@ export function updateClassname(req: Request, res: Response): void {
         success: true,
         message: "Project created successfully",
     });
-
-    // } else {
-    //     res.status(400).json({
-    //         "success": false,
-    //         "message": "Project already exists"
-    //     });
 }
 
 const unzipFile = async (zipFile: string, destiantion: string) => {

@@ -16,8 +16,8 @@
                     accept=".csv"
                     prepend-icon="fas fa-file-import"
                 ></v-file-input>
-
-                <v-btn color="primary" type="submit" :disabled="!formIsValid">Upload</v-btn>
+                <v-alert v-if="errorMessage" type="error">{{ errorMessage }}</v-alert>
+                <v-btn color="primary" type="submit" :disabled="!formIsValid">Create</v-btn>
             </v-form>
         </v-container>
     </div>
@@ -26,21 +26,25 @@
 <script setup lang="ts">
 import axios from "axios";
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
 
 import { PDTStore } from "@/store/pdt.store";
 import { storeToRefs } from "pinia";
 
+const router = useRouter();
+
 const { getPDT } = storeToRefs(PDTStore());
 
-const file = ref<File[]>([]);
+const file = ref<File>();
 
 const fileRules = [
     (value: any) => {
-        if (value.length > 0) return true;
-        return "You must choose at least 1 file";
+        if (value !== undefined) return true;
+        return "You must choose 1 file";
     },
 ];
 
+const errorMessage = ref("");
 const formIsValid = computed(() => {
     return fileRules.every((rule) => rule(file.value) === true);
 });
@@ -53,15 +57,18 @@ const submitFile = async () => {
     }
 
     const formData = new FormData();
-
     formData.append("projectName", projectName);
-    formData.append("csvFile", file.value[0]);
+    formData.append("csvFile", file.value);
 
     await axios
         .post("/uploadcsv", formData)
-        .then(() => {})
+        .then(() => {
+            errorMessage.value = "";
+            router.push("/plot");
+        })
         .catch((error) => {
-            console.log(error.response.data);
+            console.log(error);
+            errorMessage.value = error.response?.data.message || "An error occured.";
         });
 };
 </script>

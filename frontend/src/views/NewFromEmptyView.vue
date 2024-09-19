@@ -4,19 +4,19 @@
             <v-form @submit.prevent="submitFile" enctype="multipart/form-data">
                 <v-label>
                     <template v-slot:default>
-                        <h1>New</h1>
+                        <h1>Create new PDT</h1>
                     </template>
                 </v-label>
                 <v-spacer vertical></v-spacer>
                 <v-text-field
                     :rules="projectNameRules"
                     v-model="projectName"
-                    label="Project Name"
+                    label="PDT Name"
                     prepend-icon="fas fa-file-signature"
                 ></v-text-field>
 
                 <v-alert v-if="errorMessage" type="error">{{ errorMessage }}</v-alert>
-                <v-btn color="primary" type="submit" :disabled="!formIsValid">Upload</v-btn>
+                <v-btn color="primary" type="submit" :disabled="!formIsValid">Create</v-btn>
             </v-form>
         </v-container>
     </div>
@@ -38,6 +38,10 @@ const projectNameRules = [
         if (value) return true;
         return "You must give your project a name";
     },
+    (value: any) => {
+        if (/\s/.test(value)) return "Project name cannot contain spaces";
+        return true;
+    },
 ];
 //TODO: REDO ALL NEW FEATURES LIEK FLE UPLOAD ETC
 const formIsValid = computed(() => {
@@ -57,11 +61,11 @@ const submitFile = async () => {
         })
         .then(() => {
             errorMessage.value = "";
+            router.push("/open");
         })
         .catch((error) => {
             console.log(error);
             errorMessage.value = error.response?.data.message || "An error occured.";
         });
-    router.push("/");
 };
 </script>
