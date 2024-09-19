@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { PDTStore } from "@/store/pdt.store";
 import { modelStore } from "@/store/model.store";
@@ -80,17 +80,17 @@ const onOpen = async (selected: string) => {
     router.push("/plot");
 };
 
+watchEffect(() => {
+    PDTList.value = pdt.getPDTList;
+});
+
 onBeforeMount(async () => {
     world.setStatus({ status: "waiting", message: `Wait for user PDT selection` });
     // Load PDT name list
-    pdt.list()
-        .then((pdtList: string[]) => {
-            PDTList.value = pdtList;
-        })
-        .catch((err: string) => {
-            world.setStatus({ status: "error", message: "No PDT found or server unavailable" });
-            console.error(err);
-        });
+    pdt.list().catch((err: string) => {
+        world.setStatus({ status: "error", message: "No PDT found or server unavailable" });
+        console.error(err);
+    });
 
     // Load models and materials
     await models.fetchData();

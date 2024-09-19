@@ -143,6 +143,7 @@ export const PDTStore: StoreDefinition = defineStore("PDTs", () => {
             const data = JSON.parse(event.data);
 
             if (data.object === "pdt") {
+                await list();
                 if (data.name === _selectedPDT.value.name) {
                     if (
                         data.event === "add" ||
