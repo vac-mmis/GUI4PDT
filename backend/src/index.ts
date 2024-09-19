@@ -172,8 +172,6 @@ const setup = async () => {
                             name: null,
                             isDirectory: null,
                         };
-                        //TODO lösdchen erst wenn da Verzeichnis gelöscht wird
-                        //ansonten nur change
                         client.send(JSON.stringify(pdtMessage));
                     }
                 });
@@ -197,8 +195,6 @@ const setup = async () => {
                             name: null,
                             isDirectory: null,
                         };
-                        //TODO lösdchen erst wenn da Verzeichnis gelöscht wird
-                        //ansonten nur change
                         client.send(JSON.stringify(pdtMessage));
                     }
                 });
@@ -233,8 +229,6 @@ const setup = async () => {
                                 name: pdtName,
                                 isDirectory: isDirectory,
                             };
-                            //TODO lösdchen erst wenn da Verzeichnis gelöscht wird
-                            //ansonten nur change
                             client.send(JSON.stringify(pdtMessage));
                         }
                     });

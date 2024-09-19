@@ -43,7 +43,7 @@ const projectNameRules = [
         return true;
     },
 ];
-//TODO: REDO ALL NEW FEATURES LIEK FLE UPLOAD ETC
+
 const formIsValid = computed(() => {
     return projectNameRules.every((rule) => rule(projectName.value) === true);
 });

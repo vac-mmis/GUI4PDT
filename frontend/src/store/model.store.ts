@@ -114,8 +114,6 @@ export const modelStore: StoreDefinition = defineStore("models", () => {
                     name: null,
                     isDirectory: null,
                 };
-                //TODO lösdchen erst wenn da Verzeichnis gelöscht wird
-                //ansonten nur change
                 ws.send(JSON.stringify(message));
             }
         };
