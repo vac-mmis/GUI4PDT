@@ -18,11 +18,12 @@ const selectedPDT = ref(pdt.getPDT.name ?? "");
 
 const default_pdt = import.meta.env.VITE_DEFAULT_PDT ?? "";
 
-onBeforeMount(async () => {
+async function loadPDTData() {
     if (selectedPDT.value !== "") {
         world.setStatus({ status: "success", message: `` });
         return;
     }
+
     world.setStatus({ status: "waiting", message: `Wait for PDT` });
 
     pdt.list()
@@ -53,5 +54,9 @@ onBeforeMount(async () => {
                 message: `${selectedPDT.value} loaded successfully`,
             });
         });
+}
+
+onBeforeMount(async () => {
+    loadPDTData();
 });
 </script>

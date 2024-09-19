@@ -80,15 +80,6 @@ axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL ?? "";
 // Pinia initialization
 const pinia = createPinia();
 
-declare global {
-    interface Window {
-        OFFLINE_MODE: boolean;
-    }
-}
-
-// Define a global variable on the custom window object
-window.OFFLINE_MODE = true;
-
 createApp(App)
     .use(VueDOMPurifyHTML)
     .use(vuetify)

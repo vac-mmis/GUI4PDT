@@ -1,7 +1,7 @@
 <template>
     <div :class="`${openMenu ? `w-auto` : ``}`">
         <!-- Toolbar -->
-        <v-toolbar class="w-100" :collapse="!openMenu" title="PDT Menu">
+        <v-toolbar class="w-100" :collapse="!openMenu" :title="`${pdtName}`">
             <!-- <v-btn v-if="openMenu" @click="changePDT" icon="">
                 <v-icon icon="far fa-folder-open" />
                 <v-tooltip activator="parent" location="bottom" text="Change PDT" />
@@ -81,6 +81,8 @@ import { PDTStore } from "@/store/pdt.store";
 const { getPDT } = storeToRefs(PDTStore());
 
 const openMenu = ref(false);
+
+const pdtName = ref(getPDT.value.name ?? "");
 
 // Objects to control
 const elevationMaps: ComputedRef<Map[] | undefined> = computed(() =>

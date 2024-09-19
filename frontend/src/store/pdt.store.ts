@@ -10,8 +10,11 @@ import { defineStore, type StoreDefinition } from "pinia";
 import type { PDTJSON } from "@/interfaces/pdt";
 import { PDT } from "@/models/pdt.model";
 import { worldStore } from "./world.store";
+import { useRouter } from "vue-router";
 
-const offlineMode = import.meta.env.VITE_STATIC_MODE === "true";
+const router = useRouter();
+
+const staticMode = import.meta.env.VITE_STATIC_MODE === "true";
 
 /**
  * PDT store handle by Pinia.
@@ -67,7 +70,7 @@ export const PDTStore: StoreDefinition = defineStore("PDTs", () => {
      * @returns PDT list
      */
     async function list(): Promise<string[]> {
-        if (offlineMode) {
+        if (staticMode) {
             return listLocally();
         } else {
             return listRemotely();
@@ -127,7 +130,7 @@ export const PDTStore: StoreDefinition = defineStore("PDTs", () => {
     };
 
     async function fetchData(pdtName: string) {
-        if (offlineMode) {
+        if (staticMode) {
             return fetchLocally(pdtName);
         } else {
             return fetchRemotely(pdtName);
@@ -147,13 +150,16 @@ export const PDTStore: StoreDefinition = defineStore("PDTs", () => {
                         data.event === "unlink"
                     ) {
                         if (data.isDirectory) {
-                            //TODO BACK TO OPEN
+                            router.push("/open");
                         } else {
                             await fetchData(_selectedPDT.value.name).catch((err: string) => {
                                 const world = worldStore();
                                 world.setStatus({
                                     status: "error",
-                                    message: "No PDT found or server unavailable",
+                                    message:
+                                        "PDT " +
+                                        _selectedPDT.value.name +
+                                        " was not found or server unavailable",
                                 });
                                 console.error(err);
                             });

@@ -65,8 +65,6 @@ const update = ref(0);
 const onOpen = async (selected: string) => {
     world.setStatus({ status: "loading PDT", message: "Fetching selected PDT..." });
 
-    world.setStatus({ status: "loading PDT", message: "Fetching selected PDT..." });
-
     pdt.fetchData(selected)
         .catch((err: string) => {
             world.setStatus({ status: "error", message: err });

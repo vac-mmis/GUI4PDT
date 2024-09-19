@@ -21,17 +21,22 @@ export async function load(): Promise<void> {
     PDTs = [];
     const pdtDirs = await readdir(dataPath);
     await Promise.all(
-        pdtDirs.map(async (PDTDir) => {
-            const fileStat = await stat(`${dataPath}/${PDTDir}`);
-            if (fileStat.isDirectory()) {
-                const pdt = new PDT(`${dataPath}/${PDTDir}`);
-                await pdt.init();
-                PDTs.push(pdt);
-            }  
-        })
-    ).catch((err) => {
-        throw new Error(`PDTs loading failed : ${err}`);
-    });
+        pdtDirs.map((PDTDir) =>
+            stat(`${dataPath}/${PDTDir}`)
+                .then((fileStat) => {
+                    if (fileStat.isDirectory()) {
+                        const pdt = new PDT(`${dataPath}/${PDTDir}`);
+                        return pdt.init().then(() => {
+                            PDTs.push(pdt);
+                        });
+                    }
+                })
+                .catch((err) => {
+                    logger.error(`Failed to load PDT from '${PDTDir}': ${err.message}`);
+                    // Log the error and continue to the next directory
+                })
+        )
+    );
 
     logger.info(`Loaded ${PDTs.length} PDTs`);
 }

@@ -12,7 +12,7 @@ import { defineStore, type StoreDefinition } from "pinia";
 
 import type { ModelFile } from "@/interfaces/assets";
 
-const offlineMode = import.meta.env.VITE_STATIC_MODE === "true";
+const staticMode = import.meta.env.VITE_STATIC_MODE === "true";
 
 /**
  * Model store handle by Pinia.
@@ -81,7 +81,7 @@ export const modelStore: StoreDefinition = defineStore("models", () => {
     };
 
     async function fetchData() {
-        if (offlineMode) {
+        if (staticMode) {
             return fetchLocally();
         } else {
             return fetchRemotely();

@@ -12,7 +12,7 @@ import { defineStore, type StoreDefinition } from "pinia";
 
 import type { MaterialFile } from "@/interfaces/assets";
 
-const offlineMode = import.meta.env.VITE_STATIC_MODE === "true";
+const staticMode = import.meta.env.VITE_STATIC_MODE === "true";
 
 /**
  * Material store handle by Pinia.
@@ -61,7 +61,7 @@ export const materialStore: StoreDefinition = defineStore("materials", () => {
     };
 
     async function fetchData() {
-        if (offlineMode) {
+        if (staticMode) {
             return fetchLocally();
         } else {
             return fetchRemotely();
@@ -89,7 +89,6 @@ export const materialStore: StoreDefinition = defineStore("materials", () => {
             }
         };
     };
-    //TODO: REname OFFLINE TO STATIC MODE
     if (import.meta.env.VITE_STATIC_MODE === "false") {
         initWebSocket();
     }

@@ -21,6 +21,7 @@ import { debounce } from "lodash";
 import chokidar from "chokidar";
 import path from "path";
 import fs from "fs";
+import { checkDirectory } from "./utils/files";
 
 const port = process.env.PORT ?? 3000;
 
@@ -193,7 +194,8 @@ const setup = async () => {
         async (eventType, fileName) => {
             const pdtName = path.basename(path.dirname(fileName));
             const eventName = eventType;
-            const isDirectory = path.basename(fileName) === pdtName;
+
+            const isDirectory = await checkDirectory(fileName);
 
             if (hasLockFile(path.dirname(fileName))) {
                 return;
@@ -201,7 +203,7 @@ const setup = async () => {
 
             if (!isProcessingPDT) {
                 isProcessingPDT = true;
-                //await reloadProjectNames();
+
                 try {
                     await PDTStore.load();
                     wss.clients.forEach((client) => {

@@ -52,7 +52,7 @@ export class PDT extends Group implements WorldContent {
         if (pdt.elevationMaps) {
             this.elevationMaps = [];
             for (const ele_map of pdt.elevationMaps) {
-                const { find } = materialStore(); //TODO does that error change something?
+                const { find } = materialStore();
                 const mapMaterial = find(ele_map[0]);
 
                 if (mapMaterial?.name === "water") {

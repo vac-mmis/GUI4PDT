@@ -1,5 +1,4 @@
 <template>
-    
     <!-- Three Scene -->
     <div
         v-if="getStatus.status === `loading world` || getStatus.status === `success`"
@@ -12,9 +11,7 @@
     <div
         v-if="getStatus.status === `success`"
         class="d-flex flex-column justify-space-between align-center h-100 w-100"
-    >   
-    
-   
+    >
         <div class="w-100 d-flex flex-row justify-space-between">
             <SceneMenu @update="updateDetails" class="position-relative overflow-visible z-1" />
 
@@ -22,17 +19,15 @@
                 <ObjectDetails :key="detailsKey" :time="timeLength > 1 ? selectedTime : 0" />
             </div>
         </div>
-       
+
         <div v-if="timeLength > 1" class="position-relative w-75 ma-6 z-1">
             <TimeSlider @time="(t: number) => (selectedTime = t)" />
         </div>
-        
     </div>
 
     <!-- PDT loader, used to switch PDT -->
     <div v-if="getStatus.status === `waiting`" class="d-flex position-relative h-100 w-auto">
         <PDTLoader />
-        
     </div>
 
     <!-- Loading overlay -->
@@ -56,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref,watchEffect } from "vue";
+import { ref, watchEffect } from "vue";
 import { storeToRefs } from "pinia";
 
 import ObjectDetails from "@/components/Plot/Object/ObjectDetails.vue";
@@ -68,8 +63,17 @@ import ThreeScene from "@/components/Plot/Scene/ThreeScene.vue";
 
 import { PDTStore } from "@/store/pdt.store";
 import { worldStore } from "@/store/world.store";
+import { modelStore } from "@/store/model.store";
+import { materialStore } from "@/store/material.store";
 
-import { useRouter } from 'vue-router';
+const models = modelStore();
+const materials = materialStore();
+const pdt = PDTStore();
+const world = worldStore();
+
+const selectedPDT = ref(pdt.getPDT.name ?? "");
+
+import { useRouter } from "vue-router";
 
 const { timeLength } = storeToRefs(PDTStore());
 const { getStatus } = storeToRefs(worldStore());
@@ -85,16 +89,49 @@ const updateDetails = () => {
 };
 
 const sceneKey = ref(0);
+const default_pdt = import.meta.env.VITE_DEFAULT_PDT ?? "";
 
+const loadDefaultPDT = async () => {
+    world.setStatus({ status: "waiting", message: `Wait for PDT` });
+
+    pdt.list()
+        .then((pdtList: string[]) => {
+            if (pdtList.includes(default_pdt)) {
+                selectedPDT.value = default_pdt;
+            } else {
+                selectedPDT.value = pdtList[0];
+            }
+        })
+        .catch((err: string) => {
+            world.setStatus({ status: "error", message: "No PDT found or server unavailable" });
+            console.error(err);
+        });
+
+    await models.fetchData();
+    await materials.fetchData();
+
+    world.setStatus({ status: "loading PDT", message: "Fetching selected PDT..." });
+    pdt.fetchData(selectedPDT.value)
+        .catch((err: string) => {
+            world.setStatus({ status: "error", message: err });
+            console.error(err);
+        })
+        .finally(() => {
+            world.setStatus({
+                status: "loading world",
+                message: `${selectedPDT.value} loaded successfully`,
+            });
+        });
+};
 
 watchEffect(() => {
-    if (getStatus.value.status === "error" && getStatus.value.message === "PDT was deleted"){
+    if (getStatus.value.status === "error") {
+        loadDefaultPDT();
+    }
+    if (getStatus.value.status === "error" && getStatus.value.message === "PDT was deleted") {
         router.push("/open");
     }
 });
-
-
-
 </script>
 
 <style scoped>
