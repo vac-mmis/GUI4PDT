@@ -1,7 +1,7 @@
 /**
  * Implementation of objects inside PDTs.
  *
- * @module PDT.Object
+ * @module PDT.CustomMenu
  */
 export class CustomMenu {
     constructor(
