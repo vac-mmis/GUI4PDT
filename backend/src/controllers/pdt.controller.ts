@@ -8,6 +8,7 @@ import { Request, Response } from "express";
 
 import * as PDTStore from "@/store/pdt.store";
 import { logger } from "@/utils/logger";
+import { removeDirectoryRecursive } from "@/utils/files";
 
 /**
  * Get available PDT names
@@ -34,4 +35,31 @@ export function findPDTByName(req: Request, res: Response): void {
     } else {
         res.status(200).json(pdt.getPublicPDT());
     }
+}
+
+/**
+ * Get available PDT names
+ * @param req Unused here
+ * @param res HTTP Response :
+ * - 200 confirmation + PDT names sorted by alphabetic ascending order
+ */
+import path from "path";
+export function deletePDT(req: Request, res: Response): void {
+    const PDTName = req.body.name;
+    const pdtPath = path.resolve(process.env.DATA ?? "").normalize();
+    const deletionPath = path.join(pdtPath, PDTName);
+
+    removeDirectoryRecursive(deletionPath)
+        .then(() =>
+            res.status(200).json({
+                success: true,
+                message: "PDT was successfully deleted",
+            })
+        )
+        .catch((error) =>
+            res.status(400).json({
+                success: false,
+                message: error,
+            })
+        );
 }

@@ -42,3 +42,33 @@ export async function checkDirectory(path: string) {
         }
     }
 }
+
+/**
+ * Remove a directory recursivly
+ *
+ */
+import * as fs from "fs";
+import * as path from "path";
+import * as util from "util";
+
+const readdirAsync = util.promisify(fs.readdir);
+const unlinkAsync = util.promisify(fs.unlink);
+const rmdirAsync = util.promisify(fs.rmdir);
+
+export async function removeDirectoryRecursive(directory: string): Promise<void> {
+    const files = await readdirAsync(directory);
+
+    for (const file of files) {
+        const filePath = path.join(directory, file);
+
+        const stats = await fs.promises.stat(filePath);
+
+        if (stats.isDirectory()) {
+            await removeDirectoryRecursive(filePath);
+        } else {
+            await unlinkAsync(filePath);
+        }
+    }
+
+    await rmdirAsync(directory);
+}

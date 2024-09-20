@@ -1,5 +1,21 @@
 <!-- eslint-disable vue/no-deprecated-slot-attribute -->
 <template>
+    <v-dialog v-model="confirm" width="400">
+        <v-card>
+            <v-card-title class="text-h5">Are you sure?</v-card-title>
+            <v-card-text>Are you sure you want to delete this item?</v-card-text>
+            <v-btn @click="confirmDelete" color="error">Yes, delete it!</v-btn>
+            <v-btn
+                @click="
+                    {
+                        confirm = false;
+                    }
+                "
+                color=" secondary"
+                >No, cancel</v-btn
+            >
+        </v-card>
+    </v-dialog>
     <div>
         <v-container>
             <v-label>
@@ -16,9 +32,17 @@
                         @click="onOpen(item)"
                         color="primary"
                     >
-                        <v-row>
-                            <v-col cols="10">
+                        <v-row class="py-1 px-1 d-flex align-center">
+                            <v-col cols="9">
                                 {{ item }}
+                            </v-col>
+                            <v-col cols="3" class="d-flex align-center">
+                                <v-btn
+                                    plain
+                                    @click.stop="deleteItem(item)"
+                                    icon="fas fa-trash"
+                                    style="color: RGB(225, 85, 85)"
+                                ></v-btn>
                             </v-col>
                         </v-row>
                     </v-list-item>
@@ -26,6 +50,7 @@
             </v-card>
         </v-container>
     </div>
+    <v-alert v-if="errorMessage" type="error">{{ errorMessage }}</v-alert>
 
     <v-overlay
         :model-value="getStatus.status === `loading PDT` || getStatus.status === `loading world`"
@@ -48,6 +73,7 @@ import { materialStore } from "@/store/material.store";
 import { worldStore } from "@/store/world.store";
 import { onBeforeMount } from "vue";
 import { storeToRefs } from "pinia";
+import axios from "axios";
 
 const pdt = PDTStore();
 const models = modelStore();
@@ -61,6 +87,11 @@ const router = useRouter();
 const PDTList = ref<string[]>();
 
 const update = ref(0);
+
+const errorMessage = ref("");
+
+const confirm = ref(false);
+const currentForDeletion = ref("");
 
 const onOpen = async (selected: string) => {
     world.setStatus({ status: "loading PDT", message: "Fetching selected PDT..." });
@@ -78,6 +109,37 @@ const onOpen = async (selected: string) => {
         });
 
     router.push("/plot");
+};
+
+const deleteItem = async (item: string) => {
+    currentForDeletion.value = item;
+    console.log(item);
+    confirm.value = true;
+};
+
+const confirmDelete = async () => {
+    pdt.list()
+        .then((pdts: string[]) => {
+            if (pdts.includes(currentForDeletion.value)) {
+                confirm.value = false;
+                return;
+            }
+        })
+        .then(
+            await axios
+                .post("/deletePDT", { name: currentForDeletion.value })
+                .then(() => {
+                    errorMessage.value = "";
+                })
+                .catch((error) => {
+                    console.log(error);
+                    errorMessage.value = error.response?.data.message || "An error occured.";
+                })
+        )
+        .catch((err: string) => {
+            world.setStatus({ status: "error", message: "No PDT found or server unavailable" });
+            console.error(err);
+        });
 };
 
 watchEffect(() => {
