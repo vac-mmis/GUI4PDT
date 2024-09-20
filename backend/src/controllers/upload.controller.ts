@@ -10,7 +10,6 @@ import { logger } from "@/utils/logger";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import unzipper from "unzipper";
 
 const pdtPath = path.resolve(process.env.DATA ?? "").normalize();
 
@@ -77,21 +76,22 @@ export function uploadFiles(req: Request, res: Response): void {
             });
         } else {
             const files = req.files as Express.Multer.File[];
+            //Experimental unpacking from zip files
             if (files && files.length > 0) {
-                const zipFiles = files.filter((file) => path.extname(file.filename) === ".zip");
-                if (zipFiles.length > 0) {
-                    zipFiles.forEach((zip) => {
-                        unzipFile(zip.path, zip.destination).then(() => {
-                            fs.unlink(zip.path, (err) => {
-                                if (err) {
-                                    logger.error(err.message);
-                                } else {
-                                    logger.info("Successfully deleted file: " + zip.filename);
-                                }
-                            });
-                        });
-                    });
-                }
+                //     const zipFiles = files.filter((file) => path.extname(file.filename) === ".zip");
+                //     if (zipFiles.length > 0) {
+                //         zipFiles.forEach((zip) => {
+                //             unzipFile(zip.path, zip.destination).then(() => {
+                //                 fs.unlink(zip.path, (err) => {
+                //                     if (err) {
+                //                         logger.error(err.message);
+                //                     } else {
+                //                         logger.info("Successfully deleted file: " + zip.filename);
+                //                     }
+                //                 });
+                //             });
+                //         });
+                //     }
 
                 res.status(200).json({
                     success: true,
@@ -205,21 +205,6 @@ export function updateClassname(req: Request, res: Response): void {
         message: "Project created successfully",
     });
 }
-
-const unzipFile = async (zipFile: string, destiantion: string) => {
-    try {
-        const readStream = fs.createReadStream(zipFile);
-        const writeStream = unzipper.Extract({ path: destiantion });
-
-        readStream.pipe(writeStream);
-
-        writeStream.on("close", () => {
-            logger.info("File unzipped and saved successfully");
-        });
-    } catch (error) {
-        logger.error("Error unzipping the file:", error);
-    }
-};
 
 function validateJSON(body: string) {
     try {

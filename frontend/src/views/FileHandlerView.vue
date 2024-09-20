@@ -20,7 +20,7 @@
                     v-model="files"
                     label="Choose your file(s)"
                     multiple
-                    accept=".json,.csv,.png,.zip,.bmp,.jpg,.jpeg,.glb"
+                    accept=".json,.csv,.png,.bmp,.jpg,.jpeg,.glb"
                     prepend-icon="fas fa-file-import"
                 ></v-file-input>
                 <v-alert v-if="errorMessage" type="error">{{ errorMessage }}</v-alert>

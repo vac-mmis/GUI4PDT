@@ -72,3 +72,25 @@ export async function removeDirectoryRecursive(directory: string): Promise<void>
 
     await rmdirAsync(directory);
 }
+
+/**
+ * Unzip a ZIP archive
+ *
+ */
+import unzipper from "unzipper";
+import { logger } from "./logger";
+
+export async function unzipFile(zipFile: string, destiantion: string) {
+    try {
+        const readStream = fs.createReadStream(zipFile);
+        const writeStream = unzipper.Extract({ path: destiantion });
+
+        readStream.pipe(writeStream);
+
+        writeStream.on("close", () => {
+            logger.info("File unzipped and saved successfully");
+        });
+    } catch (error) {
+        logger.error("Error unzipping the file:", error);
+    }
+}
