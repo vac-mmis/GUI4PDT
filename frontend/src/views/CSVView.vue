@@ -4,7 +4,7 @@
             <v-form @submit.prevent="submitFile" enctype="multipart/form-data">
                 <v-label>
                     <template v-slot:default>
-                        <h1>Add CSV</h1>
+                        <h1>Add CSV for ({{ pdtName }})</h1>
                     </template>
                 </v-label>
                 <v-spacer vertical></v-spacer>
@@ -35,6 +35,8 @@ const router = useRouter();
 
 const { getPDT } = storeToRefs(PDTStore());
 
+const pdtName = ref(getPDT.value.name ?? "");
+
 const file = ref<File>();
 
 const fileRules = [
@@ -53,6 +55,7 @@ const submitFile = async () => {
     const projectName = getPDT.value.name;
 
     if (!file.value || !projectName) {
+        errorMessage.value = "You first need to open a PDT.";
         return;
     }
 
