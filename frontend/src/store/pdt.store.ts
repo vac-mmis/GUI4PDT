@@ -10,6 +10,7 @@ import { defineStore, type StoreDefinition } from "pinia";
 import type { PDTJSON } from "@/interfaces/pdt";
 import { PDT } from "@/models/pdt.model";
 import { worldStore } from "./world.store";
+import websocketService from "@/services/websocketService";
 
 const staticMode = import.meta.env.VITE_STATIC_MODE === "true";
 
@@ -133,57 +134,52 @@ export const PDTStore: StoreDefinition = defineStore("PDTs", () => {
             return fetchRemotely(pdtName);
         }
     }
-    const initWebSocket = () => {
-        const ws = new WebSocket("ws://localhost:3030");
 
-        ws.onmessage = async (event) => {
-            const data = JSON.parse(event.data);
-
-            if (data.object === "pdt") {
-                await list();
-
-                if (data.name === _selectedPDT.value.name) {
-                    if (
-                        data.event === "add" ||
-                        data.event === "change" ||
-                        data.event === "unlink"
-                    ) {
-                        // eslint-disable-next-line no-empty
-                        if (data.isDirectory) {
-                        } else {
-                            await fetchData(_selectedPDT.value.name).catch((err: string) => {
-                                const world = worldStore();
-                                world.setStatus({
-                                    status: "error",
-                                    message:
-                                        "PDT " +
-                                        _selectedPDT.value.name +
-                                        " was not found or server unavailable",
-                                });
-                                console.error(err);
-                            });
-                        }
-                    }
-                } else if (data.name === null) {
-                    await fetchData(_selectedPDT.value.name).catch((err: string) => {
-                        const world = worldStore();
-                        world.setStatus({
-                            status: "error",
-                            message:
-                                "PDT " +
-                                _selectedPDT.value.name +
-                                " was not found or server unavailable",
-                        });
-                        console.error(err);
-                    });
-                }
-            }
-        };
+    const initializeWebSocket = () => {
+        websocketService.onMessage((data) => {
+            reloadPDTStore(data);
+        });
     };
 
-    if (import.meta.env.VITE_STATIC_MODE === "false") {
-        initWebSocket();
-    }
+    const reloadPDTStore = async (message: string) => {
+        const data = JSON.parse(message);
 
-    return { timeLength, getPDT, getPDTList, list, fetchData, find };
+        if (data.object === "pdt") {
+            await list();
+
+            if (data.name === _selectedPDT.value.name) {
+                if (data.event === "add" || data.event === "change" || data.event === "unlink") {
+                    // eslint-disable-next-line no-empty
+                    if (data.isDirectory) {
+                    } else {
+                        await fetchData(_selectedPDT.value.name).catch((err: string) => {
+                            const world = worldStore();
+                            world.setStatus({
+                                status: "error",
+                                message:
+                                    "PDT " +
+                                    _selectedPDT.value.name +
+                                    " was not found or server unavailable",
+                            });
+                            console.error(err);
+                        });
+                    }
+                }
+            } else if (data.name === null) {
+                await fetchData(_selectedPDT.value.name).catch((err: string) => {
+                    const world = worldStore();
+                    world.setStatus({
+                        status: "error",
+                        message:
+                            "PDT " +
+                            _selectedPDT.value.name +
+                            " was not found or server unavailable",
+                    });
+                    console.error(err);
+                });
+            }
+        }
+    };
+
+    return { timeLength, getPDT, getPDTList, list, fetchData, find, initializeWebSocket };
 });

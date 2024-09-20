@@ -11,6 +11,7 @@ import axios from "axios";
 import { defineStore, type StoreDefinition } from "pinia";
 
 import type { ModelFile } from "@/interfaces/assets";
+import websocketService from "@/services/websocketService";
 
 const staticMode = import.meta.env.VITE_STATIC_MODE === "true";
 
@@ -99,28 +100,26 @@ export const modelStore: StoreDefinition = defineStore("models", () => {
         return toRaw(_models.value).find((model) => model.name === name) ?? getDefault(name);
     }
 
-    const initWebSocket = () => {
-        const ws = new WebSocket("ws://localhost:3030");
-
-        ws.onmessage = async (event) => {
-            const data = JSON.parse(event.data);
-
-            if (data.object === "model") {
-                await fetchData();
-
-                const message = {
-                    object: "pdt",
-                    event: null,
-                    name: null,
-                    isDirectory: null,
-                };
-                ws.send(JSON.stringify(message));
-            }
-        };
+    const initializeWebSocket = () => {
+        websocketService.onMessage((data) => {
+            reloadModelStore(data);
+        });
     };
-    if (import.meta.env.VITE_STATIC_MODE === "false") {
-        initWebSocket();
-    }
 
-    return { length, fetchData, find, getModels };
+    const reloadModelStore = async (messageData: string) => {
+        const data = JSON.parse(messageData);
+
+        if (data.object === "model") {
+            await fetchData();
+            const message = {
+                object: "pdt",
+                event: null,
+                name: null,
+                isDirectory: null,
+            };
+            websocketService.sendMessage(JSON.stringify(message));
+        }
+    };
+
+    return { length, fetchData, find, getModels, initializeWebSocket };
 });

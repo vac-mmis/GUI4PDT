@@ -25,12 +25,13 @@ import { checkDirectory } from "./utils/files";
 
 const port = process.env.PORT ?? 3000;
 
-const wsPort = process.env.WEBSOCKET_PORT ?? 3030;
+const wsPort = process.env.WS_PORT ?? 3030;
+const wsAddress = process.env.WS_ADDRESS ?? "localhost";
 
 const app = express();
 
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ port: wsPort as number });
+const wss = new WebSocket.Server({ port: wsPort as number, host: wsAddress });
 
 const pdtsPath = path.resolve(process.env.DATA ?? "").normalize();
 const modelsPath = path.resolve(process.env.MODELS ?? "").normalize();
@@ -46,6 +47,8 @@ const watcherModels = chokidar.watch(modelsPath, {
 const watcherPDT = chokidar.watch(pdtsPath, {
     ignored: /(^|[/\\])\../,
     persistent: true,
+    usePolling: true,
+    interval: 500,
 });
 const watcherMaterials = chokidar.watch(materialsPath, {
     ignored: /(^|[/\\])\../,

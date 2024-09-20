@@ -11,6 +11,7 @@ import axios from "axios";
 import { defineStore, type StoreDefinition } from "pinia";
 
 import type { MaterialFile } from "@/interfaces/assets";
+import websocketService from "@/services/websocketService";
 
 const staticMode = import.meta.env.VITE_STATIC_MODE === "true";
 
@@ -79,28 +80,27 @@ export const materialStore: StoreDefinition = defineStore("materials", () => {
         return toRaw(_materials.value).find((material) => material.name === name);
     }
 
-    const initWebSocket = () => {
-        const ws = new WebSocket("ws://localhost:3030");
-
-        ws.onmessage = async (event) => {
-            const data = JSON.parse(event.data);
-
-            if (data.object === "material") {
-                await fetchData();
-
-                const message = {
-                    object: "pdt",
-                    event: null,
-                    name: null,
-                    isDirectory: null,
-                };
-                ws.send(JSON.stringify(message));
-            }
-        };
+    const initializeWebSocket = () => {
+        websocketService.onMessage((data) => {
+            reloadMaterialStore(data);
+        });
     };
-    if (import.meta.env.VITE_STATIC_MODE === "false") {
-        initWebSocket();
-    }
 
-    return { length, fetchData, find, getMaterials };
+    const reloadMaterialStore = async (messageData: string) => {
+        const data = JSON.parse(messageData);
+
+        if (data.object === "material") {
+            await fetchData();
+
+            const message = {
+                object: "pdt",
+                event: null,
+                name: null,
+                isDirectory: null,
+            };
+            websocketService.sendMessage(JSON.stringify(message));
+        }
+    };
+
+    return { length, fetchData, find, getMaterials, initializeWebSocket };
 });
