@@ -23,6 +23,7 @@
                     <h1>Open</h1>
                 </template>
             </v-label>
+
             <v-card max-width="300">
                 <v-list dense :key="update">
                     <v-list-item
@@ -97,18 +98,18 @@ const onOpen = async (selected: string) => {
     world.setStatus({ status: "loading PDT", message: "Fetching selected PDT..." });
 
     pdt.fetchData(selected)
-        .catch((err: string) => {
-            world.setStatus({ status: "error", message: err });
-            console.error(err);
-        })
-        .finally(() => {
+        .then(() => {
             world.setStatus({
                 status: "loading world",
                 message: `${selected} loaded successfully`,
             });
+            router.push("/plot");
+        })
+        .catch((err: string) => {
+            world.setStatus({ status: "error", message: err });
+            errorMessage.value = err;
+            console.error(err);
         });
-
-    router.push("/plot");
 };
 
 const deleteItem = async (item: string) => {
